@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.state/
+*.db
+*.db-*
+*.cyberbackup
+node_modules/
+test-results/
+dist/
+build/
+*.egg-info/

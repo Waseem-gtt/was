@@ -1,0 +1,1936 @@
+[
+  {
+    "id": "01",
+    "name": "الاستخبارات",
+    "engine_id": "eng.section.01",
+    "platforms": [
+      {
+        "id": "platform.01.01",
+        "name": "المصادر وOSINT",
+        "labs": [
+          {
+            "id": "lab.01.01",
+            "name": "جمع المصادر والتحقق منها",
+            "parent_id": "platform.01.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.01.01.1",
+                "name": "مصادر عامة متعددة اللغات",
+                "parent_id": "lab.01.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.01.01.2",
+                "name": "تقييم المصدر وإزالة التكرار",
+                "parent_id": "lab.01.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.01.02",
+        "name": "استخبارات التهديدات",
+        "labs": [
+          {
+            "id": "lab.01.02",
+            "name": "ربط المؤشرات والحملات",
+            "parent_id": "platform.01.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.01.02.1",
+                "name": "تحليل IOC والسياق",
+                "parent_id": "lab.01.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.01.02.2",
+                "name": "ربط السلوكيات والحملات",
+                "parent_id": "lab.01.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.01.03",
+        "name": "البحث والرسم المعرفي",
+        "labs": [
+          {
+            "id": "lab.01.03",
+            "name": "تحليل الأدلة والعلاقات",
+            "parent_id": "platform.01.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.01.03.1",
+                "name": "كيانات وعلاقات زمنية",
+                "parent_id": "lab.01.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.01.03.2",
+                "name": "فرضيات وتقارير موثقة",
+                "parent_id": "lab.01.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "02",
+    "name": "الثغرات",
+    "engine_id": "eng.section.02",
+    "platforms": [
+      {
+        "id": "platform.02.01",
+        "name": "الويب وAPI",
+        "labs": [
+          {
+            "id": "lab.02.01",
+            "name": "اختبار تطبيقات تجريبية",
+            "parent_id": "platform.02.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.02.01.1",
+                "name": "الصلاحيات والجلسات ومنطق الأعمال",
+                "parent_id": "lab.02.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.02.01.2",
+                "name": "المدخلات والبروتوكولات والتخزين",
+                "parent_id": "lab.02.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.02.02",
+        "name": "الجوال والبرامج",
+        "labs": [
+          {
+            "id": "lab.02.02",
+            "name": "تحليل تطبيقات تدريبية",
+            "parent_id": "platform.02.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.02.02.1",
+                "name": "تخزين الجوال ومكوناته",
+                "parent_id": "lab.02.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.02.02.2",
+                "name": "الذاكرة والاعتماديات في البرامج",
+                "parent_id": "lab.02.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.02.03",
+        "name": "الأنظمة والأجهزة",
+        "labs": [
+          {
+            "id": "lab.02.03",
+            "name": "تحليل سطح النظام",
+            "parent_id": "platform.02.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.02.03.1",
+                "name": "نواة وبرامج ثابتة",
+                "parent_id": "lab.02.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.02.03.2",
+                "name": "IoT وOT ضمن محاكاة",
+                "parent_id": "lab.02.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.02.04",
+        "name": "السحابة والذكاء الاصطناعي",
+        "labs": [
+          {
+            "id": "lab.02.04",
+            "name": "مراجعة إعدادات تجريبية",
+            "parent_id": "platform.02.04",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.02.04.1",
+                "name": "هوية وأسرار وحاويات",
+                "parent_id": "lab.02.04",
+                "status": "planned"
+              },
+              {
+                "id": "lab.02.04.2",
+                "name": "تطبيقات AI ووكلاء",
+                "parent_id": "lab.02.04",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.02.05",
+        "name": "المعرفة والإبلاغ والإصلاح",
+        "labs": [
+          {
+            "id": "lab.02.05",
+            "name": "التحقق من نتيجة الفحص",
+            "parent_id": "platform.02.05",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.02.05.1",
+                "name": "ربط المصادر والإصدارات والأثر",
+                "parent_id": "lab.02.05",
+                "status": "planned"
+              },
+              {
+                "id": "lab.02.05.2",
+                "name": "إعادة الاختبار وتقرير المكافآت",
+                "parent_id": "lab.02.05",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "03",
+    "name": "الدفاع والعمليات",
+    "engine_id": "eng.section.03",
+    "platforms": [
+      {
+        "id": "platform.03.01",
+        "name": "الكشف والمراقبة",
+        "labs": [
+          {
+            "id": "lab.03.01",
+            "name": "مراقبة أحداث مختبرية",
+            "parent_id": "platform.03.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.03.01.1",
+                "name": "سجلات الأجهزة والشبكات",
+                "parent_id": "lab.03.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.03.01.2",
+                "name": "اختبار قواعد الكشف",
+                "parent_id": "lab.03.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.03.02",
+        "name": "صيد التهديدات",
+        "labs": [
+          {
+            "id": "lab.03.02",
+            "name": "تحليل فرضيات دفاعية",
+            "parent_id": "platform.03.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.03.02.1",
+                "name": "خطوط أساس وانحراف سلوكي",
+                "parent_id": "lab.03.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.03.02.2",
+                "name": "ربط الأحداث والمؤشرات",
+                "parent_id": "lab.03.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.03.03",
+        "name": "الاستجابة للحوادث",
+        "labs": [
+          {
+            "id": "lab.03.03",
+            "name": "محاكاة حادث قابل للاستعادة",
+            "parent_id": "platform.03.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.03.03.1",
+                "name": "فرز واحتواء",
+                "parent_id": "lab.03.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.03.03.2",
+                "name": "تعافٍ ومراجعة ما بعد الحادث",
+                "parent_id": "lab.03.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "04",
+    "name": "التحقيق الرقمي",
+    "engine_id": "eng.section.04",
+    "platforms": [
+      {
+        "id": "platform.04.01",
+        "name": "تحقيق الأجهزة والملفات",
+        "labs": [
+          {
+            "id": "lab.04.01",
+            "name": "تحليل أدلة تدريبية",
+            "parent_id": "platform.04.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.04.01.1",
+                "name": "أقراص وأنظمة ملفات",
+                "parent_id": "lab.04.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.04.01.2",
+                "name": "ذاكرة وعمليات",
+                "parent_id": "lab.04.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.04.02",
+        "name": "تحقيق الشبكات والجوال والسحابة",
+        "labs": [
+          {
+            "id": "lab.04.02",
+            "name": "ربط آثار متعددة",
+            "parent_id": "platform.04.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.04.02.1",
+                "name": "حزم وسجلات اتصال",
+                "parent_id": "lab.04.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.04.02.2",
+                "name": "آثار تطبيقات وجوال وسحابة",
+                "parent_id": "lab.04.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.04.03",
+        "name": "جودة الأدلة",
+        "labs": [
+          {
+            "id": "lab.04.03",
+            "name": "إعادة بناء خط زمني",
+            "parent_id": "platform.04.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.04.03.1",
+                "name": "حفظ الأصل والبصمات وسلسلة الحيازة",
+                "parent_id": "lab.04.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.04.03.2",
+                "name": "اختبارات مرجعية للتحليل",
+                "parent_id": "lab.04.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "05",
+    "name": "الهندسة العكسية",
+    "engine_id": "eng.section.05",
+    "platforms": [
+      {
+        "id": "platform.05.01",
+        "name": "التحليل الساكن",
+        "labs": [
+          {
+            "id": "lab.05.01",
+            "name": "فهم برنامج تجريبي",
+            "parent_id": "platform.05.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.05.01.1",
+                "name": "ملفات تنفيذية ورموز",
+                "parent_id": "lab.05.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.05.01.2",
+                "name": "تدفق تحكم وبيانات",
+                "parent_id": "lab.05.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.05.02",
+        "name": "التحليل الديناميكي",
+        "labs": [
+          {
+            "id": "lab.05.02",
+            "name": "مراقبة تشغيل معزول",
+            "parent_id": "platform.05.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.05.02.1",
+                "name": "تصحيح وواجهات واستدعاءات",
+                "parent_id": "lab.05.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.05.02.2",
+                "name": "تتبع تغييرات ملفات وذاكرة",
+                "parent_id": "lab.05.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.05.03",
+        "name": "مقارنة وتحليل السلوك",
+        "labs": [
+          {
+            "id": "lab.05.03",
+            "name": "مقارنة عينات مسموحة",
+            "parent_id": "platform.05.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.05.03.1",
+                "name": "مقارنة إصدارات وإصلاحات",
+                "parent_id": "lab.05.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.05.03.2",
+                "name": "تصنيف سلوك عينات داخل العزل",
+                "parent_id": "lab.05.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "06",
+    "name": "الشبكات والاتصالات",
+    "engine_id": "eng.section.06",
+    "platforms": [
+      {
+        "id": "platform.06.01",
+        "name": "البروتوكولات والخدمات",
+        "labs": [
+          {
+            "id": "lab.06.01",
+            "name": "شبكة افتراضية صغيرة",
+            "parent_id": "platform.06.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.06.01.1",
+                "name": "DNS وTLS وHTTP",
+                "parent_id": "lab.06.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.06.01.2",
+                "name": "توجيه وتجزئة وسياسات اتصال",
+                "parent_id": "lab.06.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.06.02",
+        "name": "اللاسلكي والاتصالات المتنقلة",
+        "labs": [
+          {
+            "id": "lab.06.02",
+            "name": "محاكاة اتصال",
+            "parent_id": "platform.06.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.06.02.1",
+                "name": "آثار Wi-Fi وBluetooth",
+                "parent_id": "lab.06.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.06.02.2",
+                "name": "نماذج 5G وشبكات غير أرضية",
+                "parent_id": "lab.06.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.06.03",
+        "name": "قياس وتحليل المرور",
+        "labs": [
+          {
+            "id": "lab.06.03",
+            "name": "تجارب أداء وأحداث",
+            "parent_id": "platform.06.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.06.03.1",
+                "name": "حزم وتوقيت وإحصاءات",
+                "parent_id": "lab.06.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.06.03.2",
+                "name": "قواعد مراقبة وانحرافات",
+                "parent_id": "lab.06.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "07",
+    "name": "الأنظمة والهوية",
+    "engine_id": "eng.section.07",
+    "platforms": [
+      {
+        "id": "platform.07.01",
+        "name": "الهوية المركزية وتسجيل الدخول",
+        "labs": [
+          {
+            "id": "lab.07.01",
+            "name": "مصادقة تطبيقات محلية",
+            "parent_id": "platform.07.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.01.1",
+                "name": "SSO وOIDC وPasskeys",
+                "parent_id": "lab.07.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.01.2",
+                "name": "استرداد وتغيير وسائل التحقق",
+                "parent_id": "lab.07.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.02",
+        "name": "الأدلة والهوية المؤسسية",
+        "labs": [
+          {
+            "id": "lab.07.02",
+            "name": "هوية نطاق تجريبي",
+            "parent_id": "platform.07.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.02.1",
+                "name": "FreeIPA وSSSD وKerberos",
+                "parent_id": "lab.07.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.02.2",
+                "name": "Samba AD والتكامل المشروط",
+                "parent_id": "lab.07.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.03",
+        "name": "التفويض والصلاحيات",
+        "labs": [
+          {
+            "id": "lab.07.03",
+            "name": "تقييم سياسات الوصول",
+            "parent_id": "platform.07.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.03.1",
+                "name": "RBAC وABAC",
+                "parent_id": "lab.07.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.03.2",
+                "name": "ReBAC وعزل المنصات المتداخلة",
+                "parent_id": "lab.07.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.04",
+        "name": "الامتيازات والوصول الإداري",
+        "labs": [
+          {
+            "id": "lab.07.04",
+            "name": "إدارة عملية محددة",
+            "parent_id": "platform.07.04",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.04.1",
+                "name": "sudo وSSH محدودان",
+                "parent_id": "lab.07.04",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.04.2",
+                "name": "امتياز مؤقت وحساب طوارئ",
+                "parent_id": "lab.07.04",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.05",
+        "name": "حماية Linux",
+        "labs": [
+          {
+            "id": "lab.07.05",
+            "name": "عزل خدمة تدريبية",
+            "parent_id": "platform.07.05",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.05.1",
+                "name": "MAC وLandlock",
+                "parent_id": "lab.07.05",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.05.2",
+                "name": "seccomp وcapabilities وsystemd",
+                "parent_id": "lab.07.05",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.06",
+        "name": "حماية Windows",
+        "labs": [
+          {
+            "id": "lab.07.06",
+            "name": "مراجعة حماية النظام",
+            "parent_id": "platform.07.06",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.06.1",
+                "name": "حسابات وأحداث وسياسات",
+                "parent_id": "lab.07.06",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.06.2",
+                "name": "Credential Guard وLAPS ببيئة مدعومة",
+                "parent_id": "lab.07.06",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.07",
+        "name": "هوية الأجهزة والثقة",
+        "labs": [
+          {
+            "id": "lab.07.07",
+            "name": "التحقق من حالة جهاز",
+            "parent_id": "platform.07.07",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.07.1",
+                "name": "شهادات أجهزة وTPM محاكى",
+                "parent_id": "lab.07.07",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.07.2",
+                "name": "قياس سلامة وremote attestation",
+                "parent_id": "lab.07.07",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.08",
+        "name": "هوية الخدمات والوكلاء",
+        "labs": [
+          {
+            "id": "lab.07.08",
+            "name": "مصادقة خدمة أو وكيل",
+            "parent_id": "platform.07.08",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.08.1",
+                "name": "SPIFFE/SPIRE وmTLS",
+                "parent_id": "lab.07.08",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.08.2",
+                "name": "هوية وكيل وصلاحيات أدواته",
+                "parent_id": "lab.07.08",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.09",
+        "name": "دورة الحساب والجلسة",
+        "labs": [
+          {
+            "id": "lab.07.09",
+            "name": "إدارة عمر الوصول",
+            "parent_id": "platform.07.09",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.09.1",
+                "name": "إنشاء وتعطيل وSCIM",
+                "parent_id": "lab.07.09",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.09.2",
+                "name": "إلغاء جلسات وإعادة تحقق",
+                "parent_id": "lab.07.09",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.07.10",
+        "name": "تدقيق الهوية وتقييمها",
+        "labs": [
+          {
+            "id": "lab.07.10",
+            "name": "مراجعة قرارات الوصول",
+            "parent_id": "platform.07.10",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.07.10.1",
+                "name": "أحداث رفض وسجل جلسات",
+                "parent_id": "lab.07.10",
+                "status": "planned"
+              },
+              {
+                "id": "lab.07.10.2",
+                "name": "مقارنة سياسات واختبارات مرجعية",
+                "parent_id": "lab.07.10",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "08",
+    "name": "السحابة والحاويات",
+    "engine_id": "eng.section.08",
+    "platforms": [
+      {
+        "id": "platform.08.01",
+        "name": "هوية وإعدادات السحابة",
+        "labs": [
+          {
+            "id": "lab.08.01",
+            "name": "نماذج موارد محلية",
+            "parent_id": "platform.08.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.08.01.1",
+                "name": "IAM وسياسات موارد",
+                "parent_id": "lab.08.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.08.01.2",
+                "name": "أسرار وإعدادات شبكات وتخزين",
+                "parent_id": "lab.08.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.08.02",
+        "name": "أمن الحاويات",
+        "labs": [
+          {
+            "id": "lab.08.02",
+            "name": "تشغيل تطبيق معزول",
+            "parent_id": "platform.08.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.08.02.1",
+                "name": "صور واعتماديات",
+                "parent_id": "lab.08.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.08.02.2",
+                "name": "حدود تنفيذ وموارد",
+                "parent_id": "lab.08.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.08.03",
+        "name": "تنسيق الخدمات",
+        "labs": [
+          {
+            "id": "lab.08.03",
+            "name": "بيئة تنسيق تجريبية اختيارية",
+            "parent_id": "platform.08.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.08.03.1",
+                "name": "Kubernetes وسياسات قبول",
+                "parent_id": "lab.08.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.08.03.2",
+                "name": "هوية خدمات واتصال بينها",
+                "parent_id": "lab.08.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "09",
+    "name": "هندسة البرمجيات الآمنة",
+    "engine_id": "eng.section.09",
+    "platforms": [
+      {
+        "id": "platform.09.01",
+        "name": "أمن الكود والتصميم",
+        "labs": [
+          {
+            "id": "lab.09.01",
+            "name": "برنامج تجريبي صغير",
+            "parent_id": "platform.09.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.09.01.1",
+                "name": "مراجعة كود وتدفق بيانات",
+                "parent_id": "lab.09.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.09.01.2",
+                "name": "اختبارات أمنية ونمذجة تهديد",
+                "parent_id": "lab.09.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.09.02",
+        "name": "الاعتماديات وسلسلة التوريد",
+        "labs": [
+          {
+            "id": "lab.09.02",
+            "name": "جرد مكونات برنامج",
+            "parent_id": "platform.09.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.09.02.1",
+                "name": "SCA وSBOM وربط التنبيهات",
+                "parent_id": "lab.09.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.09.02.2",
+                "name": "مصادر الحزم وتحقق سلامة",
+                "parent_id": "lab.09.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.09.03",
+        "name": "أمن البناء والإصدار",
+        "labs": [
+          {
+            "id": "lab.09.03",
+            "name": "خط بناء محلي",
+            "parent_id": "platform.09.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.09.03.1",
+                "name": "صلاحيات البناء وإدارة الأسرار",
+                "parent_id": "lab.09.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.09.03.2",
+                "name": "توقيع ومصدرية وإعادة إنتاج بناء",
+                "parent_id": "lab.09.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "أبحاث البرمجيات والنواة",
+    "engine_id": "eng.section.10",
+    "platforms": [
+      {
+        "id": "platform.10.01",
+        "name": "اختبار المدخلات",
+        "labs": [
+          {
+            "id": "lab.10.01",
+            "name": "Fuzzing للبرمجيات",
+            "parent_id": "platform.10.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.10.01.1",
+                "name": "تغطية وبنية مدخلات ومشغلات اختبار",
+                "parent_id": "lab.10.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.10.01.2",
+                "name": "كاشفات ذاكرة وتصغير عطل وإعادة إنتاج",
+                "parent_id": "lab.10.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.10.02",
+        "name": "التحليل والتحقق",
+        "labs": [
+          {
+            "id": "lab.10.02",
+            "name": "تحليل برنامج صغير",
+            "parent_id": "platform.10.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.10.02.1",
+                "name": "تحليل رمزي وهجين وثوابت",
+                "parent_id": "lab.10.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.10.02.2",
+                "name": "تحليل أسباب واختبارات إصلاح؛ التحقق الرسمي يحتاج بحثًا مستقلًا",
+                "parent_id": "lab.10.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.10.03",
+        "name": "أبحاث النواة",
+        "labs": [
+          {
+            "id": "lab.10.03",
+            "name": "نواة تجريبية مشروطة",
+            "parent_id": "platform.10.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.10.03.1",
+                "name": "تزامن وTOCTOU واستدعاءات النظام",
+                "parent_id": "lab.10.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.10.03.2",
+                "name": "مراقبة eBPF وصلاحيات الأدوات والتحقق من الأعطال",
+                "parent_id": "lab.10.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "التشفير والبروتوكولات",
+    "engine_id": "eng.section.11",
+    "platforms": [
+      {
+        "id": "platform.11.01",
+        "name": "المفاتيح والشهادات",
+        "labs": [
+          {
+            "id": "lab.11.01",
+            "name": "سلطة شهادات تدريبية",
+            "parent_id": "platform.11.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.11.01.1",
+                "name": "دورة مفاتيح وإلغاء وتدوير",
+                "parent_id": "lab.11.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.11.01.2",
+                "name": "PKI وسلسلة ثقة",
+                "parent_id": "lab.11.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.11.02",
+        "name": "أمن البروتوكولات",
+        "labs": [
+          {
+            "id": "lab.11.02",
+            "name": "اتصال تجريبي موثق",
+            "parent_id": "platform.11.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.11.02.1",
+                "name": "TLS وmTLS وتحقق الطرف",
+                "parent_id": "lab.11.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.11.02.2",
+                "name": "تحقق رسائل ومقاومة إعادة الإرسال",
+                "parent_id": "lab.11.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.11.03",
+        "name": "التشفير ما بعد الكم",
+        "labs": [
+          {
+            "id": "lab.11.03",
+            "name": "تقييم توافق تجريبي",
+            "parent_id": "platform.11.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.11.03.1",
+                "name": "جرد استخدام التشفير",
+                "parent_id": "lab.11.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.11.03.2",
+                "name": "اختبار انتقال وخوارزميات معتمدة",
+                "parent_id": "lab.11.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "العتاد والبرامج الثابتة",
+    "engine_id": "eng.section.12",
+    "platforms": [
+      {
+        "id": "platform.12.01",
+        "name": "تحليل البرامج الثابتة",
+        "labs": [
+          {
+            "id": "lab.12.01",
+            "name": "صورة Firmware مسموحة",
+            "parent_id": "platform.12.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.12.01.1",
+                "name": "جرد مكونات وإعدادات",
+                "parent_id": "lab.12.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.12.01.2",
+                "name": "محاكاة وظائف متاحة",
+                "parent_id": "lab.12.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.12.02",
+        "name": "الإقلاع والثقة",
+        "labs": [
+          {
+            "id": "lab.12.02",
+            "name": "نموذج إقلاع وقياس",
+            "parent_id": "platform.12.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.12.02.1",
+                "name": "UEFI وSecure Boot",
+                "parent_id": "lab.12.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.12.02.2",
+                "name": "TPM وقياسات الإقلاع",
+                "parent_id": "lab.12.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.12.03",
+        "name": "الأنظمة المدمجة والواجهات",
+        "labs": [
+          {
+            "id": "lab.12.03",
+            "name": "جهاز محاكى أو عتاد اختياري",
+            "parent_id": "platform.12.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.12.03.1",
+                "name": "واجهات وتسلسل رسائل",
+                "parent_id": "lab.12.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.12.03.2",
+                "name": "دراسة قنوات جانبية بقياسات تجريبية",
+                "parent_id": "lab.12.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "الأنظمة الصناعية وIoT",
+    "engine_id": "eng.section.13",
+    "platforms": [
+      {
+        "id": "platform.13.01",
+        "name": "الأجهزة المتصلة",
+        "labs": [
+          {
+            "id": "lab.13.01",
+            "name": "محاكاة جهاز وخدماته",
+            "parent_id": "platform.13.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.13.01.1",
+                "name": "هوية وتحديث جهاز",
+                "parent_id": "lab.13.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.13.01.2",
+                "name": "بروتوكولات ورسائل وحساسات",
+                "parent_id": "lab.13.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.13.02",
+        "name": "أنظمة التحكم الصناعية",
+        "labs": [
+          {
+            "id": "lab.13.02",
+            "name": "شبكة تحكم افتراضية",
+            "parent_id": "platform.13.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.13.02.1",
+                "name": "PLC وبروتوكولات تحكم محاكاة",
+                "parent_id": "lab.13.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.13.02.2",
+                "name": "تجزئة ومراقبة أوامر وحالات",
+                "parent_id": "lab.13.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.13.03",
+        "name": "التوأم الرقمي والسلامة",
+        "labs": [
+          {
+            "id": "lab.13.03",
+            "name": "نموذج عملية صناعية",
+            "parent_id": "platform.13.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.13.03.1",
+                "name": "قياسات وأحداث اصطناعية",
+                "parent_id": "lab.13.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.13.03.2",
+                "name": "كشف انحراف واستعادة حالة آمنة",
+                "parent_id": "lab.13.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "الإشارات والاستشعار",
+    "engine_id": "eng.section.14",
+    "platforms": [
+      {
+        "id": "platform.14.01",
+        "name": "الرادارات",
+        "labs": [
+          {
+            "id": "lab.14.01",
+            "name": "محاكاة قياسات رادارية",
+            "parent_id": "platform.14.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.14.01.1",
+                "name": "توليد مشاهد وإشارات اصطناعية",
+                "parent_id": "lab.14.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.14.01.2",
+                "name": "مدى وسرعة وضوضاء وتقييم",
+                "parent_id": "lab.14.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.14.02",
+        "name": "SDR ومعالجة الإشارات",
+        "labs": [
+          {
+            "id": "lab.14.02",
+            "name": "إشارات مسجلة أو مولدة",
+            "parent_id": "platform.14.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.14.02.1",
+                "name": "ترشيح وطيف وتضمين",
+                "parent_id": "lab.14.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.14.02.2",
+                "name": "توقيت وتزامن وجودة إشارة",
+                "parent_id": "lab.14.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.14.03",
+        "name": "دمج الحساسات",
+        "labs": [
+          {
+            "id": "lab.14.03",
+            "name": "بيانات حساسات تدريبية",
+            "parent_id": "platform.14.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.14.03.1",
+                "name": "معايرة ومحاذاة قياسات",
+                "parent_id": "lab.14.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.14.03.2",
+                "name": "دمج وتقييم ثقة وانحراف",
+                "parent_id": "lab.14.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "الطيران والمسيّرات",
+    "engine_id": "eng.section.15",
+    "platforms": [
+      {
+        "id": "platform.15.01",
+        "name": "محاكاة الطيران",
+        "labs": [
+          {
+            "id": "lab.15.01",
+            "name": "سيناريو طيران افتراضي",
+            "parent_id": "platform.15.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.15.01.1",
+                "name": "ديناميكا وحساسات",
+                "parent_id": "lab.15.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.15.01.2",
+                "name": "تحكم وحالات أعطال",
+                "parent_id": "lab.15.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.15.02",
+        "name": "الاتصال والبرمجيات",
+        "labs": [
+          {
+            "id": "lab.15.02",
+            "name": "رسائل وسجلات محاكاة",
+            "parent_id": "platform.15.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.15.02.1",
+                "name": "هوية أوامر وقنوات اتصال",
+                "parent_id": "lab.15.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.15.02.2",
+                "name": "تحديثات وإعدادات برمجيات",
+                "parent_id": "lab.15.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.15.03",
+        "name": "التحقيق والسلامة",
+        "labs": [
+          {
+            "id": "lab.15.03",
+            "name": "تحليل رحلة اصطناعية",
+            "parent_id": "platform.15.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.15.03.1",
+                "name": "خط زمني وسجلات رحلة",
+                "parent_id": "lab.15.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.15.03.2",
+                "name": "كشف انحراف واستعادة آمنة",
+                "parent_id": "lab.15.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "name": "الروبوتات والمركبات",
+    "engine_id": "eng.section.16",
+    "platforms": [
+      {
+        "id": "platform.16.01",
+        "name": "الروبوتات",
+        "labs": [
+          {
+            "id": "lab.16.01",
+            "name": "روبوت افتراضي",
+            "parent_id": "platform.16.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.16.01.1",
+                "name": "ROS 2 وهوية ورسائل",
+                "parent_id": "lab.16.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.16.01.2",
+                "name": "حركة وحساسات وحدود مهام",
+                "parent_id": "lab.16.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.16.02",
+        "name": "شبكات المركبات",
+        "labs": [
+          {
+            "id": "lab.16.02",
+            "name": "حافلة CAN افتراضية",
+            "parent_id": "platform.16.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.16.02.1",
+                "name": "رسائل وحالات تحكم",
+                "parent_id": "lab.16.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.16.02.2",
+                "name": "مراقبة وكشف رسائل شاذة",
+                "parent_id": "lab.16.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.16.03",
+        "name": "أمن الأنظمة المتصلة",
+        "labs": [
+          {
+            "id": "lab.16.03",
+            "name": "خدمات مركبة تجريبية",
+            "parent_id": "platform.16.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.16.03.1",
+                "name": "تفويض وظائف وتطبيقات",
+                "parent_id": "lab.16.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.16.03.2",
+                "name": "تحديث ودمج حساسات وسجلات",
+                "parent_id": "lab.16.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "name": "الفضاء",
+    "engine_id": "eng.section.17",
+    "platforms": [
+      {
+        "id": "platform.17.01",
+        "name": "الأنظمة الفضائية",
+        "labs": [
+          {
+            "id": "lab.17.01",
+            "name": "قمر صناعي برمجي محاكى",
+            "parent_id": "platform.17.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.17.01.1",
+                "name": "برمجيات وحالات وقياسات",
+                "parent_id": "lab.17.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.17.01.2",
+                "name": "هوية وتحديث وتدقيق أحداث",
+                "parent_id": "lab.17.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.17.02",
+        "name": "المحطة الأرضية والاتصال",
+        "labs": [
+          {
+            "id": "lab.17.02",
+            "name": "قناة تجريبية محاكاة",
+            "parent_id": "platform.17.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.17.02.1",
+                "name": "Telemetry ورسائل تحكم وهمية",
+                "parent_id": "lab.17.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.17.02.2",
+                "name": "راديو محاكى وجودة رابط",
+                "parent_id": "lab.17.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.17.03",
+        "name": "التوأم الفضائي",
+        "labs": [
+          {
+            "id": "lab.17.03",
+            "name": "سيناريو مدار واتصال",
+            "parent_id": "platform.17.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.17.03.1",
+                "name": "تغير رابط وجدولة اتصال",
+                "parent_id": "lab.17.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.17.03.2",
+                "name": "تحليل بيانات وكشف انحراف",
+                "parent_id": "lab.17.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "name": "الذكاء الاصطناعي",
+    "engine_id": "eng.section.18",
+    "platforms": [
+      {
+        "id": "platform.18.01",
+        "name": "النماذج والمعرفة",
+        "labs": [
+          {
+            "id": "lab.18.01",
+            "name": "مساعد محلي مشترك",
+            "parent_id": "platform.18.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.18.01.1",
+                "name": "استرجاع موثق ومعرفة الأقسام",
+                "parent_id": "lab.18.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.18.01.2",
+                "name": "تقييم دقة وموارد وإصدارات",
+                "parent_id": "lab.18.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.18.02",
+        "name": "الوكلاء والأدوات",
+        "labs": [
+          {
+            "id": "lab.18.02",
+            "name": "وكيل داخل بيئة معزولة",
+            "parent_id": "platform.18.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.18.02.1",
+                "name": "سياسات سلوك وهوية وصلاحيات",
+                "parent_id": "lab.18.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.18.02.2",
+                "name": "خطة وأدوات وتدقيق وإيقاف",
+                "parent_id": "lab.18.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.18.03",
+        "name": "أمن AI وتقييمه",
+        "labs": [
+          {
+            "id": "lab.18.03",
+            "name": "تطبيق AI تجريبي",
+            "parent_id": "platform.18.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.18.03.1",
+                "name": "عزل ذاكرة وبيانات ومشاريع",
+                "parent_id": "lab.18.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.18.03.2",
+                "name": "اختبارات حقن تعليمات ومخرجات غير آمنة",
+                "parent_id": "lab.18.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "name": "الحوكمة والمعمارية والخصوصية",
+    "engine_id": "eng.section.19",
+    "platforms": [
+      {
+        "id": "platform.19.01",
+        "name": "المعمارية والتهديدات",
+        "labs": [
+          {
+            "id": "lab.19.01",
+            "name": "نموذج منظومة",
+            "parent_id": "platform.19.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.19.01.1",
+                "name": "أصول وحدود ثقة وتدفقات",
+                "parent_id": "lab.19.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.19.01.2",
+                "name": "سيناريوهات تهديد وضوابط",
+                "parent_id": "lab.19.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.19.02",
+        "name": "الخصوصية والبيانات",
+        "labs": [
+          {
+            "id": "lab.19.02",
+            "name": "مجموعة بيانات وهمية",
+            "parent_id": "platform.19.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.19.02.1",
+                "name": "تصنيف وتقليل بيانات",
+                "parent_id": "lab.19.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.19.02.2",
+                "name": "احتفاظ ومحو وعزل وصول",
+                "parent_id": "lab.19.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.19.03",
+        "name": "المخاطر والضوابط",
+        "labs": [
+          {
+            "id": "lab.19.03",
+            "name": "مراجعة قرار وتصميم",
+            "parent_id": "platform.19.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.19.03.1",
+                "name": "تقييم مخاطر وأولوية معالجة",
+                "parent_id": "lab.19.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.19.03.2",
+                "name": "مطابقة أدلة لضوابط دون ادعاء اعتماد",
+                "parent_id": "lab.19.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "name": "إدارة المنظومة",
+    "engine_id": "eng.section.20",
+    "platforms": [
+      {
+        "id": "platform.20.01",
+        "name": "التشغيل والموارد",
+        "labs": [
+          {
+            "id": "lab.20.01",
+            "name": "قياس بيئة المنصة",
+            "parent_id": "platform.20.01",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.20.01.1",
+                "name": "قرص وذاكرة ومعالج وحدود تشغيل",
+                "parent_id": "lab.20.01",
+                "status": "planned"
+              },
+              {
+                "id": "lab.20.01.2",
+                "name": "مراقبة خدمات وصحة واعتماديات",
+                "parent_id": "lab.20.01",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.20.02",
+        "name": "الإضافات والتحديث",
+        "labs": [
+          {
+            "id": "lab.20.02",
+            "name": "إضافة تجريبية معزولة",
+            "parent_id": "platform.20.02",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.20.02.1",
+                "name": "توافق واجهات وترخيص ومصدر",
+                "parent_id": "lab.20.02",
+                "status": "planned"
+              },
+              {
+                "id": "lab.20.02.2",
+                "name": "تحديث تدريجي وتراجع عن إصدار",
+                "parent_id": "lab.20.02",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "platform.20.03",
+        "name": "الإدارة والاستعادة",
+        "labs": [
+          {
+            "id": "lab.20.03",
+            "name": "سياسات إدارة وتجربة استرجاع",
+            "parent_id": "platform.20.03",
+            "status": "planned",
+            "children": [
+              {
+                "id": "lab.20.03.1",
+                "name": "صلاحيات مالك وأدوار وتدقيق",
+                "parent_id": "lab.20.03",
+                "status": "planned"
+              },
+              {
+                "id": "lab.20.03.2",
+                "name": "نسخ احتياطي واستعادة إعدادات وبيانات",
+                "parent_id": "lab.20.03",
+                "status": "planned"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

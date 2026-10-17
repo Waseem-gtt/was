@@ -1,0 +1,18 @@
+[Unit]
+Description=WAS local cyber research platform
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/was
+ExecStart=%h/was/.venv/bin/python -m cyber_platform serve
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+# User service: install under ~/.config/systemd/user/ after adjusting paths.
+# Do not add RestrictNamespaces: the optional workshop requires user namespaces.
+
+[Install]
+WantedBy=default.target

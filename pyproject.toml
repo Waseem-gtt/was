@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "was-cyber-platform"
+version = "0.1.0"
+description = "Local Arabic cyber research workbench for Linux"
+requires-python = ">=3.11"
+dependencies = ["cryptography==50.0.0"]
+
+[project.scripts]
+was-platform = "cyber_platform.__main__:main"
+
+[tool.setuptools.package-data]
+cyber_platform = ["catalog.json", "static/*"]
+
+[tool.setuptools.packages.find]
+include = ["cyber_platform*"]
