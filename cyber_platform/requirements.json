@@ -3317,10 +3317,11 @@
       "title": "مدير الموارد والمساحة",
       "group": "F",
       "status": "partial",
-      "scope": "حصة أدلة واحتياطي قرص ومهمة ثقيلة واحدة؛ لا حصة لكل نظام الضيف",
+      "scope": "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف",
       "evidence_paths": [
         "cyber_platform/store.py",
-        "tests/test_platform.py"
+        "cyber_platform/worker.py",
+        "tests/test_security.py"
       ],
       "source_ids": [
         "source.0028"
@@ -3522,10 +3523,10 @@
       "title": "محرك سير عمل عبر الأقسام",
       "group": "N",
       "status": "partial",
-      "scope": "سير عمل متتابع وقبول وتوقف؛ لا تفرع أو توازٍ أو استكمال تلقائي",
+      "scope": "سير عمل وقبول واستكمال يدوي يتحقق من بصمات المنجز؛ لا تفرع أو توازٍ أو استكمال تلقائي",
       "evidence_paths": [
         "cyber_platform/engine.py",
-        "tests/test_platform.py"
+        "tests/test_workflow_progress.py"
       ],
       "source_ids": [
         "source.0055"
@@ -3562,10 +3563,11 @@
       "title": "تسجيل حالة التجربة وإعادتها ومقارنة التغييرات",
       "group": "N",
       "status": "partial",
-      "scope": "حفظ نتائج ومدخلات وبصمات؛ لا snapshots محاكاة أو مقارنة متكاملة",
+      "scope": "حفظ نتائج ومدخلات وبصمات ومقارنة بنيوية محدودة لنتائج موثقة؛ لا snapshots محاكاة",
       "evidence_paths": [
         "cyber_platform/engine.py",
-        "tests/test_platform.py"
+        "cyber_platform/comparison.py",
+        "tests/test_workflow_progress.py"
       ],
       "source_ids": [
         "source.0058"

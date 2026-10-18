@@ -13,7 +13,7 @@ OUTPUT = ROOT / "cyber_platform/requirements.json"
 # Status is a reviewed statement about this checkout, not a source-document claim.
 REVIEWS = {
     "F01": ("partial", "تحقق بيان إضافة فقط؛ لا تثبيت أو تفعيل كود إضافات", "cyber_platform/tools.py", "tests/test_platform.py"),
-    "F02": ("partial", "حصة أدلة واحتياطي قرص ومهمة ثقيلة واحدة؛ لا حصة لكل نظام الضيف", "cyber_platform/store.py", "tests/test_platform.py"),
+    "F02": ("partial", "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف", "cyber_platform/store.py", "cyber_platform/worker.py", "tests/test_security.py"),
     "F03": ("partial", "صيغة أحداث was.event/1 مع حفظ الأصل؛ ليس توافق OCSF كاملًا", "cyber_platform/tools.py", "tests/test_platform.py"),
     "F04": ("partial", "اختبار قواعد was.rules/1 بمرجع ومقاييس؛ لا Sigma كامل أو مراقبة حية", "cyber_platform/tools.py", "tests/test_platform.py"),
     "F05": ("not_implemented", "لا تحديثات كود موقعة أو TUF أو مسار تثبيت وترحيل تلقائي", "docs/Implementation-Status.md"),
@@ -23,10 +23,10 @@ REVIEWS = {
     "E03": ("partial", "شجرة منصات وخريطة وجدول أدلة و20 درسًا؛ لا كل مسارات التعلم", "cyber_platform/static/app.js", "tests/browser_smoke.py"),
     "E04": ("partial", "جلب CISA وجدولة وبحث ولقطة؛ لا تركيب أدوات أو تجديد كل التقنيات", "cyber_platform/knowledge.py", "tests/test_platform.py"),
     "E05": ("partial", "نسخ واستعادة وتعليمات تشغيل؛ لا إصلاح مستقل لكل مكون أو ضمان صيانة لعقود", "cyber_platform/backup.py", "docs/Linux-Deployment.md"),
-    "N01": ("partial", "سير عمل متتابع وقبول وتوقف؛ لا تفرع أو توازٍ أو استكمال تلقائي", "cyber_platform/engine.py", "tests/test_platform.py"),
+    "N01": ("partial", "سير عمل وقبول واستكمال يدوي يتحقق من بصمات المنجز؛ لا تفرع أو توازٍ أو استكمال تلقائي", "cyber_platform/engine.py", "tests/test_workflow_progress.py"),
     "N02": ("superseded", "اشتراط إنشاء مختبرات ألغي؛ توليد منصات وإضافات عامة غير منفذ", "docs/Scope-Update-0.2.md"),
     "N03": ("not_implemented", "لا تعاون تنفيذي بين مساعدين؛ موصل النموذج ليس تعاون وكلاء", "docs/Implementation-Status.md"),
-    "N04": ("partial", "حفظ نتائج ومدخلات وبصمات؛ لا snapshots محاكاة أو مقارنة متكاملة", "cyber_platform/engine.py", "tests/test_platform.py"),
+    "N04": ("partial", "حفظ نتائج ومدخلات وبصمات ومقارنة بنيوية محدودة لنتائج موثقة؛ لا snapshots محاكاة", "cyber_platform/engine.py", "cyber_platform/comparison.py", "tests/test_workflow_progress.py"),
     "N05": ("partial", "اختبارات مرجعية للمحللات والقواعد؛ لا مركز تقييم عام", "tests/test_platform.py", "docs/Validation.md"),
     "N06": ("partial", "علاقات أدلة؛ لا تقييم دفاعي شامل أو ادعاء فعالية دون تجارب", "cyber_platform/store.py"),
     "Q01": ("partial", "جرد SBOM وبيان إضافة؛ لا مصدرية بناء أو سلسلة تحديث موقعة", "cyber_platform/tools.py"),

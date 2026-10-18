@@ -1,28 +1,22 @@
 """Linux-only Python workshop: namespace isolation is mandatory, no fallback."""
 import os
-import resource
 import signal
-import subprocess
+# Required fixed Bubblewrap launcher; no shell execution.
+import subprocess  # nosec B404
 import tempfile
 from pathlib import Path
 from .store import Problem
 
 
-def limits():
-    resource.setrlimit(resource.RLIMIT_CPU, (3, 3))
-    resource.setrlimit(resource.RLIMIT_AS, (192 * 1024 * 1024, 192 * 1024 * 1024))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (1024 * 1024, 1024 * 1024))
-    resource.setrlimit(resource.RLIMIT_NOFILE, (32, 32))
-    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
-    resource.setrlimit(resource.RLIMIT_NPROC, (64, 64))
-
-
 def command(input_dir):
-    args = ["/usr/bin/bwrap", "--die-with-parent", "--new-session", "--unshare-all", "--cap-drop", "ALL", "--clearenv"]
+    # A fixed prlimit wrapper avoids Python preexec_fn in the threaded server.
+    args = ["/usr/bin/prlimit", "--cpu=3:3", "--as=201326592:201326592", "--fsize=1048576:1048576", "--nofile=32:32", "--core=0:0", "--nproc=64:64", "--",
+            "/usr/bin/bwrap", "--die-with-parent", "--new-session", "--unshare-all", "--cap-drop", "ALL", "--clearenv"]
     for path in ("/usr", "/bin", "/lib", "/lib64"):
         if Path(path).exists():
             args += ["--ro-bind", path, path]
-    return args + ["--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp", "--ro-bind", str(input_dir), "/work",
+    # /tmp is a new private tmpfs inside the namespace, not a host temp path.
+    return args + ["--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp", "--ro-bind", str(input_dir), "/work",  # nosec B108
                    "--chdir", "/work", "--setenv", "PATH", "/usr/bin:/bin", "/usr/bin/python3", "-I", "-S", "/work/main.py"]
 
 
@@ -30,15 +24,18 @@ def run(code):
     if not isinstance(code, str) or not 1 <= len(code.encode()) <= 16000:
         raise Problem("حد كود الورشة 16 KB")
     if not Path("/usr/bin/bwrap").is_file():
-        raise Problem("Bubblewrap غير مثبت؛ التشغيل غير المعزول ممنوع", 503)
+        raise Problem("أداة عزل Bubblewrap غير مثبتة؛ التشغيل غير المعزول ممنوع", 503)
+    if not Path("/usr/bin/prlimit").is_file():
+        raise Problem("أداة حدود الموارد prlimit غير متاحة؛ لم يُشغّل العزل", 503)
     with tempfile.TemporaryDirectory(prefix="was-workshop-") as tmp:
         base = Path(tmp)
         source = base / "input"
         source.mkdir()
         (source / "main.py").write_text(code)
         with (base / "stdout").open("w+b") as out, (base / "stderr").open("w+b") as err:
-            process = subprocess.Popen(command(source), stdin=subprocess.DEVNULL, stdout=out, stderr=err,
-                                       env={"PATH": "/usr/bin:/bin"}, start_new_session=True, preexec_fn=limits)
+            # Fixed executable/argv; code is a mounted file, never shell arguments.
+            process = subprocess.Popen(command(source), stdin=subprocess.DEVNULL, stdout=out, stderr=err,  # nosec B603
+                                       env={"PATH": "/usr/bin:/bin"}, start_new_session=True)
             timed_out = False
             try:
                 process.wait(timeout=10)
@@ -49,7 +46,7 @@ def run(code):
             out.seek(0)
             err.seek(0)
             stdout, stderr = out.read(65536).decode(errors="replace"), err.read(65536).decode(errors="replace")
-        if "bwrap:" in stderr:
+        if "bwrap:" in stderr or "prlimit:" in stderr:
             raise Problem("عزل Linux غير متاح في المضيف؛ لم يُشغّل الكود", 503)
         return {"status": "succeeded" if process.returncode == 0 else "failed", "exit_code": process.returncode,
                 "stdout": stdout, "stderr": stderr, "timed_out": timed_out,

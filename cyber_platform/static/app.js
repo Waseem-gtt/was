@@ -281,6 +281,13 @@ function auth(initialized) {
     "aria-label": "كلمة المرور",
   });
   const error = el("p", { class: "login-error", role: "alert" });
+  const setupToken = el("input", {
+    type: "password",
+    autocomplete: "off",
+    required: true,
+    maxlength: 128,
+    "aria-label": "رمز التهيئة",
+  });
   const submit = el(
     "button",
     { type: "submit", class: "primary" },
@@ -289,6 +296,14 @@ function auth(initialized) {
   const form = el(
     "form",
     { class: "stack" },
+    !initialized ? field("رمز التهيئة", setupToken) : null,
+    !initialized
+      ? el(
+          "small",
+          {},
+          "اقرأ الرمز من ملف setup-token في مجلد بيانات التطبيق على جهازك. لا ترسله في المحادثة أو ترفعه إلى GitHub.",
+        )
+      : null,
     field("كلمة المرور", password),
     el(
       "small",
@@ -304,6 +319,7 @@ function auth(initialized) {
     try {
       const login = await api(initialized ? "login" : "setup", {
         password: password.value,
+        ...(!initialized ? { setup_token: setupToken.value } : {}),
       });
       state.csrf = login.csrf;
       await refresh();
@@ -394,7 +410,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.3.0"),
+      el("small", {}, "نسخة البناء 0.4.0"),
     ),
   );
   const select = el(
@@ -1133,8 +1149,23 @@ function jobResult(job) {
         statusText[job.status] || job.status,
         job.status === "succeeded" ? "good" : "bad",
       ),
-      el("small", {}, job.executed + " / " + job.planned + " خطوات"),
+      el(
+        "small",
+        {},
+        (job.completed ?? job.executed) + " / " + job.planned + " خطوات",
+      ),
     ),
+    job.reused
+      ? el(
+          "small",
+          {},
+          "أعيد استخدام " +
+            job.reused +
+            " خطوة متحقق منها؛ نُفذت " +
+            job.executed +
+            " خطوة جديدة",
+        )
+      : null,
     job.results.map((r) =>
       el(
         "div",
@@ -1146,6 +1177,111 @@ function jobResult(job) {
             : null,
         pre(r),
       ),
+    ),
+  );
+}
+function resumeJob(job) {
+  const steps = el(
+    "textarea",
+    { class: "code", rows: 12, "aria-label": "خطة الاستكمال" },
+    JSON.stringify(job.spec.steps, null, 2),
+  );
+  const out = el("div", { class: "stack" });
+  const submit = button(
+    "تحقق واستكمل",
+    () =>
+      action(async () => {
+        let parsed;
+        try {
+          parsed = JSON.parse(steps.value);
+        } catch {
+          throw Error("صيغة JSON غير صحيحة");
+        }
+        const resumed = await api("workflows/resume", {
+          project_id: state.project.project.id,
+          source_job_id: job.id,
+          steps: parsed,
+          name: ("استكمال: " + job.name).slice(0, 120),
+        });
+        await refresh();
+        out.replaceChildren(jobResult(resumed));
+      }, submit),
+    "primary",
+  );
+  modal(
+    "استكمال سير العمل",
+    el(
+      "div",
+      { class: "stack" },
+      el(
+        "p",
+        {},
+        "يمكن تعديل الخطوات غير المنجزة فقط. يتحقق الخادم من الأصل والنتائج وبصمات المحرك؛ تغير المنجز أو المحرك يمنع إعادة الاستخدام.",
+      ),
+      field("خطة الاستكمال", steps),
+      submit,
+      out,
+    ),
+  );
+}
+function comparisonPanel() {
+  const options = () =>
+    el(
+      "select",
+      {},
+      el("option", { value: "" }, "اختر نتيجة تحليل…"),
+      state.project.evidence
+        .filter((e) => e.kind === "result")
+        .map((e) => el("option", { value: e.id }, e.name)),
+    );
+  const left = options(),
+    right = options(),
+    out = el("div", {});
+  left.setAttribute("aria-label", "النتيجة الأولى");
+  right.setAttribute("aria-label", "النتيجة الثانية");
+  const compare = button(
+    "مقارنة وحفظ الفرق",
+    () =>
+      action(async () => {
+        if (!left.value || !right.value) throw Error("اختر نتيجتي تحليل");
+        const response = await api("results/compare", {
+          project_id: state.project.project.id,
+          left_id: left.value,
+          right_id: right.value,
+        });
+        await refresh();
+        out.replaceChildren(
+          badge(
+            response.result.equal
+              ? "النتائج متساوية ضمن المقارنة"
+              : response.result.truncated
+                ? "مقارنة جزئية"
+                : "توجد فروق",
+            response.result.equal ? "good" : "warn",
+          ),
+          pre(response.result),
+        );
+      }, compare),
+    "primary",
+  );
+  return panel(
+    "مقارنة نتائج الأداة نفسها",
+    el(
+      "div",
+      { class: "stack" },
+      el(
+        "p",
+        {},
+        "الفروق بنيوية ومحدودة العدد؛ لا تثبت وحدها أن نتيجة أو إصدارًا أكثر أمنًا.",
+      ),
+      el(
+        "div",
+        { class: "form-grid" },
+        field("النتيجة الأولى", left),
+        field("النتيجة الثانية", right),
+      ),
+      compare,
+      out,
     ),
   );
 }
@@ -1228,11 +1364,15 @@ function workflows() {
                   j.status === "succeeded" ? "good" : "bad",
                 ),
                 button("النتائج", () => modal(j.name, pre(j)), "small"),
+                ["failed", "interrupted"].includes(j.status)
+                  ? button("استكمال", () => resumeJob(j), "small primary")
+                  : null,
               ),
             ),
           )
         : empty("لم تُشغّل مهام بعد", "كل تشغيل ناجح أو فاشل يظهر هنا."),
     ),
+    comparisonPanel(),
   );
 }
 function svg(tag, props = {}) {

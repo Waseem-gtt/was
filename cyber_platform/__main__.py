@@ -29,6 +29,8 @@ def main():
         store = Store(args.data, args.quota)
         app = App(("127.0.0.1", args.port), store, os.environ.get("WAS_AI_URL", "http://127.0.0.1:8081/v1"), os.environ.get("WAS_AI_MODEL", "local"))
         print(f"WAS started on loopback port {app.server_port}. Data directory: {store.root}", flush=True)
+        if not store.setting("owner"):
+            print("Owner enrollment requires the private setup-token file in the data directory. Read it locally; do not share it in chat or Git.", flush=True)
         try:
             app.serve_forever()
         except KeyboardInterrupt:

@@ -6,6 +6,7 @@ import os
 import re
 import secrets
 import shutil
+import stat
 import sqlite3
 import threading
 import time
@@ -27,15 +28,24 @@ def uid():
     return uuid.uuid4().hex
 
 
-def password_hash(password, salt):
-    return hashlib.scrypt(password.encode(), salt=salt, n=16384, r=8, p=1).hex()
+PASSWORD_COST = 131072
+
+
+def password_hash(password, salt, cost=16384):
+    if type(cost) is not int or cost not in (16384, PASSWORD_COST):
+        raise Problem("صيغة اشتقاق كلمة المرور غير مدعومة", 409)
+    return hashlib.scrypt(password.encode(), salt=salt, n=cost, r=8, p=1, maxmem=256 * 1024 * 1024).hex()
 
 
 class Store:
     def __init__(self, root, quota=2_000_000_000):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if self.root.stat().st_mode & 0o077:
+            raise Problem("مجلد البيانات يجب أن يكون خاصًا بصلاحيات0700")
         self.blobs = self.root / "evidence"
+        if self.blobs.is_symlink() or (self.root / "platform.db").is_symlink():
+            raise Problem("روابط رمزية غير مسموحة لمجلد الأدلة أو قاعدة البيانات")
         self.blobs.mkdir(exist_ok=True, mode=0o700)
         self.quota = quota
         self.lock = threading.RLock()
@@ -59,6 +69,35 @@ class Store:
 
     def close(self):
         self.db.close()
+
+    def setup_token(self):
+        """Owner-local enrollment secret; never returned by an HTTP endpoint."""
+        path = self.root / "setup-token"
+        try:
+            fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        except FileExistsError:
+            try:
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+            except OSError:
+                raise Problem("ملف رمز التهيئة غير آمن") from None
+            with os.fdopen(fd, "rb") as file:
+                info = os.fstat(file.fileno())
+                if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077 or info.st_size > 128:
+                    raise Problem("ملف رمز التهيئة غير آمن")
+                try:
+                    token = file.read(129).decode("ascii").strip()
+                except UnicodeDecodeError:
+                    raise Problem("ملف رمز التهيئة غير صالح") from None
+                if not re.fullmatch(r"[A-Za-z0-9_-]{43}", token):
+                    raise Problem("ملف رمز التهيئة غير صالح")
+                return token
+        else:
+            token = secrets.token_urlsafe(32)
+            with os.fdopen(fd, "wb") as file:
+                file.write(token.encode("ascii"))
+                file.flush()
+                os.fsync(file.fileno())
+            return token
 
     def rows(self, sql, args=()):
         with self.lock:
@@ -94,14 +133,24 @@ class Store:
             if self.setting("owner"):
                 raise Problem("تم إعداد حساب المالك مسبقًا", 409)
             salt = secrets.token_bytes(16)
-            self.db.execute("INSERT INTO settings VALUES('owner',?)", (encode({"salt": salt.hex(), "hash": password_hash(password, salt)}),))
+            self.db.execute("INSERT INTO settings VALUES('owner',?)", (encode({"salt": salt.hex(), "hash": password_hash(password, salt, PASSWORD_COST), "n": PASSWORD_COST}),))
             self.audit("owner.initialized", {})
 
     def check_password(self, password):
-        owner = self.setting("owner")
-        if not owner or not isinstance(password, str) or len(password) > 256:
-            return False
-        return hmac.compare_digest(owner["hash"], password_hash(password, bytes.fromhex(owner["salt"])))
+        # Serialize KDF work with the store lock to bound simultaneous memory use.
+        with self.lock:
+            owner = self.setting("owner")
+            if not owner or not isinstance(password, str) or len(password) > 256:
+                return False
+            cost = owner.get("n", 16384)
+            valid = hmac.compare_digest(owner["hash"], password_hash(password, bytes.fromhex(owner["salt"]), cost))
+            if valid and cost != PASSWORD_COST:
+                salt = secrets.token_bytes(16)
+                upgraded = {"salt": salt.hex(), "hash": password_hash(password, salt, PASSWORD_COST), "n": PASSWORD_COST}
+                with self.db:
+                    self.db.execute("UPDATE settings SET value=? WHERE key='owner'", (encode(upgraded),))
+                    self.audit("owner.kdf_upgraded", {})
+            return valid
 
     def project(self, project_id):
         rows = self.rows("SELECT * FROM projects WHERE id=?", (project_id,))
@@ -129,7 +178,7 @@ class Store:
 
     def add_evidence(self, project_id, name, data, kind="original", parent_id=None):
         self.project(project_id)
-        if not isinstance(name, str) or not 1 <= len(name) <= 200 or any(c in name for c in ("/", "\\", "\0")):
+        if not isinstance(name, str) or not 1 <= len(name) <= 200 or any(c in name for c in ("/", "\\")) or any(ord(c) < 32 or ord(c) == 127 for c in name):
             raise Problem("اسم الملف غير صالح")
         if len(data) > 16 * 1024 * 1024:
             raise Problem("حد الملف 16 MiB", 413)
@@ -166,9 +215,15 @@ class Store:
     def read_evidence(self, project_id, eid):
         record = self.evidence(project_id, eid)
         path = self.blobs / record["id"]
-        if path.is_symlink() or not path.is_file():
-            raise Problem("ملف الدليل مفقود أو غير آمن", 409)
-        data = path.read_bytes()
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+        except OSError:
+            raise Problem("ملف الدليل مفقود أو غير آمن", 409) from None
+        with os.fdopen(fd, "rb") as file:
+            info = os.fstat(file.fileno())
+            if not stat.S_ISREG(info.st_mode) or info.st_size != record["size"] or info.st_size > 16 * 1024 * 1024:
+                raise Problem("فشل تحقق بصمة الدليل أو حجمه أو نوع ملفه", 409)
+            data = file.read(16 * 1024 * 1024 + 1)
         if len(data) != record["size"] or hashlib.sha256(data).hexdigest() != record["sha256"]:
             raise Problem("فشل تحقق بصمة الدليل؛ أُوقف الاستخدام", 409)
         return data

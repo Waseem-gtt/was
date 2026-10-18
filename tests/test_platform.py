@@ -419,7 +419,7 @@ class HTTPTests(StoreCase):
         return result
 
     def login(self):
-        status, headers, body = self.request("/api/setup", {"password": "http-password-123"})
+        status, headers, body = self.request("/api/setup", {"password": "http-password-123", "setup_token": self.store.setup_token()})
         self.assertEqual(status, 200)
         self.cookie = headers["Set-Cookie"].split(";")[0]
         self.csrf = json.loads(body)["csrf"]

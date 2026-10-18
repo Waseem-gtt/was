@@ -6,7 +6,7 @@
 |---|---|---|
 | GET | `/healthz` | سلامة الخدمة وقراءة SQLite؛ عام محليًا |
 | GET | `/api/status` | نسخة التطبيق وهل أنشئ المالك؛ عام محليًا |
-| POST | `/api/setup` | `password`، مرة واحدة |
+| POST | `/api/setup` | `password,setup_token`، مرة واحدة؛ الرمز من ملف خاص على جهاز المالك |
 | POST | `/api/login` | `password` |
 | POST | `/api/logout` | `{}`؛ إلغاء الجلسة |
 | GET | `/api/bootstrap` | الأقسام والأدوات والمشاريع والموارد |
@@ -15,6 +15,8 @@
 | POST | `/api/upload` | `project_id,name,base64`؛ حد الملف16MiB |
 | GET | `/api/evidence?project=…&id=…` | تنزيل بعد تحقق SHA256؛ ترويسة `X-Evidence-SHA256` |
 | POST | `/api/run` | `project_id,name,steps` |
+| POST | `/api/workflows/resume` | `project_id,source_job_id,steps,name`؛ الاسم اختياري،والمنجز لا يغير |
+| POST | `/api/results/compare` | `project_id,left_id,right_id`؛ نتيجتا تحليل من الأداة نفسها في المشروع |
 | POST | `/api/learning/attempt` | `project_id,lesson_id,answer_index`؛ مدخل تعليمي اصطناعي مسجل،وأي حقول إضافية مرفوضة |
 | GET | `/api/requirements` | `q,status,page,mode`؛ السجل أو كامل نص المصدر،25عنصرًا للصفحة |
 | GET | `/api/requirements/block?id=…` | نص مقطع وأرقام أسطره وبصمة الأصل |

@@ -10,11 +10,24 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, engine, knowledge, learning, local_ai, requirements, sandbox, tools
+from . import __version__, backup, comparison, engine, knowledge, learning, local_ai, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
 CATALOG = json.loads((Path(__file__).parent / "catalog.json").read_text())
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate JSON key")
+        result[key] = value
+    return result
+
+
+def reject_constant(value):
+    raise ValueError("Non-finite JSON number")
 
 
 class App(ThreadingHTTPServer):
@@ -24,8 +37,10 @@ class App(ThreadingHTTPServer):
         if address[0] != "127.0.0.1":
             raise Problem("الخادم محلي فقط؛ استخدم نفق SSH خاصًا للوصول البعيد")
         self.store, self.ai_url, self.ai_model = store, ai_url, ai_model
+        self.setup_digest = hashlib.sha256(store.setup_token().encode()).hexdigest() if not store.setting("owner") else None
         self.sessions, self.failures = {}, []
         self.auth_lock, self.execution_lock = threading.Lock(), threading.Lock()
+        self.worker_slots = threading.BoundedSemaphore(16)
         self.stop_scheduler = threading.Event()
         super().__init__(address, Handler)
         # Recover interrupted tasks without claiming successful completion.
@@ -35,6 +50,31 @@ class App(ThreadingHTTPServer):
                 store.audit("jobs.interrupted", {"count": count})
         self.scheduler = threading.Thread(target=self.schedule_loop, daemon=True)
         self.scheduler.start()
+
+    def get_request(self):
+        connection, address = super().get_request()
+        connection.settimeout(10)
+        return connection, address
+
+    def process_request(self, request, client_address):
+        if not self.worker_slots.acquire(blocking=False):
+            body = b'{"error":"Service busy"}'
+            try:
+                request.sendall(b"HTTP/1.0 503 Service Unavailable\r\nContent-Type: application/json\r\nConnection: close\r\nContent-Length: " + str(len(body)).encode() + b"\r\n\r\n" + body)
+            finally:
+                self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self.worker_slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self.worker_slots.release()
 
     def schedule_loop(self):
         while not self.stop_scheduler.wait(1):
@@ -85,7 +125,8 @@ class Handler(BaseHTTPRequestHandler):
             value = cookie.get("was_session")
             token = value.value if value else ""
         except Exception:
-            token = ""
+            # Invalid-cookie sentinel, never a usable session credential.
+            token = ""  # nosec B105
         digest = hashlib.sha256(token.encode()).hexdigest()
         with self.server.auth_lock:
             session = self.server.sessions.get(digest)
@@ -98,6 +139,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def validate_request(self):
         expected = f"127.0.0.1:{self.server.server_port}"
+        if len(self.headers.get_all("Host", [])) != 1 or len(self.headers.get_all("Origin", [])) > 1:
+            raise Problem("ترويسات المضيف أو المصدر ملتبسة", 400)
         if self.headers.get("Host") not in (expected, f"localhost:{self.server.server_port}"):
             raise Problem("عنوان المضيف غير مسموح", 403)
         origin = self.headers.get("Origin")
@@ -172,16 +215,23 @@ class Handler(BaseHTTPRequestHandler):
         try:
             self.connection.settimeout(20)
             self.validate_request()
+            path = urlsplit(self.path).path
+            public = path in ("/api/setup", "/api/login")
+            if not public:
+                self.session(csrf=True)
             if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
                 raise Problem("JSON مطلوب", 415)
+            if self.headers.get("Transfer-Encoding") or len(self.headers.get_all("Content-Length", [])) != 1:
+                raise Problem("صيغة طول الطلب ملتبسة", 400)
             length = int(self.headers.get("Content-Length", "0"))
-            if not 1 <= length <= 24 * 1024 * 1024:
+            if not 1 <= length <= (4096 if public else 24 * 1024 * 1024):
                 raise Problem("حجم الطلب غير مسموح", 413)
             raw = self.rfile.read(length)
-            body = json.loads(raw)
+            if len(raw) != length:
+                raise Problem("الطلب مبتور", 400)
+            body = json.loads(raw, object_pairs_hook=unique_object, parse_constant=reject_constant)
             if not isinstance(body, dict):
                 raise Problem("صيغة الطلب غير صالحة")
-            path = urlsplit(self.path).path
             if path in ("/api/setup", "/api/login"):
                 with self.server.auth_lock:
                     self.server.failures = [t for t in self.server.failures if t > time.time() - 60]
@@ -189,15 +239,25 @@ class Handler(BaseHTTPRequestHandler):
                         raise Problem("محاولات كثيرة؛ انتظر دقيقة", 429)
                     self.server.failures.append(time.time())
                 if path == "/api/setup":
+                    if self.store.setting("owner"):
+                        raise Problem("تم إعداد حساب المالك مسبقًا", 409)
+                    provided = body.get("setup_token")
+                    if not isinstance(provided, str) or not self.server.setup_digest or not secrets.compare_digest(hashlib.sha256(provided.encode()).hexdigest(), self.server.setup_digest):
+                        raise Problem("رمز التهيئة المحلي مطلوب؛ اقرأ ملف setup-token من مجلد بيانات التطبيق على جهازك", 403)
                     self.store.initialize(body.get("password"))
+                    self.server.setup_digest = None
+                    (self.store.root / "setup-token").unlink(missing_ok=True)
                 elif not self.store.check_password(body.get("password")):
+                    with self.store.lock, self.store.db:
+                        self.store.audit("owner.login_failed", {})
                     raise Problem("بيانات الدخول غير صحيحة", 401)
                 token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
                 with self.server.auth_lock:
                     self.server.sessions = {k: v for k, v in self.server.sessions.items() if v["expires"] > time.time()}
                     self.server.sessions[hashlib.sha256(token.encode()).hexdigest()] = {"expires": time.time() + 8 * 3600, "csrf": csrf}
+                with self.store.lock, self.store.db:
+                    self.store.audit("owner.login", {})
                 return self.reply({"csrf": csrf}, headers={"Set-Cookie": f"was_session={token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800"})
-            self.session(csrf=True)
             if path == "/api/logout":
                 token = SimpleCookie(self.headers.get("Cookie", ""))["was_session"].value
                 with self.server.auth_lock:
@@ -218,10 +278,20 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/workflows/resume":
+                        if not {"project_id", "source_job_id", "steps"} <= set(body) or set(body) - {"project_id", "source_job_id", "steps", "name"}:
+                            raise Problem("حقول الاستكمال غير صالحة")
+                        if not isinstance(body["source_job_id"], str) or not body["source_job_id"]:
+                            raise Problem("حدد المهمة الأصلية للاستكمال")
+                        return self.reply(engine.run(self.store, body["project_id"], body["steps"], body.get("name", "استكمال سير عمل"), resume_id=body["source_job_id"]))
+                    if path == "/api/results/compare":
+                        if set(body) != {"project_id", "left_id", "right_id"}:
+                            raise Problem("اختر المشروع ونتيجتي التحليل فقط")
+                        return self.reply(comparison.compare(self.store, body["project_id"], body["left_id"], body["right_id"]))
                     if path == "/api/requirements/import":
                         if set(body) != {"project_id"}:
                             raise Problem("الاستيراد يقبل معرف المشروع فقط")
