@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, engine, knowledge, learning, local_ai, sandbox, tools
+from . import __version__, backup, engine, knowledge, learning, local_ai, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -129,6 +129,16 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/requirements":
+                return self.reply(requirements.view(query.get("q", [""])[0], query.get("status", [""])[0],
+                                                    int(query.get("page", ["1"])[0]), query.get("mode", ["requirements"])[0]))
+            if path == "/api/requirements/block":
+                return self.reply(requirements.block(query.get("id", [""])[0]))
+            if path == "/api/requirements/source":
+                return self.reply(requirements.source_bytes(), content_type="text/markdown; charset=utf-8",
+                                  headers={"Content-Disposition": 'attachment; filename="Cyber-Platform-Requirements.md"', "X-Source-SHA256": requirements.DATA["source"]["sha256"]})
+            if path == "/api/requirements/export":
+                return self.reply(requirements.DATA, headers={"Content-Disposition": 'attachment; filename="requirements-register.json"'})
             if path == "/api/knowledge":
                 return self.reply(knowledge.status(self.store, query.get("project", [""])[0]))
             if path == "/api/knowledge/search":
@@ -151,6 +161,8 @@ class Handler(BaseHTTPRequestHandler):
             raise Problem("المسار غير موجود", 404)
         except Problem as exc:
             self.reply({"error": str(exc)}, exc.status)
+        except (ValueError, TypeError):
+            self.reply({"error": "مرشحات غير صالحة"}, 400)
         except (BrokenPipeError, ConnectionResetError):
             pass
         except Exception:
@@ -206,10 +218,14 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh"):
+            if path in ("/api/run", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/requirements/import":
+                        if set(body) != {"project_id"}:
+                            raise Problem("الاستيراد يقبل معرف المشروع فقط")
+                        return self.reply(requirements.import_source(self.store, body["project_id"]))
                     if path == "/api/knowledge/refresh":
                         if set(body) != {"project_id", "source_id"}:
                             raise Problem("الجلب يقبل معرف مصدر مسجل فقط")

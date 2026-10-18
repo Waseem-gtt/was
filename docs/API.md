@@ -16,6 +16,11 @@
 | GET | `/api/evidence?project=…&id=…` | تنزيل بعد تحقق SHA256؛ ترويسة `X-Evidence-SHA256` |
 | POST | `/api/run` | `project_id,name,steps` |
 | POST | `/api/learning/attempt` | `project_id,lesson_id,answer_index`؛ مدخل تعليمي اصطناعي مسجل،وأي حقول إضافية مرفوضة |
+| GET | `/api/requirements` | `q,status,page,mode`؛ السجل أو كامل نص المصدر،25عنصرًا للصفحة |
+| GET | `/api/requirements/block?id=…` | نص مقطع وأرقام أسطره وبصمة الأصل |
+| GET | `/api/requirements/source` | تنزيل الأصل مطابقًا بالبايت مع `X-Source-SHA256` |
+| GET | `/api/requirements/export` | تصدير السجل والمقاطع والروابط والملفات المشار إليها |
+| POST | `/api/requirements/import` | `project_id` فقط؛ مرجع خاص دون تكرار النسخة المطابقة،مع تحقق بصمتها |
 | GET | `/api/knowledge?project=…` | المصادر وحالة اللقطة والجدولة |
 | GET | `/api/knowledge/search?project=…&q=…` | بحث داخل اللقطة،حتى50نتيجة،وحد السؤال120 حرفًا |
 | POST | `/api/knowledge/refresh` | `project_id,source_id`؛ يقبل المصدر المسجل فقط دون URL بديل |

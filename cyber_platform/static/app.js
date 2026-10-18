@@ -15,6 +15,7 @@ const nav = [
   ["evidence", "◇", "الأدلة والملفات"],
   ["tools", "⌘", "أدوات التحليل"],
   ["knowledge", "◎", "المعرفة العالمية"],
+  ["requirements", "☷", "ملف المشروع ومتطلباته"],
   ["workflows", "⇄", "سير العمل"],
   ["map", "⌗", "خريطة الأدلة"],
   ["workshop", "⌨", "ورشة البرمجة"],
@@ -393,7 +394,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.2.0"),
+      el("small", {}, "نسخة البناء 0.3.0"),
     ),
   );
   const select = el(
@@ -455,6 +456,7 @@ function render() {
     evidence,
     tools: toolPage,
     knowledge: knowledgePage,
+    requirements: requirementsPage,
     workflows,
     map: mapPage,
     workshop,
@@ -523,6 +525,8 @@ function subtitle() {
     evidence: "احفظ الأصل، تحقّق من البصمة، وتتبع ما اشتُق منه.",
     tools: "محللات محلية محددة النطاق. الملفات المرفوعة لا تُشغّل.",
     knowledge: "مصادر عامة عالمية ولقطات خاصة داخل مشروعك.",
+    requirements:
+      "الملف الأصلي كاملًا، ومعلوماته مفهرسة، وحالة تنفيذ متطلباته.",
     workflows: "خطوات قابلة للتتبع ومعايير قبول توقف السلسلة عند الفشل.",
     map: "كل علاقة تبدأ بدليل؛ اضغط عقدة لعرض سجلها.",
     workshop: "تعلّم وجرّب Python داخل عزل Linux، عند توفره.",
@@ -922,9 +926,11 @@ function evidence() {
                 badge(
                   e.kind === "original"
                     ? "أصل"
-                    : e.kind === "learning"
-                      ? "تعلّم"
-                      : "نتيجة",
+                    : e.kind === "reference"
+                      ? "مرجع"
+                      : e.kind === "learning"
+                        ? "تعلّم"
+                        : "نتيجة",
                   e.kind === "original" ? "" : "good",
                 ),
                 el("div", { class: "code" }, size(e.size)),
@@ -1507,6 +1513,242 @@ function auditPage() {
       );
     })
     .catch((e) => toast(e.message, true));
+  return holder;
+}
+function requirementsPage() {
+  const holder = el("div", { class: "stack" });
+  let currentPage = 1,
+    requestNumber = 0;
+  const query = el("input", {
+    type: "search",
+    maxlength: 200,
+    placeholder: "ابحث في المعلومات أو المتطلبات",
+    "aria-label": "بحث ملف المشروع",
+  });
+  const mode = el(
+    "select",
+    { "aria-label": "نمط عرض الملف" },
+    el("option", { value: "requirements" }, "المتطلبات وحالة التنفيذ"),
+    el("option", { value: "source" }, "جميع معلومات الملف الأصلي"),
+  );
+  const filter = el(
+    "select",
+    { "aria-label": "حالة المتطلب" },
+    el("option", { value: "" }, "كل الحالات"),
+  );
+  const matches = el("div", { class: "stack" }),
+    meta = el("div", {}),
+    pager = el("div", { class: "actions" });
+  let filtersBuilt = false;
+  async function load() {
+    const request = ++requestNumber;
+    const data = await api(
+      "requirements?q=" +
+        encodeURIComponent(query.value) +
+        "&mode=" +
+        mode.value +
+        "&status=" +
+        filter.value +
+        "&page=" +
+        currentPage,
+    );
+    if (request !== requestNumber) return;
+    if (!filtersBuilt) {
+      for (const [k, v] of Object.entries(data.labels))
+        filter.append(el("option", { value: k }, v));
+      filtersBuilt = true;
+    }
+    filter.classList.toggle("hidden", mode.value === "source");
+    meta.replaceChildren(
+      el("div", { class: "notice info" }, data.notice),
+      panel(
+        "الملف المحفوظ والتعديلات النافذة",
+        row("حجم الأصل", size(data.source.bytes)),
+        row("مقاطع مفهرسة", data.counts.source_blocks),
+        row("متطلبات مرتبطة بمصدرها", data.counts.requirements),
+        row("مراجع وروابط من الملف", data.counts.references),
+        el("div", { class: "code" }, "SHA256: " + data.source.sha256),
+        el(
+          "ul",
+          {},
+          data.overrides.map((t) => el("li", {}, t)),
+        ),
+        el(
+          "div",
+          { class: "actions" },
+          button(
+            "تنزيل الملف الأصلي",
+            () =>
+              action(async () =>
+                download(
+                  await api("requirements/source", undefined, true),
+                  data.source.filename,
+                ),
+              ),
+            "small",
+          ),
+          button(
+            "إضافة المرجع للمشروع المختار",
+            () =>
+              action(async () => {
+                if (!state.project) throw Error("اختر مشروعًا أولًا");
+                const imported = await api("requirements/import", {
+                  project_id: state.project.project.id,
+                });
+                await refresh();
+                toast(
+                  imported.reused
+                    ? "المرجع محفوظ في المشروع مسبقًا"
+                    : "أضيف مرجع الملف إلى المشروع",
+                );
+              }),
+            "small primary",
+          ),
+          button(
+            "تصدير سجل المعلومات JSON",
+            () =>
+              action(async () =>
+                download(
+                  await api("requirements/export", undefined, true),
+                  "requirements-register.json",
+                ),
+              ),
+            "small",
+          ),
+        ),
+      ),
+    );
+    matches.replaceChildren(
+      el("small", {}, data.matches + " نتيجة؛ الصفحة " + data.page),
+      ...data.items.map((item) =>
+        data.mode === "source"
+          ? el(
+              "article",
+              { class: "card" },
+              el("h3", {}, item.heading || "مقدمة الملف"),
+              badge(
+                item.kind === "historical"
+                  ? "سجل تاريخي؛ ليس تحققًا لهذا الكود"
+                  : "نص مرجعي",
+              ),
+              el(
+                "small",
+                {},
+                "المصدر: الأسطر " + item.line_start + "–" + item.line_end,
+              ),
+              pre(item.text),
+            )
+          : el(
+              "article",
+              { class: "card" },
+              el(
+                "div",
+                { class: "card-top" },
+                el("span", { class: "code" }, item.id),
+                badge(
+                  data.labels[item.status],
+                  item.status === "available"
+                    ? "good"
+                    : item.status === "partial"
+                      ? "warn"
+                      : "",
+                ),
+              ),
+              el("h3", {}, item.title),
+              el("p", {}, item.scope),
+              el(
+                "small",
+                {},
+                "مراجع التنفيذ: " + item.evidence_paths.join(" · "),
+              ),
+              el(
+                "div",
+                { class: "actions" },
+                item.source_ids.map((id) =>
+                  button(
+                    "عرض نص المصدر",
+                    () =>
+                      action(async () => {
+                        const result = await api("requirements/block?id=" + id);
+                        modal(
+                          "نص الملف الأصلي",
+                          el("div", { class: "notice info" }, result.notice),
+                          el("p", {}, result.block.heading),
+                          el(
+                            "small",
+                            {},
+                            "الأسطر " +
+                              result.block.line_start +
+                              "–" +
+                              result.block.line_end,
+                          ),
+                          pre(result.block.text),
+                        );
+                      }),
+                    "small ghost",
+                  ),
+                ),
+              ),
+            ),
+      ),
+    );
+    pager.replaceChildren(
+      button(
+        "السابق",
+        () => {
+          currentPage--;
+          load().catch((e) => toast(e.message, true));
+        },
+        "small",
+      ),
+      el(
+        "span",
+        { class: "muted" },
+        data.page +
+          " / " +
+          Math.max(1, Math.ceil(data.matches / data.page_size)),
+      ),
+      button(
+        "التالي",
+        () => {
+          currentPage++;
+          load().catch((e) => toast(e.message, true));
+        },
+        "small",
+      ),
+    );
+    pager.firstElementChild.disabled = currentPage <= 1;
+    pager.lastElementChild.disabled =
+      currentPage * data.page_size >= data.matches;
+  }
+  const form = el(
+    "form",
+    { class: "stack" },
+    el(
+      "div",
+      { class: "form-grid" },
+      field("البحث", query),
+      field("العرض", mode),
+      field("الحالة", filter),
+    ),
+    el("button", { type: "submit", class: "primary" }, "بحث في الملف"),
+  );
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    currentPage = 1;
+    load().catch((e) => toast(e.message, true));
+  });
+  mode.addEventListener("change", () => {
+    currentPage = 1;
+    filter.value = "";
+    load().catch((e) => toast(e.message, true));
+  });
+  filter.addEventListener("change", () => {
+    currentPage = 1;
+    load().catch((e) => toast(e.message, true));
+  });
+  holder.append(meta, panel("معلومات الملف والمتطلبات", form), matches, pager);
+  load().catch((e) => toast(e.message, true));
   return holder;
 }
 function knowledgePage() {
