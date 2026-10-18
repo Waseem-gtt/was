@@ -14,6 +14,7 @@ const nav = [
   ["projects", "▱", "المشاريع"],
   ["evidence", "◇", "الأدلة والملفات"],
   ["tools", "⌘", "أدوات التحليل"],
+  ["knowledge", "◎", "المعرفة العالمية"],
   ["workflows", "⇄", "سير العمل"],
   ["map", "⌗", "خريطة الأدلة"],
   ["workshop", "⌨", "ورشة البرمجة"],
@@ -127,7 +128,8 @@ async function refresh() {
 function go(view, section = null) {
   state.view = view;
   state.section = section;
-  location.hash = section ? "section-" + section : view;
+  const hash = section ? "section-" + section : view;
+  if (location.hash !== "#" + hash) history.pushState(null, "", "#" + hash);
   render();
   window.scrollTo(0, 0);
 }
@@ -200,7 +202,7 @@ function newProject() {
   const name = el("input", {
       required: true,
       maxlength: 120,
-      placeholder: "مثل: تحليل سجلات المختبر",
+      placeholder: "مثل: تحليل سجلات مشروع",
     }),
     description = el("textarea", {
       maxlength: 4000,
@@ -331,7 +333,7 @@ function auth(initialized) {
         el(
           "div",
           { class: "actions" },
-          badge("20 قسمًا"),
+          badge("22 قسمًا"),
           badge("تحليل دون اتصال"),
           badge("لا اشتراك إلزامي"),
         ),
@@ -391,7 +393,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.1.0"),
+      el("small", {}, "نسخة البناء 0.2.0"),
     ),
   );
   const select = el(
@@ -452,6 +454,7 @@ function render() {
     projects,
     evidence,
     tools: toolPage,
+    knowledge: knowledgePage,
     workflows,
     map: mapPage,
     workshop,
@@ -519,6 +522,7 @@ function subtitle() {
     projects: "سياق مستقل لكل بحث، ومرجع واضح لكل نتيجة.",
     evidence: "احفظ الأصل، تحقّق من البصمة، وتتبع ما اشتُق منه.",
     tools: "محللات محلية محددة النطاق. الملفات المرفوعة لا تُشغّل.",
+    knowledge: "مصادر عامة عالمية ولقطات خاصة داخل مشروعك.",
     workflows: "خطوات قابلة للتتبع ومعايير قبول توقف السلسلة عند الفشل.",
     map: "كل علاقة تبدأ بدليل؛ اضغط عقدة لعرض سجلها.",
     workshop: "تعلّم وجرّب Python داخل عزل Linux، عند توفره.",
@@ -539,7 +543,7 @@ function dashboard() {
       el(
         "div",
         {},
-        badge("مركز البحث المحلي", "good"),
+        badge("معرفة عالمية · مساحة خاصة", "good"),
         el("h2", {}, "ابدأ من دليل. وابنِ عليه."),
         el(
           "p",
@@ -556,14 +560,14 @@ function dashboard() {
       el(
         "div",
         { class: "orbit" },
-        el("b", {}, "20"),
+        el("b", {}, b.catalog.length),
         el("span", {}, "مجال بحث مترابط"),
       ),
     ),
     el(
       "div",
       { class: "stats" },
-      stat("الأقسام الرئيسية", "20", "خريطة تنظيمية موثقة"),
+      stat("الأقسام الرئيسية", b.catalog.length, "أقسام ومنصات وأدوات"),
       stat("أدوات محلية", b.tools.length, "محللات محددة النطاق"),
       stat("المشاريع", b.projects.length, "محفوظة في هذا التثبيت"),
       stat(
@@ -593,7 +597,7 @@ function dashboard() {
         el(
           "p",
           {},
-          "تضم الخريطة 69 منصة و207 مختبرات مخططة. ظهورها لا يعني تجهيز بيئاتها.",
+          "22 قسمًا و109 منصات، تشمل الحماية الشاملة والتعلم الأخلاقي عبر 20 تخصصًا. مراجع تقنية عالمية مع فهرس CISA قابل للجلب والبحث والجدولة.",
         ),
         el("div", { class: "divider" }),
         row("الذكاء الاصطناعي", badge("يتطلب نموذجًا محليًا", "warn")),
@@ -625,7 +629,7 @@ function row(label, value) {
   );
 }
 function sectionCard(s) {
-  const t = state.boot.tools.find((t) => t.section === s.id);
+  const count = new Set(s.platforms.flatMap((p) => p.tool_ids)).size;
   return el(
     "article",
     { class: "card" },
@@ -636,12 +640,141 @@ function sectionCard(s) {
       badge(s.platforms.length + " منصات"),
     ),
     el("h3", {}, s.name),
-    el("p", {}, s.platforms.map((p) => p.name).join(" · ")),
+    el("p", {}, s.description || s.platforms.map((p) => p.name).join(" · ")),
     el(
       "footer",
       {},
-      el("small", {}, t ? "أداة محلية متاحة" : "تصميم"),
+      el("small", {}, count + " أداة مرتبطة"),
       button("فتح القسم ←", () => go("sections", s.id), "small ghost"),
+    ),
+  );
+}
+function references(items) {
+  return el(
+    "div",
+    { class: "stack" },
+    el(
+      "small",
+      {},
+      "مراجع تقنية عالمية؛ روابط توثيق لا تعني تثبيت الأدوات أو متابعة إصداراتها تلقائيًا.",
+    ),
+    items.map((r) =>
+      el(
+        "a",
+        { href: r.url, target: "_blank", rel: "noopener noreferrer" },
+        r.name + " ↗",
+      ),
+    ),
+  );
+}
+function platformCard(p) {
+  const linked = state.boot.tools.filter((t) => p.tool_ids.includes(t.id));
+  const lessons = (p.lesson_ids || []).map((id) =>
+    state.boot.lessons.find((l) => l.id === id),
+  );
+  return el(
+    "details",
+    { class: "platform" },
+    el(
+      "summary",
+      {},
+      p.name,
+      " · ",
+      badge(linked.length + " أداة مرتبطة", linked.length ? "good" : ""),
+    ),
+    el(
+      "div",
+      { class: "platform-content stack" },
+      el("p", {}, p.description),
+      el(
+        "ul",
+        {},
+        p.topics.map((t) => el("li", {}, t)),
+      ),
+      el(
+        "div",
+        { class: "actions" },
+        linked.map((t) => button(t.name, () => openTool(t), "small")),
+        lessons.map((l) =>
+          button(
+            "درس وتقييم: " + l.title,
+            () => openLesson(l),
+            "small primary",
+          ),
+        ),
+      ),
+      !linked.length
+        ? el("small", {}, "نطاق موثق؛ لم تُربط أداة تنفيذ لهذا الجزء بعد.")
+        : null,
+      el("small", {}, p.scope),
+      references(p.references),
+      p.related_section_id
+        ? button(
+            "فتح قسم التخصص",
+            () => go("sections", p.related_section_id),
+            "ghost small",
+          )
+        : null,
+    ),
+  );
+}
+function openLesson(lesson) {
+  const answers = el("div", { class: "checklist" });
+  let selected = null;
+  const output = el("div", { class: "stack" });
+  lesson.choices.forEach((choice, i) =>
+    answers.append(
+      el(
+        "label",
+        {},
+        el("input", {
+          type: "radio",
+          name: lesson.id,
+          value: i,
+          onchange: () => (selected = i),
+        }),
+        choice,
+      ),
+    ),
+  );
+  const submit = button(
+    "تقييم الإجابة وتشغيل المثال",
+    () =>
+      action(async () => {
+        if (!state.project) throw Error("اختر مشروعًا لحفظ محاولة التعلم");
+        if (selected === null) throw Error("اختر إجابة");
+        const response = await api("learning/attempt", {
+          project_id: state.project.project.id,
+          lesson_id: lesson.id,
+          answer_index: selected,
+        });
+        await refresh();
+        output.replaceChildren(
+          badge(
+            response.result.correct ? "إجابة صحيحة" : "تحتاج مراجعة",
+            response.result.correct ? "good" : "warn",
+          ),
+          el("p", {}, response.result.explanation),
+          el("small", {}, response.result.assessment),
+          el("h3", {}, "نتيجة الأداة على بيانات اصطناعية"),
+          pre(response.result.analysis),
+          el("small", {}, "حُفظت المحاولة وبياناتها وبصمتها كدليل في المشروع."),
+        );
+      }, submit),
+    "primary",
+  );
+  modal(
+    lesson.title,
+    el(
+      "div",
+      { class: "stack" },
+      el("div", { class: "notice info" }, lesson.scope),
+      el("p", {}, lesson.concept),
+      el("h3", {}, lesson.question),
+      answers,
+      submit,
+      output,
+      references([lesson.source]),
     ),
   );
 }
@@ -649,6 +782,7 @@ function sections() {
   if (state.section) {
     const s = state.boot.catalog.find((s) => s.id === state.section);
     if (!s) return empty("قسم غير موجود", "");
+    const ids = new Set(s.platforms.flatMap((p) => p.tool_ids));
     return el(
       "div",
       {},
@@ -657,50 +791,17 @@ function sections() {
       el(
         "div",
         { class: "notice info" },
-        "المختبرات أدناه هيكل مخطط من المتطلبات. الأداة المتاحة لهذا القسم موضحة بصورة مستقلة.",
+        "قسم رئيسي ← منصات فرعية ← أدوات وتقنيات. توفر الأداة محدد بوظيفتها واختباراتها؛ لا يعني تغطية التخصص بالكامل.",
       ),
       panel(
-        "الأداة المحلية المتاحة",
-        state.boot.tools.filter((t) => t.section === s.id).map(toolCard),
-      ),
-      panel(
-        "المنصات والمختبرات",
-        s.platforms.map((p) =>
-          el(
-            "details",
-            { class: "lab" },
-            el("summary", {}, p.name, " · ", badge("مخطط")),
-            el(
-              "div",
-              { class: "lab-content" },
-              p.labs.map((l) =>
-                el(
-                  "div",
-                  {},
-                  el("b", {}, l.name),
-                  el(
-                    "ul",
-                    {},
-                    l.children.map((c) => el("li", {}, c.name)),
-                  ),
-                  el("small", { class: "code" }, l.id),
-                ),
-              ),
-            ),
-          ),
+        "أدوات القسم المتاحة",
+        el(
+          "div",
+          { class: "grid" },
+          state.boot.tools.filter((t) => ids.has(t.id)).map(toolCard),
         ),
       ),
-      panel(
-        "عقد المحرك التنظيمي",
-        pre({
-          id: s.engine_id,
-          inputs: ["selected_project_evidence"],
-          outputs: ["analysis_result", "provenance"],
-          permissions: ["evidence.read", "result.write"],
-          network: false,
-          state: "logical_definition",
-        }),
-      ),
+      panel("المنصات والأدوات والتقنيات", s.platforms.map(platformCard)),
     );
   }
   const list = el(
@@ -819,7 +920,11 @@ function evidence() {
                 "div",
                 {},
                 badge(
-                  e.kind === "original" ? "أصل" : "نتيجة",
+                  e.kind === "original"
+                    ? "أصل"
+                    : e.kind === "learning"
+                      ? "تعلّم"
+                      : "نتيجة",
                   e.kind === "original" ? "" : "good",
                 ),
                 el("div", { class: "code" }, size(e.size)),
@@ -931,7 +1036,7 @@ function toolPage() {
     el(
       "div",
       { class: "notice info" },
-      "20 محللًا مختلفًا بمدخلات وحدود معلنة. لا تفحص الأدوات أهدافًا خارجية، ولا تنفذ ملفات الأدلة.",
+      "21 أداة تحليل واختبار قواعد بمدخلات وحدود معلنة. لا تفحص الأدوات أهدافًا خارجية، ولا تنفذ ملفات الأدلة.",
     ),
     el("div", { class: "grid" }, state.boot.tools.map(toolCard)),
   );
@@ -1404,6 +1509,152 @@ function auditPage() {
     .catch((e) => toast(e.message, true));
   return holder;
 }
+function knowledgePage() {
+  const missing = requireProject();
+  if (missing) return missing;
+  const holder = el(
+    "div",
+    { class: "stack" },
+    el("p", {}, "تحميل حالة المصادر…"),
+  );
+  const pid = state.project.project.id;
+  async function load() {
+    const data = await api("knowledge?project=" + pid);
+    const stateNode = panel(
+      "المصادر واللقطات",
+      el("div", { class: "notice info" }, data.privacy),
+      data.sources.map((source) => {
+        const cached = data.states.find((s) => s.source_id === source.id);
+        return el(
+          "article",
+          { class: "card" },
+          el("h3", {}, source.name),
+          references([{ name: source.publisher, url: source.reference }]),
+          cached.evidence_id
+            ? el(
+                "div",
+                {},
+                row("إصدار المصدر", cached.version),
+                row("السجلات", cached.count),
+                row("آخر فحص", when(cached.checked_at)),
+                row("آخر تغير محتوى", when(cached.changed_at)),
+                badge(
+                  cached.stale ? "لقطة قديمة؛ تعذر آخر جلب" : "آخر جلب ناجح",
+                  cached.stale ? "warn" : "good",
+                ),
+                pre({ sha256: cached.sha256, evidence_id: cached.evidence_id }),
+              )
+            : el(
+                "p",
+                {},
+                cached.error || "لم يُجلب هذا المصدر في المشروع بعد.",
+              ),
+          button(
+            "جلب المصدر العام",
+            () =>
+              action(async () => {
+                await api("knowledge/refresh", {
+                  project_id: pid,
+                  source_id: source.id,
+                });
+                await refresh();
+                await load();
+                toast("تم فحص المصدر وحفظ التغيير إن وجد");
+              }),
+            "primary",
+          ),
+        );
+      }),
+      el("small", {}, data.limitation),
+    );
+    const enabled = el("input", {
+      type: "checkbox",
+      checked: data.schedule.enabled && data.schedule.project_id === pid,
+    });
+    const interval = el("input", {
+      type: "number",
+      min: 60,
+      max: 86400,
+      value: data.schedule.interval_seconds || 60,
+    });
+    const schedule = panel(
+      "جدولة الفحص",
+      el(
+        "div",
+        { class: "stack" },
+        el(
+          "p",
+          {},
+          "معطلة افتراضيًا. تعمل أثناء تشغيل الخدمة؛ الفحص لا يعني توفر سجل جديد كل دقيقة. عند الانقطاع تبقى آخر لقطة مع إظهار قدمها.",
+        ),
+        el(
+          "div",
+          { class: "checklist" },
+          field("تفعيل الجلب لهذا المشروع", enabled),
+        ),
+        field("فاصل الفحص بالثواني", interval),
+        button(
+          "حفظ إعداد الجدولة",
+          () =>
+            action(async () => {
+              await api("knowledge/settings", {
+                project_id: pid,
+                enabled: enabled.checked,
+                interval_seconds: Number(interval.value),
+              });
+              await load();
+              toast("تم حفظ الجدولة");
+            }),
+          "primary",
+        ),
+      ),
+    );
+    const query = el("input", {
+        type: "search",
+        maxlength: 120,
+        placeholder: "CVE أو الشركة أو المنتج",
+        "aria-label": "بحث المعرفة",
+      }),
+      results = el("div", {});
+    const search = async () => {
+      const found = await api(
+        "knowledge/search?project=" +
+          pid +
+          "&q=" +
+          encodeURIComponent(query.value),
+      );
+      results.replaceChildren(
+        el("small", {}, found.total_matches + " نتيجة؛ العرض حتى50"),
+        table(
+          ["CVE", "المنتج", "الوصف"],
+          found.items.map((r) => [
+            r.cveID,
+            r.vendorProject + " / " + r.product,
+            r.vulnerabilityName,
+          ]),
+        ),
+      );
+    };
+    const form = el(
+      "form",
+      { class: "stack" },
+      field("بحث في آخر لقطة محفوظة", query),
+      el("button", { type: "submit", class: "primary" }, "بحث"),
+      results,
+    );
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      action(search);
+    });
+    holder.replaceChildren(
+      stateNode,
+      schedule,
+      panel("بحث المعرفة دون إرسال السؤال للمصدر", form),
+    );
+  }
+  load().catch((e) => toast(e.message, true));
+  return holder;
+}
 function settings() {
   const b = state.boot;
   const password = el("input", {
@@ -1468,9 +1719,9 @@ function settings() {
             "محلي وبأدوات محددة",
           ],
           [
-            "المختبرات التخصصية الـ207",
-            badge("مخططة", "warn"),
-            "الهيكل محفوظ؛ لا ادعاء تجهيزها",
+            "المنصات والأدوات",
+            badge("هيكل محدث", "good"),
+            "22 قسمًا و109 منصات بأدوات وتقنيات مباشرة",
           ],
           [
             "المساعد المحلي",
@@ -1478,9 +1729,9 @@ function settings() {
             "يضبط عنوان المحرك محليًا في إعدادات التشغيل",
           ],
           [
-            "تحديثات البرامج والمصادر",
-            badge("غير منفذة"),
-            "لا تنزيل أو تركيب صامت",
+            "المعرفة وتحديث البرامج",
+            badge("جلب معرفة متاح", "good"),
+            "فهرس CISA وجدولة اختيارية؛ تثبيت تحديثات البرامج غير منفذ",
           ],
           [
             "VirtualBox / OVA",

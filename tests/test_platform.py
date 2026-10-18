@@ -11,7 +11,7 @@ import unittest
 import zipfile
 from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from cyber_platform import backup, engine, local_ai, sandbox, tools
+from cyber_platform import backup, engine, knowledge, learning, local_ai, sandbox, tools
 from cyber_platform.server import App, CATALOG
 from cyber_platform.store import Problem, Store, encode
 
@@ -134,13 +134,17 @@ class WorkflowTests(StoreCase):
 
 class AnalyzerTests(unittest.TestCase):
     def test_catalog_exact_hierarchy(self):
-        self.assertEqual(len(CATALOG), 20)
-        platforms = [p for s in CATALOG for p in s["platforms"]]
-        self.assertEqual(len(platforms), 69)
-        labs = [l for p in platforms for l in p["labs"]]
-        self.assertEqual(len(labs) + sum(len(l["children"]) for l in labs), 207)
-        ids = [s["id"] for s in CATALOG] + [p["id"] for p in platforms] + [l["id"] for l in labs] + [c["id"] for l in labs for c in l["children"]]
+        self.assertEqual(len(CATALOG), 22)
+        platforms = [p for s in CATALOG for p in s['platforms']]
+        self.assertEqual(len(platforms), 109)
+        ids = [s['id'] for s in CATALOG] + [p['id'] for p in platforms]
         self.assertEqual(len(ids), len(set(ids)))
+        self.assertNotIn('"labs"', json.dumps(CATALOG))
+        for platform in platforms:
+            self.assertTrue(set(platform['tool_ids']) <= set(tools.REGISTRY))
+            self.assertTrue(all(r['url'].startswith('https://') for r in platform['references']))
+        self.assertEqual(CATALOG[-2]['name'], 'الحماية الشاملة')
+        self.assertEqual(CATALOG[-1]['name'], 'تعلّم الهجوم الأخلاقي')
 
     def test_ioc_validation(self):
         self.assertEqual(tools.analyze("ioc", b"192.0.2.1 999.0.0.1")["ipv4"], ["192.0.2.1"])
@@ -235,6 +239,126 @@ class AnalyzerTests(unittest.TestCase):
             tools.analyze("hashes", b"x" * (4 * 1024 * 1024 + 1))
 
 
+class RulesTests(unittest.TestCase):
+    def test_reference_and_false_positive_metrics(self):
+        data = {"events": [{"action": "login", "outcome": "failure"}, {"action": "login", "outcome": "success"}],
+                "rules": [{"id": "auth", "selection": {"action": "login"}, "expected_event_indexes": [0]}]}
+        result = tools.analyze('rules', json.dumps(data).encode())
+        self.assertEqual(result['rules'][0]['metrics']['false_positive'], 1)
+        self.assertFalse(result['rules'][0]['metrics']['passed'])
+        data['rules'][0]['selection']['outcome'] = 'failure'
+        result = tools.analyze('rules', json.dumps(data).encode())
+        self.assertTrue(result['rules'][0]['metrics']['passed'])
+        self.assertEqual(result['rules'][0]['metrics']['true_negative'], 1)
+
+    def test_absent_truth_is_not_a_pass(self):
+        result = tools.analyze('rules', b'{"events":[],"rules":[{"id":"test","selection":{"action":"login"}}]}')
+        self.assertIsNone(result['rules'][0]['metrics'])
+        self.assertEqual(result['evaluated_rules'], 0)
+
+    def test_rule_bounds_duplicates_and_no_eval(self):
+        for rules in [[], [{"id":"a","selection":{} }],
+                      [{"id":"a","selection":{"x":1}}, {"id":"a","selection":{"x":2}}],
+                      [{"id":"a","selection":{"x":1},"expected_event_indexes":[999]}]]:
+            with self.assertRaises(ValueError):
+                tools.analyze('rules', json.dumps({'events':[], 'rules':rules}).encode())
+        value = {"events": [{"value": "__import__('os').system('id')"}],
+                 "rules": [{"id": "literal", "selection": {"value": "__import__('os').system('id')"}, "expected_event_indexes": [0]}]}
+        self.assertTrue(tools.analyze('rules', json.dumps(value).encode())['rules'][0]['metrics']['passed'])
+
+
+class LearningTests(StoreCase):
+    def test_all_twenty_lessons_retain_synthetic_evidence(self):
+        lessons = learning.lessons()
+        self.assertEqual(len(lessons), 20)
+        for lesson in lessons:
+            with self.subTest(lesson=lesson['id']):
+                correct = lesson['choices'].index(lesson['defense'])
+                result = learning.attempt(self.store, self.pid, lesson['id'], correct)
+                self.assertTrue(result['result']['correct'])
+                self.assertTrue(result['result']['synthetic'])
+                self.assertEqual(result['evidence']['kind'], 'learning')
+                stored = json.loads(self.store.read_evidence(self.pid, result['evidence']['id']))
+                self.assertEqual(stored['lesson_id'], lesson['id'])
+                self.assertEqual(stored['input_sha256'], hashlib.sha256(base64.b64decode(stored['input_base64'])).hexdigest())
+        self.assertTrue(self.store.verify_audit()['valid'])
+
+    def test_wrong_answer_recorded_as_wrong(self):
+        lesson = learning.lessons()[0]
+        wrong = next(i for i, choice in enumerate(lesson['choices']) if choice != lesson['defense'])
+        result = learning.attempt(self.store, self.pid, lesson['id'], wrong)
+        self.assertFalse(result['result']['correct'])
+        self.assertFalse(json.loads(self.store.read_evidence(self.pid, result['evidence']['id']))['correct'])
+
+    def test_invalid_answers_and_missing_project_rejected(self):
+        for answer in [True, -1, 3, '0', None]:
+            with self.assertRaises(Problem):
+                learning.attempt(self.store, self.pid, 'lesson.01', answer)
+        with self.assertRaises(Problem):
+            learning.attempt(self.store, self.pid, 'unknown', 0)
+        with self.assertRaises(Problem):
+            learning.attempt(self.store, 'missing', 'lesson.01', 0)
+
+
+class KnowledgeTests(StoreCase):
+    @staticmethod
+    def fixture():
+        return json.dumps({'catalogVersion':'test-1','dateReleased':'2026-10-18T00:00:00Z','count':2,
+                           'vulnerabilities':[{'cveID':'CVE-2026-0001','vendorProject':'Example','product':'Demo'},
+                                              {'cveID':'CVE-2026-0002','vendorProject':'Other','product':'Product'}]}).encode()
+
+    def test_download_cache_search_and_unchanged(self):
+        first = knowledge.refresh(self.store, self.pid, loader=lambda source:self.fixture())
+        self.assertTrue(first['changed'])
+        second = knowledge.refresh(self.store, self.pid, loader=lambda source:self.fixture())
+        self.assertFalse(second['changed'])
+        self.assertEqual(first['evidence_id'], second['evidence_id'])
+        self.assertEqual(first['changed_at'], second['changed_at'])
+        result = knowledge.search(self.store, self.pid, 'example')
+        self.assertEqual(result['total_matches'], 1)
+        self.assertEqual(result['items'][0]['cveID'], 'CVE-2026-0001')
+        self.assertEqual(len(self.store.rows("SELECT * FROM evidence WHERE kind='knowledge'")), 1)
+
+    def test_failed_source_keeps_old_snapshot_and_sets_stale(self):
+        previous = knowledge.refresh(self.store, self.pid, loader=lambda source:self.fixture())
+        def failure(source):
+            raise OSError('offline')
+        with self.assertRaises(Problem):
+            knowledge.refresh(self.store, self.pid, loader=failure)
+        state = knowledge.status(self.store, self.pid)['states'][0]
+        self.assertTrue(state['stale'])
+        self.assertEqual(state['evidence_id'], previous['evidence_id'])
+        self.assertEqual(knowledge.search(self.store, self.pid,'')['total_matches'], 2)
+        with self.assertRaises(Problem):
+            knowledge.refresh(self.store, self.pid, loader=lambda source:b'{"count":0}')
+        self.assertEqual(knowledge.search(self.store, self.pid,'')['total_matches'], 2)
+
+    def test_unknown_source_and_invalid_schedule_rejected(self):
+        with self.assertRaises(Problem):
+            knowledge.refresh(self.store, self.pid, source_id='http://169.254.169.254/')
+        for enabled, interval in [(1,60),(True,1),(True,True),(True,90000)]:
+            with self.assertRaises(Problem):
+                knowledge.configure(self.store, self.pid, enabled, interval)
+
+    def test_schedule_default_off_and_one_catchup(self):
+        calls=[]
+        loader=lambda source:(calls.append(source['url']) or self.fixture())
+        self.assertFalse(knowledge.scheduled_tick(self.store, loader=loader))
+        config=knowledge.configure(self.store, self.pid, True, 60)
+        self.assertTrue(knowledge.scheduled_tick(self.store, now=config['next_at']+10000,loader=loader))
+        self.assertFalse(knowledge.scheduled_tick(self.store, now=config['next_at']+10001,loader=loader))
+        self.assertEqual(len(calls),1)
+        self.assertEqual(calls[0], knowledge.SOURCES[0]['url'])
+        knowledge.configure(self.store,self.pid,False,60)
+        self.assertFalse(knowledge.scheduled_tick(self.store,now=config['next_at']+20000,loader=loader))
+
+    def test_tampered_snapshot_is_not_used_for_search(self):
+        state=knowledge.refresh(self.store,self.pid,loader=lambda source:self.fixture())
+        path=self.store.blobs/state['evidence_id'];path.chmod(0o600);path.write_bytes(b'changed')
+        with self.assertRaises(Problem):
+            knowledge.search(self.store,self.pid,'')
+
+
 class BackupTests(StoreCase):
     def test_encrypted_roundtrip_and_tamper(self):
         e = self.evidence(b"private evidence")
@@ -323,7 +447,7 @@ class HTTPTests(StoreCase):
         self.assertEqual(body, b"192.0.2.8")
         self.assertEqual(headers["X-Evidence-SHA256"], hashlib.sha256(body).hexdigest())
 
-    def test_all_twenty_tools_through_http(self):
+    def test_all_registered_tools_through_http(self):
         self.login()
         for tool in tools.describe():
             with self.subTest(tool=tool["id"]):
@@ -337,6 +461,36 @@ class HTTPTests(StoreCase):
                 output = self.store.read_evidence(self.pid, job['results'][0]['evidence_id'])
                 self.assertEqual(json.loads(output)['input_sha256'], hashlib.sha256(data).hexdigest())
 
+    def test_learning_http_auth_and_arbitrary_targets_rejected(self):
+        path = '/api/learning/attempt'
+        data = {'project_id': self.pid, 'lesson_id': 'lesson.01', 'answer_index': 0}
+        self.assertEqual(self.request(path, data)[0], 401)
+        self.login()
+        self.assertEqual(self.request(path, {**data, 'target': 'example.test'})[0], 400)
+        self.assertEqual(self.request(path, data, {'X-CSRF-Token':'bad'})[0], 403)
+        status, _, body = self.request(path, data)
+        self.assertEqual(status, 200)
+        self.assertTrue(json.loads(body)['result']['synthetic'])
+        _, _, bootstrap = self.request('/api/bootstrap')
+        self.assertEqual(len(json.loads(bootstrap)['lessons']), 20)
+
+
+    def test_knowledge_requires_auth_and_fixed_source(self):
+        self.assertEqual(self.request('/api/knowledge?project='+self.pid)[0],401)
+        self.login()
+        self.assertEqual(self.request('/api/knowledge?project='+self.pid)[0],200)
+        self.assertEqual(self.request('/api/knowledge/refresh',{'project_id':self.pid,'source_id':'cisa-kev','url':'http://example.test'})[0],400)
+        self.assertEqual(self.request('/api/knowledge/settings',{'project_id':self.pid,'enabled':True,'interval_seconds':1})[0],400)
+        from unittest.mock import patch
+        with patch('cyber_platform.knowledge.download',return_value=KnowledgeTests.fixture()):
+            status,_,body=self.request('/api/knowledge/refresh',{'project_id':self.pid,'source_id':'cisa-kev'})
+            self.assertEqual(status,200)
+            self.assertEqual(json.loads(body)['count'],2)
+        status,_,body=self.request('/api/knowledge/search?project='+self.pid+'&q=example')
+        self.assertEqual(status,200)
+        self.assertEqual(json.loads(body)['total_matches'],1)
+
+
     def test_bad_input_and_security_headers(self):
         self.login()
         self.assertEqual(self.request("/api/upload", {"project_id": self.pid, "name": "test", "base64": "!invalid!"})[0], 400)
@@ -344,6 +498,10 @@ class HTTPTests(StoreCase):
         self.assertEqual(status, 200)
         self.assertIn("frame-ancestors 'none'", headers["Content-Security-Policy"])
         self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
+
+    def test_busy_port_reports_bind_error_without_scheduler_cleanup_error(self):
+        with self.assertRaises(OSError):
+            App(("127.0.0.1", self.app.server_port), self.store)
 
     def test_report_redacts_owner_metadata(self):
         self.login()

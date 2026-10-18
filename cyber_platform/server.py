@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, engine, local_ai, sandbox, tools
+from . import __version__, backup, engine, knowledge, learning, local_ai, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -26,12 +26,29 @@ class App(ThreadingHTTPServer):
         self.store, self.ai_url, self.ai_model = store, ai_url, ai_model
         self.sessions, self.failures = {}, []
         self.auth_lock, self.execution_lock = threading.Lock(), threading.Lock()
+        self.stop_scheduler = threading.Event()
         super().__init__(address, Handler)
         # Recover interrupted tasks without claiming successful completion.
         with store.lock, store.db:
             count = store.db.execute("UPDATE jobs SET status='interrupted' WHERE status='running'").rowcount
             if count:
                 store.audit("jobs.interrupted", {"count": count})
+        self.scheduler = threading.Thread(target=self.schedule_loop, daemon=True)
+        self.scheduler.start()
+
+    def schedule_loop(self):
+        while not self.stop_scheduler.wait(1):
+            if self.execution_lock.acquire(blocking=False):
+                try:
+                    knowledge.scheduled_tick(self.store)
+                finally:
+                    self.execution_lock.release()
+
+    def server_close(self):
+        self.stop_scheduler.set()
+        if hasattr(self, "scheduler"):
+            self.scheduler.join(timeout=25)
+        super().server_close()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -105,13 +122,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
             session = self.session()
             if path == "/api/bootstrap":
-                return self.reply({"csrf": session["csrf"], "catalog": CATALOG, "tools": tools.describe(),
+                return self.reply({"csrf": session["csrf"], "catalog": CATALOG, "tools": tools.describe(), "lessons": learning.lessons(),
                                    "projects": self.store.rows("SELECT * FROM projects ORDER BY created DESC"),
                                    "resources": self.store.resources(), "audit": self.store.verify_audit(),
                                    "capabilities": {"offline_analysis": True, "ai": "requires_local_model", "workshop": "requires_linux_namespaces",
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/knowledge":
+                return self.reply(knowledge.status(self.store, query.get("project", [""])[0]))
+            if path == "/api/knowledge/search":
+                return self.reply(knowledge.search(self.store, query.get("project", [""])[0], query.get("q", [""])[0]))
             if path == "/api/evidence":
                 project_id, eid = query.get("project", [""])[0], query.get("id", [""])[0]
                 record = self.store.evidence(project_id, eid)
@@ -172,6 +193,10 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"ok": True}, headers={"Set-Cookie": "was_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0"})
             if path == "/api/projects":
                 return self.reply(self.store.create_project(body.get("name"), body.get("description", "")), 201)
+            if path == "/api/knowledge/settings":
+                if set(body) != {"project_id", "enabled", "interval_seconds"}:
+                    raise Problem("إعدادات الجدولة غير صالحة")
+                return self.reply(knowledge.configure(self.store, body["project_id"], body["enabled"], body["interval_seconds"]))
             if path == "/api/upload":
                 try:
                     data = base64.b64decode(body.get("base64", ""), validate=True)
@@ -181,10 +206,18 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workshop", "/api/chat", "/api/backup"):
+            if path in ("/api/run", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/knowledge/refresh":
+                        if set(body) != {"project_id", "source_id"}:
+                            raise Problem("الجلب يقبل معرف مصدر مسجل فقط")
+                        return self.reply(knowledge.refresh(self.store, body["project_id"], body["source_id"]))
+                    if path == "/api/learning/attempt":
+                        if set(body) != {"project_id", "lesson_id", "answer_index"}:
+                            raise Problem("المحاولة تقبل مشروعًا ودرسًا واختيار إجابة فقط")
+                        return self.reply(learning.attempt(self.store, body["project_id"], body["lesson_id"], body["answer_index"]))
                     if path == "/api/run":
                         return self.reply(engine.run(self.store, body.get("project_id"), body.get("steps"), body.get("name", "تحليل محلي")))
                     if path == "/api/workshop":

@@ -7,80 +7,70 @@
       {
         "id": "platform.01.01",
         "name": "المصادر وOSINT",
-        "labs": [
+        "description": "جمع المصادر والتحقق منها",
+        "topics": [
+          "مصادر عامة متعددة اللغات",
+          "تقييم المصدر وإزالة التكرار"
+        ],
+        "tool_ids": [
+          "ioc"
+        ],
+        "references": [
           {
-            "id": "lab.01.01",
-            "name": "جمع المصادر والتحقق منها",
-            "parent_id": "platform.01.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.01.01.1",
-                "name": "مصادر عامة متعددة اللغات",
-                "parent_id": "lab.01.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.01.01.2",
-                "name": "تقييم المصدر وإزالة التكرار",
-                "parent_id": "lab.01.01",
-                "status": "planned"
-              }
-            ]
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.01.02",
         "name": "استخبارات التهديدات",
-        "labs": [
+        "description": "ربط المؤشرات والحملات",
+        "topics": [
+          "تحليل IOC والسياق",
+          "ربط السلوكيات والحملات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.01.02",
-            "name": "ربط المؤشرات والحملات",
-            "parent_id": "platform.01.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.01.02.1",
-                "name": "تحليل IOC والسياق",
-                "parent_id": "lab.01.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.01.02.2",
-                "name": "ربط السلوكيات والحملات",
-                "parent_id": "lab.01.02",
-                "status": "planned"
-              }
-            ]
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.01.03",
         "name": "البحث والرسم المعرفي",
-        "labs": [
+        "description": "تحليل الأدلة والعلاقات",
+        "topics": [
+          "كيانات وعلاقات زمنية",
+          "فرضيات وتقارير موثقة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.01.03",
-            "name": "تحليل الأدلة والعلاقات",
-            "parent_id": "platform.01.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.01.03.1",
-                "name": "كيانات وعلاقات زمنية",
-                "parent_id": "lab.01.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.01.03.2",
-                "name": "فرضيات وتقارير موثقة",
-                "parent_id": "lab.01.03",
-                "status": "planned"
-              }
-            ]
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "المؤشر قرينة تحتاج سياقًا؛ وجود عنوان IP لا يثبت نشاطًا ضارًا.",
+    "references": [
+      {
+        "name": "MITRE ATT&CK",
+        "url": "https://attack.mitre.org/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -92,132 +82,108 @@
       {
         "id": "platform.02.01",
         "name": "الويب وAPI",
-        "labs": [
+        "description": "اختبار تطبيقات تجريبية",
+        "topics": [
+          "الصلاحيات والجلسات ومنطق الأعمال",
+          "المدخلات والبروتوكولات والتخزين"
+        ],
+        "tool_ids": [
+          "http"
+        ],
+        "references": [
           {
-            "id": "lab.02.01",
-            "name": "اختبار تطبيقات تجريبية",
-            "parent_id": "platform.02.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.02.01.1",
-                "name": "الصلاحيات والجلسات ومنطق الأعمال",
-                "parent_id": "lab.02.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.02.01.2",
-                "name": "المدخلات والبروتوكولات والتخزين",
-                "parent_id": "lab.02.01",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.02.02",
         "name": "الجوال والبرامج",
-        "labs": [
+        "description": "تحليل تطبيقات تدريبية",
+        "topics": [
+          "تخزين الجوال ومكوناته",
+          "الذاكرة والاعتماديات في البرامج"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.02.02",
-            "name": "تحليل تطبيقات تدريبية",
-            "parent_id": "platform.02.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.02.02.1",
-                "name": "تخزين الجوال ومكوناته",
-                "parent_id": "lab.02.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.02.02.2",
-                "name": "الذاكرة والاعتماديات في البرامج",
-                "parent_id": "lab.02.02",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.02.03",
         "name": "الأنظمة والأجهزة",
-        "labs": [
+        "description": "تحليل سطح النظام",
+        "topics": [
+          "نواة وبرامج ثابتة",
+          "IoT وOT ضمن محاكاة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.02.03",
-            "name": "تحليل سطح النظام",
-            "parent_id": "platform.02.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.02.03.1",
-                "name": "نواة وبرامج ثابتة",
-                "parent_id": "lab.02.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.02.03.2",
-                "name": "IoT وOT ضمن محاكاة",
-                "parent_id": "lab.02.03",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.02.04",
         "name": "السحابة والذكاء الاصطناعي",
-        "labs": [
+        "description": "مراجعة إعدادات تجريبية",
+        "topics": [
+          "هوية وأسرار وحاويات",
+          "تطبيقات AI ووكلاء"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.02.04",
-            "name": "مراجعة إعدادات تجريبية",
-            "parent_id": "platform.02.04",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.02.04.1",
-                "name": "هوية وأسرار وحاويات",
-                "parent_id": "lab.02.04",
-                "status": "planned"
-              },
-              {
-                "id": "lab.02.04.2",
-                "name": "تطبيقات AI ووكلاء",
-                "parent_id": "lab.02.04",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.02.05",
         "name": "المعرفة والإبلاغ والإصلاح",
-        "labs": [
+        "description": "التحقق من نتيجة الفحص",
+        "topics": [
+          "ربط المصادر والإصدارات والأثر",
+          "إعادة الاختبار وتقرير المكافآت"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.02.05",
-            "name": "التحقق من نتيجة الفحص",
-            "parent_id": "platform.02.05",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.02.05.1",
-                "name": "ربط المصادر والإصدارات والأثر",
-                "parent_id": "lab.02.05",
-                "status": "planned"
-              },
-              {
-                "id": "lab.02.05.2",
-                "name": "إعادة الاختبار وتقرير المكافآت",
-                "parent_id": "lab.02.05",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "غياب رأس حماية يحتاج تقييم سياق، ولا يمنح إذنًا لاختبار موقع آخر.",
+    "references": [
+      {
+        "name": "OWASP WSTG",
+        "url": "https://owasp.org/www-project-web-security-testing-guide/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -229,80 +195,70 @@
       {
         "id": "platform.03.01",
         "name": "الكشف والمراقبة",
-        "labs": [
+        "description": "مراقبة أحداث تجريبية",
+        "topics": [
+          "سجلات الأجهزة والشبكات",
+          "اختبار قواعد الكشف"
+        ],
+        "tool_ids": [
+          "events"
+        ],
+        "references": [
           {
-            "id": "lab.03.01",
-            "name": "مراقبة أحداث مختبرية",
-            "parent_id": "platform.03.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.03.01.1",
-                "name": "سجلات الأجهزة والشبكات",
-                "parent_id": "lab.03.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.03.01.2",
-                "name": "اختبار قواعد الكشف",
-                "parent_id": "lab.03.01",
-                "status": "planned"
-              }
-            ]
+            "name": "Sigma",
+            "url": "https://sigmahq.io/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.03.02",
         "name": "صيد التهديدات",
-        "labs": [
+        "description": "تحليل فرضيات دفاعية",
+        "topics": [
+          "خطوط أساس وانحراف سلوكي",
+          "ربط الأحداث والمؤشرات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.03.02",
-            "name": "تحليل فرضيات دفاعية",
-            "parent_id": "platform.03.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.03.02.1",
-                "name": "خطوط أساس وانحراف سلوكي",
-                "parent_id": "lab.03.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.03.02.2",
-                "name": "ربط الأحداث والمؤشرات",
-                "parent_id": "lab.03.02",
-                "status": "planned"
-              }
-            ]
+            "name": "Sigma",
+            "url": "https://sigmahq.io/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.03.03",
         "name": "الاستجابة للحوادث",
-        "labs": [
+        "description": "محاكاة حادث قابل للاستعادة",
+        "topics": [
+          "فرز واحتواء",
+          "تعافٍ ومراجعة ما بعد الحادث"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.03.03",
-            "name": "محاكاة حادث قابل للاستعادة",
-            "parent_id": "platform.03.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.03.03.1",
-                "name": "فرز واحتواء",
-                "parent_id": "lab.03.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.03.03.2",
-                "name": "تعافٍ ومراجعة ما بعد الحادث",
-                "parent_id": "lab.03.03",
-                "status": "planned"
-              }
-            ]
+            "name": "Sigma",
+            "url": "https://sigmahq.io/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "فشل دخول واحد قد يكون خطأ مستخدم؛ تربط الأحداث بزمن وهوية قبل الاستجابة.",
+    "references": [
+      {
+        "name": "Sigma",
+        "url": "https://sigmahq.io/docs/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -314,80 +270,70 @@
       {
         "id": "platform.04.01",
         "name": "تحقيق الأجهزة والملفات",
-        "labs": [
+        "description": "تحليل أدلة تدريبية",
+        "topics": [
+          "أقراص وأنظمة ملفات",
+          "ذاكرة وعمليات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.04.01",
-            "name": "تحليل أدلة تدريبية",
-            "parent_id": "platform.04.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.04.01.1",
-                "name": "أقراص وأنظمة ملفات",
-                "parent_id": "lab.04.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.04.01.2",
-                "name": "ذاكرة وعمليات",
-                "parent_id": "lab.04.01",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST CFTT",
+            "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.04.02",
         "name": "تحقيق الشبكات والجوال والسحابة",
-        "labs": [
+        "description": "ربط آثار متعددة",
+        "topics": [
+          "حزم وسجلات اتصال",
+          "آثار تطبيقات وجوال وسحابة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.04.02",
-            "name": "ربط آثار متعددة",
-            "parent_id": "platform.04.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.04.02.1",
-                "name": "حزم وسجلات اتصال",
-                "parent_id": "lab.04.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.04.02.2",
-                "name": "آثار تطبيقات وجوال وسحابة",
-                "parent_id": "lab.04.02",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST CFTT",
+            "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.04.03",
         "name": "جودة الأدلة",
-        "labs": [
+        "description": "إعادة بناء خط زمني",
+        "topics": [
+          "حفظ الأصل والبصمات وسلسلة الحيازة",
+          "اختبارات مرجعية للتحليل"
+        ],
+        "tool_ids": [
+          "hashes"
+        ],
+        "references": [
           {
-            "id": "lab.04.03",
-            "name": "إعادة بناء خط زمني",
-            "parent_id": "platform.04.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.04.03.1",
-                "name": "حفظ الأصل والبصمات وسلسلة الحيازة",
-                "parent_id": "lab.04.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.04.03.2",
-                "name": "اختبارات مرجعية للتحليل",
-                "parent_id": "lab.04.03",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST CFTT",
+            "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "العمل على نسخة مع بصمة موثقة يتيح كشف تغير الأصل وإعادة المراجعة.",
+    "references": [
+      {
+        "name": "NIST CFTT",
+        "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -399,80 +345,70 @@
       {
         "id": "platform.05.01",
         "name": "التحليل الساكن",
-        "labs": [
+        "description": "فهم برنامج تجريبي",
+        "topics": [
+          "ملفات تنفيذية ورموز",
+          "تدفق تحكم وبيانات"
+        ],
+        "tool_ids": [
+          "executable"
+        ],
+        "references": [
           {
-            "id": "lab.05.01",
-            "name": "فهم برنامج تجريبي",
-            "parent_id": "platform.05.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.05.01.1",
-                "name": "ملفات تنفيذية ورموز",
-                "parent_id": "lab.05.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.05.01.2",
-                "name": "تدفق تحكم وبيانات",
-                "parent_id": "lab.05.01",
-                "status": "planned"
-              }
-            ]
+            "name": "Ghidra",
+            "url": "https://ghidra-sre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.05.02",
         "name": "التحليل الديناميكي",
-        "labs": [
+        "description": "مراقبة تشغيل معزول",
+        "topics": [
+          "تصحيح وواجهات واستدعاءات",
+          "تتبع تغييرات ملفات وذاكرة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.05.02",
-            "name": "مراقبة تشغيل معزول",
-            "parent_id": "platform.05.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.05.02.1",
-                "name": "تصحيح وواجهات واستدعاءات",
-                "parent_id": "lab.05.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.05.02.2",
-                "name": "تتبع تغييرات ملفات وذاكرة",
-                "parent_id": "lab.05.02",
-                "status": "planned"
-              }
-            ]
+            "name": "Ghidra",
+            "url": "https://ghidra-sre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.05.03",
         "name": "مقارنة وتحليل السلوك",
-        "labs": [
+        "description": "مقارنة عينات مسموحة",
+        "topics": [
+          "مقارنة إصدارات وإصلاحات",
+          "تصنيف سلوك عينات داخل العزل"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.05.03",
-            "name": "مقارنة عينات مسموحة",
-            "parent_id": "platform.05.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.05.03.1",
-                "name": "مقارنة إصدارات وإصلاحات",
-                "parent_id": "lab.05.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.05.03.2",
-                "name": "تصنيف سلوك عينات داخل العزل",
-                "parent_id": "lab.05.03",
-                "status": "planned"
-              }
-            ]
+            "name": "Ghidra",
+            "url": "https://ghidra-sre.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "تحليل الرأس والسلاسل ساكنًا لا يتطلب تنفيذ العينة ولا يثبت سلامة سلوكها.",
+    "references": [
+      {
+        "name": "Ghidra",
+        "url": "https://ghidra-sre.org/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -484,80 +420,70 @@
       {
         "id": "platform.06.01",
         "name": "البروتوكولات والخدمات",
-        "labs": [
+        "description": "شبكة افتراضية صغيرة",
+        "topics": [
+          "DNS وTLS وHTTP",
+          "توجيه وتجزئة وسياسات اتصال"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.06.01",
-            "name": "شبكة افتراضية صغيرة",
-            "parent_id": "platform.06.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.06.01.1",
-                "name": "DNS وTLS وHTTP",
-                "parent_id": "lab.06.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.06.01.2",
-                "name": "توجيه وتجزئة وسياسات اتصال",
-                "parent_id": "lab.06.01",
-                "status": "planned"
-              }
-            ]
+            "name": "Wireshark",
+            "url": "https://www.wireshark.org/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.06.02",
         "name": "اللاسلكي والاتصالات المتنقلة",
-        "labs": [
+        "description": "محاكاة اتصال",
+        "topics": [
+          "آثار Wi-Fi وBluetooth",
+          "نماذج 5G وشبكات غير أرضية"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.06.02",
-            "name": "محاكاة اتصال",
-            "parent_id": "platform.06.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.06.02.1",
-                "name": "آثار Wi-Fi وBluetooth",
-                "parent_id": "lab.06.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.06.02.2",
-                "name": "نماذج 5G وشبكات غير أرضية",
-                "parent_id": "lab.06.02",
-                "status": "planned"
-              }
-            ]
+            "name": "Wireshark",
+            "url": "https://www.wireshark.org/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.06.03",
         "name": "قياس وتحليل المرور",
-        "labs": [
+        "description": "تجارب أداء وأحداث",
+        "topics": [
+          "حزم وتوقيت وإحصاءات",
+          "قواعد مراقبة وانحرافات"
+        ],
+        "tool_ids": [
+          "flows"
+        ],
+        "references": [
           {
-            "id": "lab.06.03",
-            "name": "تجارب أداء وأحداث",
-            "parent_id": "platform.06.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.06.03.1",
-                "name": "حزم وتوقيت وإحصاءات",
-                "parent_id": "lab.06.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.06.03.2",
-                "name": "قواعد مراقبة وانحرافات",
-                "parent_id": "lab.06.03",
-                "status": "planned"
-              }
-            ]
+            "name": "Wireshark",
+            "url": "https://www.wireshark.org/docs/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "التدفقات بيانات وصفية؛ الحجم الكبير قد يكون نشاطًا مشروعًا ولا يكشف المحتوى وحده.",
+    "references": [
+      {
+        "name": "Wireshark",
+        "url": "https://www.wireshark.org/docs/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -569,262 +495,203 @@
       {
         "id": "platform.07.01",
         "name": "الهوية المركزية وتسجيل الدخول",
-        "labs": [
+        "description": "مصادقة تطبيقات محلية",
+        "topics": [
+          "SSO وOIDC وPasskeys",
+          "استرداد وتغيير وسائل التحقق"
+        ],
+        "tool_ids": [
+          "identity"
+        ],
+        "references": [
           {
-            "id": "lab.07.01",
-            "name": "مصادقة تطبيقات محلية",
-            "parent_id": "platform.07.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.01.1",
-                "name": "SSO وOIDC وPasskeys",
-                "parent_id": "lab.07.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.01.2",
-                "name": "استرداد وتغيير وسائل التحقق",
-                "parent_id": "lab.07.01",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.02",
         "name": "الأدلة والهوية المؤسسية",
-        "labs": [
+        "description": "هوية نطاق تجريبي",
+        "topics": [
+          "FreeIPA وSSSD وKerberos",
+          "Samba AD والتكامل المشروط"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.02",
-            "name": "هوية نطاق تجريبي",
-            "parent_id": "platform.07.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.02.1",
-                "name": "FreeIPA وSSSD وKerberos",
-                "parent_id": "lab.07.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.02.2",
-                "name": "Samba AD والتكامل المشروط",
-                "parent_id": "lab.07.02",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.03",
         "name": "التفويض والصلاحيات",
-        "labs": [
+        "description": "تقييم سياسات الوصول",
+        "topics": [
+          "RBAC وABAC",
+          "ReBAC وعزل المنصات المتداخلة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.03",
-            "name": "تقييم سياسات الوصول",
-            "parent_id": "platform.07.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.03.1",
-                "name": "RBAC وABAC",
-                "parent_id": "lab.07.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.03.2",
-                "name": "ReBAC وعزل المنصات المتداخلة",
-                "parent_id": "lab.07.03",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.04",
         "name": "الامتيازات والوصول الإداري",
-        "labs": [
+        "description": "إدارة عملية محددة",
+        "topics": [
+          "sudo وSSH محدودان",
+          "امتياز مؤقت وحساب طوارئ"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.04",
-            "name": "إدارة عملية محددة",
-            "parent_id": "platform.07.04",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.04.1",
-                "name": "sudo وSSH محدودان",
-                "parent_id": "lab.07.04",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.04.2",
-                "name": "امتياز مؤقت وحساب طوارئ",
-                "parent_id": "lab.07.04",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.05",
         "name": "حماية Linux",
-        "labs": [
+        "description": "عزل خدمة تدريبية",
+        "topics": [
+          "MAC وLandlock",
+          "seccomp وcapabilities وsystemd"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.05",
-            "name": "عزل خدمة تدريبية",
-            "parent_id": "platform.07.05",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.05.1",
-                "name": "MAC وLandlock",
-                "parent_id": "lab.07.05",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.05.2",
-                "name": "seccomp وcapabilities وsystemd",
-                "parent_id": "lab.07.05",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.06",
         "name": "حماية Windows",
-        "labs": [
+        "description": "مراجعة حماية النظام",
+        "topics": [
+          "حسابات وأحداث وسياسات",
+          "Credential Guard وLAPS ببيئة مدعومة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.06",
-            "name": "مراجعة حماية النظام",
-            "parent_id": "platform.07.06",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.06.1",
-                "name": "حسابات وأحداث وسياسات",
-                "parent_id": "lab.07.06",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.06.2",
-                "name": "Credential Guard وLAPS ببيئة مدعومة",
-                "parent_id": "lab.07.06",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.07",
         "name": "هوية الأجهزة والثقة",
-        "labs": [
+        "description": "التحقق من حالة جهاز",
+        "topics": [
+          "شهادات أجهزة وTPM محاكى",
+          "قياس سلامة وremote attestation"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.07",
-            "name": "التحقق من حالة جهاز",
-            "parent_id": "platform.07.07",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.07.1",
-                "name": "شهادات أجهزة وTPM محاكى",
-                "parent_id": "lab.07.07",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.07.2",
-                "name": "قياس سلامة وremote attestation",
-                "parent_id": "lab.07.07",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.08",
         "name": "هوية الخدمات والوكلاء",
-        "labs": [
+        "description": "مصادقة خدمة أو وكيل",
+        "topics": [
+          "SPIFFE/SPIRE وmTLS",
+          "هوية وكيل وصلاحيات أدواته"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.08",
-            "name": "مصادقة خدمة أو وكيل",
-            "parent_id": "platform.07.08",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.08.1",
-                "name": "SPIFFE/SPIRE وmTLS",
-                "parent_id": "lab.07.08",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.08.2",
-                "name": "هوية وكيل وصلاحيات أدواته",
-                "parent_id": "lab.07.08",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.09",
         "name": "دورة الحساب والجلسة",
-        "labs": [
+        "description": "إدارة عمر الوصول",
+        "topics": [
+          "إنشاء وتعطيل وSCIM",
+          "إلغاء جلسات وإعادة تحقق"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.09",
-            "name": "إدارة عمر الوصول",
-            "parent_id": "platform.07.09",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.09.1",
-                "name": "إنشاء وتعطيل وSCIM",
-                "parent_id": "lab.07.09",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.09.2",
-                "name": "إلغاء جلسات وإعادة تحقق",
-                "parent_id": "lab.07.09",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.07.10",
         "name": "تدقيق الهوية وتقييمها",
-        "labs": [
+        "description": "مراجعة قرارات الوصول",
+        "topics": [
+          "أحداث رفض وسجل جلسات",
+          "مقارنة سياسات واختبارات مرجعية"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.07.10",
-            "name": "مراجعة قرارات الوصول",
-            "parent_id": "platform.07.10",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.07.10.1",
-                "name": "أحداث رفض وسجل جلسات",
-                "parent_id": "lab.07.10",
-                "status": "planned"
-              },
-              {
-                "id": "lab.07.10.2",
-                "name": "مقارنة سياسات واختبارات مرجعية",
-                "parent_id": "lab.07.10",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "تزداد مخاطر الحسابات الإدارية دون MFA، وتطبق أقل صلاحية مع استرداد موثق.",
+    "references": [
+      {
+        "name": "NIST Digital Identity",
+        "url": "https://pages.nist.gov/800-63-4/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -836,80 +703,70 @@
       {
         "id": "platform.08.01",
         "name": "هوية وإعدادات السحابة",
-        "labs": [
+        "description": "نماذج موارد محلية",
+        "topics": [
+          "IAM وسياسات موارد",
+          "أسرار وإعدادات شبكات وتخزين"
+        ],
+        "tool_ids": [
+          "container"
+        ],
+        "references": [
           {
-            "id": "lab.08.01",
-            "name": "نماذج موارد محلية",
-            "parent_id": "platform.08.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.08.01.1",
-                "name": "IAM وسياسات موارد",
-                "parent_id": "lab.08.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.08.01.2",
-                "name": "أسرار وإعدادات شبكات وتخزين",
-                "parent_id": "lab.08.01",
-                "status": "planned"
-              }
-            ]
+            "name": "Kubernetes Security",
+            "url": "https://kubernetes.io/docs/concepts/security/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.08.02",
         "name": "أمن الحاويات",
-        "labs": [
+        "description": "تشغيل تطبيق معزول",
+        "topics": [
+          "صور واعتماديات",
+          "حدود تنفيذ وموارد"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.08.02",
-            "name": "تشغيل تطبيق معزول",
-            "parent_id": "platform.08.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.08.02.1",
-                "name": "صور واعتماديات",
-                "parent_id": "lab.08.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.08.02.2",
-                "name": "حدود تنفيذ وموارد",
-                "parent_id": "lab.08.02",
-                "status": "planned"
-              }
-            ]
+            "name": "Kubernetes Security",
+            "url": "https://kubernetes.io/docs/concepts/security/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.08.03",
         "name": "تنسيق الخدمات",
-        "labs": [
+        "description": "بيئة تنسيق تجريبية اختيارية",
+        "topics": [
+          "Kubernetes وسياسات قبول",
+          "هوية خدمات واتصال بينها"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.08.03",
-            "name": "بيئة تنسيق تجريبية اختيارية",
-            "parent_id": "platform.08.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.08.03.1",
-                "name": "Kubernetes وسياسات قبول",
-                "parent_id": "lab.08.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.08.03.2",
-                "name": "هوية خدمات واتصال بينها",
-                "parent_id": "lab.08.03",
-                "status": "planned"
-              }
-            ]
+            "name": "Kubernetes Security",
+            "url": "https://kubernetes.io/docs/concepts/security/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "privileged وشبكة المضيف يوسّعان سطح الوصول؛ مراجعة JSON لا تثبت عزل التنفيذ.",
+    "references": [
+      {
+        "name": "Kubernetes Security",
+        "url": "https://kubernetes.io/docs/concepts/security/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -921,80 +778,70 @@
       {
         "id": "platform.09.01",
         "name": "أمن الكود والتصميم",
-        "labs": [
+        "description": "برنامج تجريبي صغير",
+        "topics": [
+          "مراجعة كود وتدفق بيانات",
+          "اختبارات أمنية ونمذجة تهديد"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.09.01",
-            "name": "برنامج تجريبي صغير",
-            "parent_id": "platform.09.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.09.01.1",
-                "name": "مراجعة كود وتدفق بيانات",
-                "parent_id": "lab.09.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.09.01.2",
-                "name": "اختبارات أمنية ونمذجة تهديد",
-                "parent_id": "lab.09.01",
-                "status": "planned"
-              }
-            ]
+            "name": "CycloneDX",
+            "url": "https://cyclonedx.org/specification/overview/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.09.02",
         "name": "الاعتماديات وسلسلة التوريد",
-        "labs": [
+        "description": "جرد مكونات برنامج",
+        "topics": [
+          "SCA وSBOM وربط التنبيهات",
+          "مصادر الحزم وتحقق سلامة"
+        ],
+        "tool_ids": [
+          "sbom"
+        ],
+        "references": [
           {
-            "id": "lab.09.02",
-            "name": "جرد مكونات برنامج",
-            "parent_id": "platform.09.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.09.02.1",
-                "name": "SCA وSBOM وربط التنبيهات",
-                "parent_id": "lab.09.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.09.02.2",
-                "name": "مصادر الحزم وتحقق سلامة",
-                "parent_id": "lab.09.02",
-                "status": "planned"
-              }
-            ]
+            "name": "CycloneDX",
+            "url": "https://cyclonedx.org/specification/overview/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.09.03",
         "name": "أمن البناء والإصدار",
-        "labs": [
+        "description": "خط بناء محلي",
+        "topics": [
+          "صلاحيات البناء وإدارة الأسرار",
+          "توقيع ومصدرية وإعادة إنتاج بناء"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.09.03",
-            "name": "خط بناء محلي",
-            "parent_id": "platform.09.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.09.03.1",
-                "name": "صلاحيات البناء وإدارة الأسرار",
-                "parent_id": "lab.09.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.09.03.2",
-                "name": "توقيع ومصدرية وإعادة إنتاج بناء",
-                "parent_id": "lab.09.03",
-                "status": "planned"
-              }
-            ]
+            "name": "CycloneDX",
+            "url": "https://cyclonedx.org/specification/overview/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "SBOM يسجل المكونات؛ يلزم ربط الإصدارات والتنبيهات والسياق قبل تقرير التأثر.",
+    "references": [
+      {
+        "name": "CycloneDX",
+        "url": "https://cyclonedx.org/specification/overview/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1006,80 +853,70 @@
       {
         "id": "platform.10.01",
         "name": "اختبار المدخلات",
-        "labs": [
+        "description": "Fuzzing للبرمجيات",
+        "topics": [
+          "تغطية وبنية مدخلات ومشغلات اختبار",
+          "كاشفات ذاكرة وتصغير عطل وإعادة إنتاج"
+        ],
+        "tool_ids": [
+          "tlv"
+        ],
+        "references": [
           {
-            "id": "lab.10.01",
-            "name": "Fuzzing للبرمجيات",
-            "parent_id": "platform.10.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.10.01.1",
-                "name": "تغطية وبنية مدخلات ومشغلات اختبار",
-                "parent_id": "lab.10.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.10.01.2",
-                "name": "كاشفات ذاكرة وتصغير عطل وإعادة إنتاج",
-                "parent_id": "lab.10.01",
-                "status": "planned"
-              }
-            ]
+            "name": "LLVM libFuzzer",
+            "url": "https://llvm.org/docs/LibFuzzer.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.10.02",
         "name": "التحليل والتحقق",
-        "labs": [
+        "description": "تحليل برنامج صغير",
+        "topics": [
+          "تحليل رمزي وهجين وثوابت",
+          "تحليل أسباب واختبارات إصلاح؛ التحقق الرسمي يحتاج بحثًا مستقلًا"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.10.02",
-            "name": "تحليل برنامج صغير",
-            "parent_id": "platform.10.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.10.02.1",
-                "name": "تحليل رمزي وهجين وثوابت",
-                "parent_id": "lab.10.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.10.02.2",
-                "name": "تحليل أسباب واختبارات إصلاح؛ التحقق الرسمي يحتاج بحثًا مستقلًا",
-                "parent_id": "lab.10.02",
-                "status": "planned"
-              }
-            ]
+            "name": "LLVM libFuzzer",
+            "url": "https://llvm.org/docs/LibFuzzer.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.10.03",
         "name": "أبحاث النواة",
-        "labs": [
+        "description": "نواة تجريبية مشروطة",
+        "topics": [
+          "تزامن وTOCTOU واستدعاءات النظام",
+          "مراقبة eBPF وصلاحيات الأدوات والتحقق من الأعطال"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.10.03",
-            "name": "نواة تجريبية مشروطة",
-            "parent_id": "platform.10.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.10.03.1",
-                "name": "تزامن وTOCTOU واستدعاءات النظام",
-                "parent_id": "lab.10.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.10.03.2",
-                "name": "مراقبة eBPF وصلاحيات الأدوات والتحقق من الأعطال",
-                "parent_id": "lab.10.03",
-                "status": "planned"
-              }
-            ]
+            "name": "LLVM libFuzzer",
+            "url": "https://llvm.org/docs/LibFuzzer.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "المدخل المبتور يجب أن يفشل بوضوح دون قراءة خارج حدوده؛ التجربة هنا بيانات ثابتة.",
+    "references": [
+      {
+        "name": "LLVM libFuzzer",
+        "url": "https://llvm.org/docs/LibFuzzer.html",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1091,80 +928,70 @@
       {
         "id": "platform.11.01",
         "name": "المفاتيح والشهادات",
-        "labs": [
+        "description": "سلطة شهادات تدريبية",
+        "topics": [
+          "دورة مفاتيح وإلغاء وتدوير",
+          "PKI وسلسلة ثقة"
+        ],
+        "tool_ids": [
+          "crypto"
+        ],
+        "references": [
           {
-            "id": "lab.11.01",
-            "name": "سلطة شهادات تدريبية",
-            "parent_id": "platform.11.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.11.01.1",
-                "name": "دورة مفاتيح وإلغاء وتدوير",
-                "parent_id": "lab.11.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.11.01.2",
-                "name": "PKI وسلسلة ثقة",
-                "parent_id": "lab.11.01",
-                "status": "planned"
-              }
-            ]
+            "name": "OpenSSL",
+            "url": "https://docs.openssl.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.11.02",
         "name": "أمن البروتوكولات",
-        "labs": [
+        "description": "اتصال تجريبي موثق",
+        "topics": [
+          "TLS وmTLS وتحقق الطرف",
+          "تحقق رسائل ومقاومة إعادة الإرسال"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.11.02",
-            "name": "اتصال تجريبي موثق",
-            "parent_id": "platform.11.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.11.02.1",
-                "name": "TLS وmTLS وتحقق الطرف",
-                "parent_id": "lab.11.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.11.02.2",
-                "name": "تحقق رسائل ومقاومة إعادة الإرسال",
-                "parent_id": "lab.11.02",
-                "status": "planned"
-              }
-            ]
+            "name": "OpenSSL",
+            "url": "https://docs.openssl.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.11.03",
         "name": "التشفير ما بعد الكم",
-        "labs": [
+        "description": "تقييم توافق تجريبي",
+        "topics": [
+          "جرد استخدام التشفير",
+          "اختبار انتقال وخوارزميات معتمدة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.11.03",
-            "name": "تقييم توافق تجريبي",
-            "parent_id": "platform.11.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.11.03.1",
-                "name": "جرد استخدام التشفير",
-                "parent_id": "lab.11.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.11.03.2",
-                "name": "اختبار انتقال وخوارزميات معتمدة",
-                "parent_id": "lab.11.03",
-                "status": "planned"
-              }
-            ]
+            "name": "OpenSSL",
+            "url": "https://docs.openssl.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "اسم خوارزمية في نص ليس اختبارًا للمفاتيح أو تفاوض البروتوكول.",
+    "references": [
+      {
+        "name": "OpenSSL",
+        "url": "https://docs.openssl.org/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1176,80 +1003,70 @@
       {
         "id": "platform.12.01",
         "name": "تحليل البرامج الثابتة",
-        "labs": [
+        "description": "صورة Firmware مسموحة",
+        "topics": [
+          "جرد مكونات وإعدادات",
+          "محاكاة وظائف متاحة"
+        ],
+        "tool_ids": [
+          "firmware"
+        ],
+        "references": [
           {
-            "id": "lab.12.01",
-            "name": "صورة Firmware مسموحة",
-            "parent_id": "platform.12.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.12.01.1",
-                "name": "جرد مكونات وإعدادات",
-                "parent_id": "lab.12.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.12.01.2",
-                "name": "محاكاة وظائف متاحة",
-                "parent_id": "lab.12.01",
-                "status": "planned"
-              }
-            ]
+            "name": "UEFI",
+            "url": "https://uefi.org/specifications",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.12.02",
         "name": "الإقلاع والثقة",
-        "labs": [
+        "description": "نموذج إقلاع وقياس",
+        "topics": [
+          "UEFI وSecure Boot",
+          "TPM وقياسات الإقلاع"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.12.02",
-            "name": "نموذج إقلاع وقياس",
-            "parent_id": "platform.12.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.12.02.1",
-                "name": "UEFI وSecure Boot",
-                "parent_id": "lab.12.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.12.02.2",
-                "name": "TPM وقياسات الإقلاع",
-                "parent_id": "lab.12.02",
-                "status": "planned"
-              }
-            ]
+            "name": "UEFI",
+            "url": "https://uefi.org/specifications",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.12.03",
         "name": "الأنظمة المدمجة والواجهات",
-        "labs": [
+        "description": "جهاز محاكى أو عتاد اختياري",
+        "topics": [
+          "واجهات وتسلسل رسائل",
+          "دراسة قنوات جانبية بقياسات تجريبية"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.12.03",
-            "name": "جهاز محاكى أو عتاد اختياري",
-            "parent_id": "platform.12.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.12.03.1",
-                "name": "واجهات وتسلسل رسائل",
-                "parent_id": "lab.12.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.12.03.2",
-                "name": "دراسة قنوات جانبية بقياسات تجريبية",
-                "parent_id": "lab.12.03",
-                "status": "planned"
-              }
-            ]
+            "name": "UEFI",
+            "url": "https://uefi.org/specifications",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "ارتفاع entropy قد يدل على ضغط أو تشفير، ولا يثبت برمجية ضارة بمفرده.",
+    "references": [
+      {
+        "name": "UEFI",
+        "url": "https://uefi.org/specifications",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1261,80 +1078,70 @@
       {
         "id": "platform.13.01",
         "name": "الأجهزة المتصلة",
-        "labs": [
+        "description": "محاكاة جهاز وخدماته",
+        "topics": [
+          "هوية وتحديث جهاز",
+          "بروتوكولات ورسائل وحساسات"
+        ],
+        "tool_ids": [
+          "twin"
+        ],
+        "references": [
           {
-            "id": "lab.13.01",
-            "name": "محاكاة جهاز وخدماته",
-            "parent_id": "platform.13.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.13.01.1",
-                "name": "هوية وتحديث جهاز",
-                "parent_id": "lab.13.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.13.01.2",
-                "name": "بروتوكولات ورسائل وحساسات",
-                "parent_id": "lab.13.01",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST OT Security",
+            "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.13.02",
         "name": "أنظمة التحكم الصناعية",
-        "labs": [
+        "description": "شبكة تحكم افتراضية",
+        "topics": [
+          "PLC وبروتوكولات تحكم محاكاة",
+          "تجزئة ومراقبة أوامر وحالات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.13.02",
-            "name": "شبكة تحكم افتراضية",
-            "parent_id": "platform.13.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.13.02.1",
-                "name": "PLC وبروتوكولات تحكم محاكاة",
-                "parent_id": "lab.13.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.13.02.2",
-                "name": "تجزئة ومراقبة أوامر وحالات",
-                "parent_id": "lab.13.02",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST OT Security",
+            "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.13.03",
         "name": "التوأم الرقمي والسلامة",
-        "labs": [
+        "description": "نموذج عملية صناعية",
+        "topics": [
+          "قياسات وأحداث اصطناعية",
+          "كشف انحراف واستعادة حالة آمنة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.13.03",
-            "name": "نموذج عملية صناعية",
-            "parent_id": "platform.13.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.13.03.1",
-                "name": "قياسات وأحداث اصطناعية",
-                "parent_id": "lab.13.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.13.03.2",
-                "name": "كشف انحراف واستعادة حالة آمنة",
-                "parent_id": "lab.13.03",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST OT Security",
+            "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "نموذج حسابي مبسط يوضح أثر التغذية الراجعة، ولا يثبت سلامة مصنع فعلي.",
+    "references": [
+      {
+        "name": "NIST OT Security",
+        "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1346,80 +1153,70 @@
       {
         "id": "platform.14.01",
         "name": "الرادارات",
-        "labs": [
+        "description": "محاكاة قياسات رادارية",
+        "topics": [
+          "توليد مشاهد وإشارات اصطناعية",
+          "مدى وسرعة وضوضاء وتقييم"
+        ],
+        "tool_ids": [
+          "spectrum"
+        ],
+        "references": [
           {
-            "id": "lab.14.01",
-            "name": "محاكاة قياسات رادارية",
-            "parent_id": "platform.14.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.14.01.1",
-                "name": "توليد مشاهد وإشارات اصطناعية",
-                "parent_id": "lab.14.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.14.01.2",
-                "name": "مدى وسرعة وضوضاء وتقييم",
-                "parent_id": "lab.14.01",
-                "status": "planned"
-              }
-            ]
+            "name": "GNU Radio",
+            "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.14.02",
         "name": "SDR ومعالجة الإشارات",
-        "labs": [
+        "description": "إشارات مسجلة أو مولدة",
+        "topics": [
+          "ترشيح وطيف وتضمين",
+          "توقيت وتزامن وجودة إشارة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.14.02",
-            "name": "إشارات مسجلة أو مولدة",
-            "parent_id": "platform.14.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.14.02.1",
-                "name": "ترشيح وطيف وتضمين",
-                "parent_id": "lab.14.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.14.02.2",
-                "name": "توقيت وتزامن وجودة إشارة",
-                "parent_id": "lab.14.02",
-                "status": "planned"
-              }
-            ]
+            "name": "GNU Radio",
+            "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.14.03",
         "name": "دمج الحساسات",
-        "labs": [
+        "description": "بيانات حساسات تدريبية",
+        "topics": [
+          "معايرة ومحاذاة قياسات",
+          "دمج وتقييم ثقة وانحراف"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.14.03",
-            "name": "بيانات حساسات تدريبية",
-            "parent_id": "platform.14.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.14.03.1",
-                "name": "معايرة ومحاذاة قياسات",
-                "parent_id": "lab.14.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.14.03.2",
-                "name": "دمج وتقييم ثقة وانحراف",
-                "parent_id": "lab.14.03",
-                "status": "planned"
-              }
-            ]
+            "name": "GNU Radio",
+            "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "DFT يصف عينات مقدمة؛ تحديد القمة لا يحدد جهازًا أو نيةً أو تصريح بث.",
+    "references": [
+      {
+        "name": "GNU Radio",
+        "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1431,80 +1228,70 @@
       {
         "id": "platform.15.01",
         "name": "محاكاة الطيران",
-        "labs": [
+        "description": "سيناريو طيران افتراضي",
+        "topics": [
+          "ديناميكا وحساسات",
+          "تحكم وحالات أعطال"
+        ],
+        "tool_ids": [
+          "telemetry"
+        ],
+        "references": [
           {
-            "id": "lab.15.01",
-            "name": "سيناريو طيران افتراضي",
-            "parent_id": "platform.15.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.15.01.1",
-                "name": "ديناميكا وحساسات",
-                "parent_id": "lab.15.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.15.01.2",
-                "name": "تحكم وحالات أعطال",
-                "parent_id": "lab.15.01",
-                "status": "planned"
-              }
-            ]
+            "name": "MAVLink",
+            "url": "https://mavlink.io/en/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.15.02",
         "name": "الاتصال والبرمجيات",
-        "labs": [
+        "description": "رسائل وسجلات محاكاة",
+        "topics": [
+          "هوية أوامر وقنوات اتصال",
+          "تحديثات وإعدادات برمجيات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.15.02",
-            "name": "رسائل وسجلات محاكاة",
-            "parent_id": "platform.15.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.15.02.1",
-                "name": "هوية أوامر وقنوات اتصال",
-                "parent_id": "lab.15.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.15.02.2",
-                "name": "تحديثات وإعدادات برمجيات",
-                "parent_id": "lab.15.02",
-                "status": "planned"
-              }
-            ]
+            "name": "MAVLink",
+            "url": "https://mavlink.io/en/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.15.03",
         "name": "التحقيق والسلامة",
-        "labs": [
+        "description": "تحليل رحلة اصطناعية",
+        "topics": [
+          "خط زمني وسجلات رحلة",
+          "كشف انحراف واستعادة آمنة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.15.03",
-            "name": "تحليل رحلة اصطناعية",
-            "parent_id": "platform.15.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.15.03.1",
-                "name": "خط زمني وسجلات رحلة",
-                "parent_id": "lab.15.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.15.03.2",
-                "name": "كشف انحراف واستعادة آمنة",
-                "parent_id": "lab.15.03",
-                "status": "planned"
-              }
-            ]
+            "name": "MAVLink",
+            "url": "https://mavlink.io/en/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "فجوة القياسات قد تنتج عن فقد أو إعادة ترتيب؛ تحتاج سياقًا ولا تبرر تحكمًا حيًا.",
+    "references": [
+      {
+        "name": "MAVLink",
+        "url": "https://mavlink.io/en/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1516,80 +1303,70 @@
       {
         "id": "platform.16.01",
         "name": "الروبوتات",
-        "labs": [
+        "description": "روبوت افتراضي",
+        "topics": [
+          "ROS 2 وهوية ورسائل",
+          "حركة وحساسات وحدود مهام"
+        ],
+        "tool_ids": [
+          "can"
+        ],
+        "references": [
           {
-            "id": "lab.16.01",
-            "name": "روبوت افتراضي",
-            "parent_id": "platform.16.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.16.01.1",
-                "name": "ROS 2 وهوية ورسائل",
-                "parent_id": "lab.16.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.16.01.2",
-                "name": "حركة وحساسات وحدود مهام",
-                "parent_id": "lab.16.01",
-                "status": "planned"
-              }
-            ]
+            "name": "Linux SocketCAN",
+            "url": "https://docs.kernel.org/networking/can.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.16.02",
         "name": "شبكات المركبات",
-        "labs": [
+        "description": "حافلة CAN افتراضية",
+        "topics": [
+          "رسائل وحالات تحكم",
+          "مراقبة وكشف رسائل شاذة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.16.02",
-            "name": "حافلة CAN افتراضية",
-            "parent_id": "platform.16.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.16.02.1",
-                "name": "رسائل وحالات تحكم",
-                "parent_id": "lab.16.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.16.02.2",
-                "name": "مراقبة وكشف رسائل شاذة",
-                "parent_id": "lab.16.02",
-                "status": "planned"
-              }
-            ]
+            "name": "Linux SocketCAN",
+            "url": "https://docs.kernel.org/networking/can.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.16.03",
         "name": "أمن الأنظمة المتصلة",
-        "labs": [
+        "description": "خدمات مركبة تجريبية",
+        "topics": [
+          "تفويض وظائف وتطبيقات",
+          "تحديث ودمج حساسات وسجلات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.16.03",
-            "name": "خدمات مركبة تجريبية",
-            "parent_id": "platform.16.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.16.03.1",
-                "name": "تفويض وظائف وتطبيقات",
-                "parent_id": "lab.16.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.16.03.2",
-                "name": "تحديث ودمج حساسات وسجلات",
-                "parent_id": "lab.16.03",
-                "status": "planned"
-              }
-            ]
+            "name": "Linux SocketCAN",
+            "url": "https://docs.kernel.org/networking/can.html",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "قراءة candump لا تتطلب إرسال إطارات، ولا تكشف معنى كل إشارة دون مواصفة.",
+    "references": [
+      {
+        "name": "Linux SocketCAN",
+        "url": "https://docs.kernel.org/networking/can.html",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1601,80 +1378,70 @@
       {
         "id": "platform.17.01",
         "name": "الأنظمة الفضائية",
-        "labs": [
+        "description": "قمر صناعي برمجي محاكى",
+        "topics": [
+          "برمجيات وحالات وقياسات",
+          "هوية وتحديث وتدقيق أحداث"
+        ],
+        "tool_ids": [
+          "ccsds"
+        ],
+        "references": [
           {
-            "id": "lab.17.01",
-            "name": "قمر صناعي برمجي محاكى",
-            "parent_id": "platform.17.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.17.01.1",
-                "name": "برمجيات وحالات وقياسات",
-                "parent_id": "lab.17.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.17.01.2",
-                "name": "هوية وتحديث وتدقيق أحداث",
-                "parent_id": "lab.17.01",
-                "status": "planned"
-              }
-            ]
+            "name": "CCSDS",
+            "url": "https://public.ccsds.org/Publications/default.aspx",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.17.02",
         "name": "المحطة الأرضية والاتصال",
-        "labs": [
+        "description": "قناة تجريبية محاكاة",
+        "topics": [
+          "Telemetry ورسائل تحكم وهمية",
+          "راديو محاكى وجودة رابط"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.17.02",
-            "name": "قناة تجريبية محاكاة",
-            "parent_id": "platform.17.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.17.02.1",
-                "name": "Telemetry ورسائل تحكم وهمية",
-                "parent_id": "lab.17.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.17.02.2",
-                "name": "راديو محاكى وجودة رابط",
-                "parent_id": "lab.17.02",
-                "status": "planned"
-              }
-            ]
+            "name": "CCSDS",
+            "url": "https://public.ccsds.org/Publications/default.aspx",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.17.03",
         "name": "التوأم الفضائي",
-        "labs": [
+        "description": "سيناريو مدار واتصال",
+        "topics": [
+          "تغير رابط وجدولة اتصال",
+          "تحليل بيانات وكشف انحراف"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.17.03",
-            "name": "سيناريو مدار واتصال",
-            "parent_id": "platform.17.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.17.03.1",
-                "name": "تغير رابط وجدولة اتصال",
-                "parent_id": "lab.17.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.17.03.2",
-                "name": "تحليل بيانات وكشف انحراف",
-                "parent_id": "lab.17.03",
-                "status": "planned"
-              }
-            ]
+            "name": "CCSDS",
+            "url": "https://public.ccsds.org/Publications/default.aspx",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "CCSDS يحدد بنية رسائل؛ قراءة الرأس ليست اتصالًا بقمر أو تحليلًا لكل حمولة.",
+    "references": [
+      {
+        "name": "CCSDS",
+        "url": "https://public.ccsds.org/Publications/default.aspx",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1686,80 +1453,70 @@
       {
         "id": "platform.18.01",
         "name": "النماذج والمعرفة",
-        "labs": [
+        "description": "مساعد محلي مشترك",
+        "topics": [
+          "استرجاع موثق ومعرفة الأقسام",
+          "تقييم دقة وموارد وإصدارات"
+        ],
+        "tool_ids": [
+          "ai-audit"
+        ],
+        "references": [
           {
-            "id": "lab.18.01",
-            "name": "مساعد محلي مشترك",
-            "parent_id": "platform.18.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.18.01.1",
-                "name": "استرجاع موثق ومعرفة الأقسام",
-                "parent_id": "lab.18.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.18.01.2",
-                "name": "تقييم دقة وموارد وإصدارات",
-                "parent_id": "lab.18.01",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP GenAI Security",
+            "url": "https://genai.owasp.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.18.02",
         "name": "الوكلاء والأدوات",
-        "labs": [
+        "description": "وكيل داخل بيئة معزولة",
+        "topics": [
+          "سياسات سلوك وهوية وصلاحيات",
+          "خطة وأدوات وتدقيق وإيقاف"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.18.02",
-            "name": "وكيل داخل بيئة معزولة",
-            "parent_id": "platform.18.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.18.02.1",
-                "name": "سياسات سلوك وهوية وصلاحيات",
-                "parent_id": "lab.18.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.18.02.2",
-                "name": "خطة وأدوات وتدقيق وإيقاف",
-                "parent_id": "lab.18.02",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP GenAI Security",
+            "url": "https://genai.owasp.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.18.03",
         "name": "أمن AI وتقييمه",
-        "labs": [
+        "description": "تطبيق AI تجريبي",
+        "topics": [
+          "عزل ذاكرة وبيانات ومشاريع",
+          "اختبارات حقن تعليمات ومخرجات غير آمنة"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.18.03",
-            "name": "تطبيق AI تجريبي",
-            "parent_id": "platform.18.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.18.03.1",
-                "name": "عزل ذاكرة وبيانات ومشاريع",
-                "parent_id": "lab.18.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.18.03.2",
-                "name": "اختبارات حقن تعليمات ومخرجات غير آمنة",
-                "parent_id": "lab.18.03",
-                "status": "planned"
-              }
-            ]
+            "name": "OWASP GenAI Security",
+            "url": "https://genai.owasp.org/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "مطابقة مقتطف لمصدره لا تثبت أن الاستنتاج صحيح؛ النص غير الموثوق لا يمنح صلاحيات.",
+    "references": [
+      {
+        "name": "OWASP GenAI Security",
+        "url": "https://genai.owasp.org/",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1771,80 +1528,70 @@
       {
         "id": "platform.19.01",
         "name": "المعمارية والتهديدات",
-        "labs": [
+        "description": "نموذج منظومة",
+        "topics": [
+          "أصول وحدود ثقة وتدفقات",
+          "سيناريوهات تهديد وضوابط"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.19.01",
-            "name": "نموذج منظومة",
-            "parent_id": "platform.19.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.19.01.1",
-                "name": "أصول وحدود ثقة وتدفقات",
-                "parent_id": "lab.19.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.19.01.2",
-                "name": "سيناريوهات تهديد وضوابط",
-                "parent_id": "lab.19.01",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Privacy Framework",
+            "url": "https://www.nist.gov/privacy-framework",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.19.02",
         "name": "الخصوصية والبيانات",
-        "labs": [
+        "description": "مجموعة بيانات وهمية",
+        "topics": [
+          "تصنيف وتقليل بيانات",
+          "احتفاظ ومحو وعزل وصول"
+        ],
+        "tool_ids": [
+          "privacy"
+        ],
+        "references": [
           {
-            "id": "lab.19.02",
-            "name": "مجموعة بيانات وهمية",
-            "parent_id": "platform.19.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.19.02.1",
-                "name": "تصنيف وتقليل بيانات",
-                "parent_id": "lab.19.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.19.02.2",
-                "name": "احتفاظ ومحو وعزل وصول",
-                "parent_id": "lab.19.02",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Privacy Framework",
+            "url": "https://www.nist.gov/privacy-framework",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.19.03",
         "name": "المخاطر والضوابط",
-        "labs": [
+        "description": "مراجعة قرار وتصميم",
+        "topics": [
+          "تقييم مخاطر وأولوية معالجة",
+          "مطابقة أدلة لضوابط دون ادعاء اعتماد"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.19.03",
-            "name": "مراجعة قرار وتصميم",
-            "parent_id": "platform.19.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.19.03.1",
-                "name": "تقييم مخاطر وأولوية معالجة",
-                "parent_id": "lab.19.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.19.03.2",
-                "name": "مطابقة أدلة لضوابط دون ادعاء اعتماد",
-                "parent_id": "lab.19.03",
-                "status": "planned"
-              }
-            ]
+            "name": "NIST Privacy Framework",
+            "url": "https://www.nist.gov/privacy-framework",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "تنقيح نسخة يترك الأصل سليمًا، لكن الكاشف قد يفوّت أسرارًا فتجب مراجعة بشرية.",
+    "references": [
+      {
+        "name": "NIST Privacy Framework",
+        "url": "https://www.nist.gov/privacy-framework",
+        "kind": "official_reference",
+        "live_updates": false
       }
     ]
   },
@@ -1856,80 +1603,1049 @@
       {
         "id": "platform.20.01",
         "name": "التشغيل والموارد",
-        "labs": [
+        "description": "قياس بيئة المنصة",
+        "topics": [
+          "قرص وذاكرة ومعالج وحدود تشغيل",
+          "مراقبة خدمات وصحة واعتماديات"
+        ],
+        "tool_ids": [
+          "manifest"
+        ],
+        "references": [
           {
-            "id": "lab.20.01",
-            "name": "قياس بيئة المنصة",
-            "parent_id": "platform.20.01",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.20.01.1",
-                "name": "قرص وذاكرة ومعالج وحدود تشغيل",
-                "parent_id": "lab.20.01",
-                "status": "planned"
-              },
-              {
-                "id": "lab.20.01.2",
-                "name": "مراقبة خدمات وصحة واعتماديات",
-                "parent_id": "lab.20.01",
-                "status": "planned"
-              }
-            ]
+            "name": "The Update Framework",
+            "url": "https://theupdateframework.io/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.20.02",
         "name": "الإضافات والتحديث",
-        "labs": [
+        "description": "إضافة تجريبية معزولة",
+        "topics": [
+          "توافق واجهات وترخيص ومصدر",
+          "تحديث تدريجي وتراجع عن إصدار"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.20.02",
-            "name": "إضافة تجريبية معزولة",
-            "parent_id": "platform.20.02",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.20.02.1",
-                "name": "توافق واجهات وترخيص ومصدر",
-                "parent_id": "lab.20.02",
-                "status": "planned"
-              },
-              {
-                "id": "lab.20.02.2",
-                "name": "تحديث تدريجي وتراجع عن إصدار",
-                "parent_id": "lab.20.02",
-                "status": "planned"
-              }
-            ]
+            "name": "The Update Framework",
+            "url": "https://theupdateframework.io/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
       },
       {
         "id": "platform.20.03",
         "name": "الإدارة والاستعادة",
-        "labs": [
+        "description": "سياسات إدارة وتجربة استرجاع",
+        "topics": [
+          "صلاحيات مالك وأدوار وتدقيق",
+          "نسخ احتياطي واستعادة إعدادات وبيانات"
+        ],
+        "tool_ids": [],
+        "references": [
           {
-            "id": "lab.20.03",
-            "name": "سياسات إدارة وتجربة استرجاع",
-            "parent_id": "platform.20.03",
-            "status": "planned",
-            "children": [
-              {
-                "id": "lab.20.03.1",
-                "name": "صلاحيات مالك وأدوار وتدقيق",
-                "parent_id": "lab.20.03",
-                "status": "planned"
-              },
-              {
-                "id": "lab.20.03.2",
-                "name": "نسخ احتياطي واستعادة إعدادات وبيانات",
-                "parent_id": "lab.20.03",
-                "status": "planned"
-              }
-            ]
+            "name": "The Update Framework",
+            "url": "https://theupdateframework.io/",
+            "kind": "official_reference",
+            "live_updates": false
           }
-        ]
+        ],
+        "scope": "نطاق تقني؛ توفر الأداة لا يعني اكتمال جميع تكاملات المنصة"
+      }
+    ],
+    "description": "البيان والترخيص والصلاحيات تساعد المراجعة؛ لا تشغّل كود الإضافة قبل التحقق والعزل.",
+    "references": [
+      {
+        "name": "The Update Framework",
+        "url": "https://theupdateframework.io/",
+        "kind": "official_reference",
+        "live_updates": false
+      }
+    ]
+  },
+  {
+    "id": "21",
+    "name": "الحماية الشاملة",
+    "engine_id": "eng.section.21",
+    "mode": "protection",
+    "description": "حماية عبر التخصصات",
+    "platforms": [
+      {
+        "id": "platform.21.01",
+        "name": "حماية المؤشرات والمصادر",
+        "description": "ربط المصدر والتوقيت والثقة قبل الحظر",
+        "topics": [
+          "التعامل مع رابط مجهول",
+          "ربط المصدر والتوقيت والثقة قبل الحظر"
+        ],
+        "tool_ids": [
+          "ioc"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "01",
+        "references": [
+          {
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.02",
+        "name": "حماية تطبيقات الويب وAPI",
+        "description": "توثيق الملاحظة وإعادة التحقق ضمن نطاق مصرح",
+        "topics": [
+          "تمييز الملاحظة عن إثبات الثغرة",
+          "توثيق الملاحظة وإعادة التحقق ضمن نطاق مصرح"
+        ],
+        "tool_ids": [
+          "http"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "02",
+        "references": [
+          {
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.03",
+        "name": "حماية الكشف والاستجابة",
+        "description": "مقارنة الأحداث بالسياق وتجربة قاعدة على بيانات مرجعية",
+        "topics": [
+          "تحليل فشل الدخول",
+          "مقارنة الأحداث بالسياق وتجربة قاعدة على بيانات مرجعية"
+        ],
+        "tool_ids": [
+          "events",
+          "rules"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "03",
+        "references": [
+          {
+            "name": "Sigma",
+            "url": "https://sigmahq.io/docs/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.04",
+        "name": "حماية التحقيق الرقمي",
+        "description": "حفظ الأصل والتحقق من SHA256 قبل استخدام النسخة",
+        "topics": [
+          "التحقق من سلامة الأصل",
+          "حفظ الأصل والتحقق من SHA256 قبل استخدام النسخة"
+        ],
+        "tool_ids": [
+          "hashes"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "04",
+        "references": [
+          {
+            "name": "NIST CFTT",
+            "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.05",
+        "name": "حماية البرامج والهندسة العكسية",
+        "description": "البدء بالتحليل الساكن وحفظ حدود الاستنتاج",
+        "topics": [
+          "فحص ملف غير موثوق",
+          "البدء بالتحليل الساكن وحفظ حدود الاستنتاج"
+        ],
+        "tool_ids": [
+          "executable"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "05",
+        "references": [
+          {
+            "name": "Ghidra",
+            "url": "https://ghidra-sre.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.06",
+        "name": "حماية الشبكات والاتصالات",
+        "description": "مراجعة البروتوكول والوجهة والزمن مع خط أساس",
+        "topics": [
+          "تفسير حجم تدفق",
+          "مراجعة البروتوكول والوجهة والزمن مع خط أساس"
+        ],
+        "tool_ids": [
+          "flows"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "06",
+        "references": [
+          {
+            "name": "Wireshark",
+            "url": "https://www.wireshark.org/docs/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.07",
+        "name": "حماية الأنظمة والهوية",
+        "description": "تقليل الامتياز وتفعيل MFA ومراجعة دورة الحساب",
+        "topics": [
+          "مراجعة حساب إداري",
+          "تقليل الامتياز وتفعيل MFA ومراجعة دورة الحساب"
+        ],
+        "tool_ids": [
+          "identity"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "07",
+        "references": [
+          {
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.08",
+        "name": "حماية السحابة والحاويات",
+        "description": "تقليل الصلاحيات والتحقق من سياسة التنفيذ فعليًا",
+        "topics": [
+          "تمييز إعداد حاوية خطر",
+          "تقليل الصلاحيات والتحقق من سياسة التنفيذ فعليًا"
+        ],
+        "tool_ids": [
+          "container"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "08",
+        "references": [
+          {
+            "name": "Kubernetes Security",
+            "url": "https://kubernetes.io/docs/concepts/security/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.09",
+        "name": "حماية البرمجيات وسلسلة التوريد",
+        "description": "توثيق المكون والإصدار والترخيص ومراجعة التنبيهات",
+        "topics": [
+          "قراءة جرد مكونات",
+          "توثيق المكون والإصدار والترخيص ومراجعة التنبيهات"
+        ],
+        "tool_ids": [
+          "sbom"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "09",
+        "references": [
+          {
+            "name": "CycloneDX",
+            "url": "https://cyclonedx.org/specification/overview/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.10",
+        "name": "حماية المحللات وأبحاث البرمجيات",
+        "description": "التحقق من الطول والحدود قبل قراءة القيمة",
+        "topics": [
+          "اختبار طول سجل ثنائي",
+          "التحقق من الطول والحدود قبل قراءة القيمة"
+        ],
+        "tool_ids": [
+          "tlv"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "10",
+        "references": [
+          {
+            "name": "LLVM libFuzzer",
+            "url": "https://llvm.org/docs/LibFuzzer.html",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.11",
+        "name": "حماية التشفير والبروتوكولات",
+        "description": "توثيق الخوارزمية ثم اختبار الإعداد والتوافق بأداة مناسبة",
+        "topics": [
+          "فهم حدود جرد التشفير",
+          "توثيق الخوارزمية ثم اختبار الإعداد والتوافق بأداة مناسبة"
+        ],
+        "tool_ids": [
+          "crypto"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "11",
+        "references": [
+          {
+            "name": "OpenSSL",
+            "url": "https://docs.openssl.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.12",
+        "name": "حماية العتاد والبرامج الثابتة",
+        "description": "ربط التواقيع والبنية والمصدر والتحقق من سلامة التحديث",
+        "topics": [
+          "تفسير entropy",
+          "ربط التواقيع والبنية والمصدر والتحقق من سلامة التحديث"
+        ],
+        "tool_ids": [
+          "firmware"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "12",
+        "references": [
+          {
+            "name": "UEFI",
+            "url": "https://uefi.org/specifications",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.13",
+        "name": "حماية الأنظمة الصناعية وIoT",
+        "description": "قياس النموذج وحدوده قبل أي تكامل مادي مصرح",
+        "topics": [
+          "اختبار نموذج حراري",
+          "قياس النموذج وحدوده قبل أي تكامل مادي مصرح"
+        ],
+        "tool_ids": [
+          "twin"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "13",
+        "references": [
+          {
+            "name": "NIST OT Security",
+            "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.14",
+        "name": "حماية الإشارات والاستشعار",
+        "description": "توثيق العينات ومعدلها وحدود الدقة",
+        "topics": [
+          "تفسير قمة طيفية",
+          "توثيق العينات ومعدلها وحدود الدقة"
+        ],
+        "tool_ids": [
+          "spectrum"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "14",
+        "references": [
+          {
+            "name": "GNU Radio",
+            "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.15",
+        "name": "حماية الطيران والمسيّرات",
+        "description": "حفظ تسلسل القياسات ومراجعة الفقد والسياق",
+        "topics": [
+          "اكتشاف فجوة تسلسل",
+          "حفظ تسلسل القياسات ومراجعة الفقد والسياق"
+        ],
+        "tool_ids": [
+          "telemetry"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "15",
+        "references": [
+          {
+            "name": "MAVLink",
+            "url": "https://mavlink.io/en/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.16",
+        "name": "حماية الروبوتات والمركبات",
+        "description": "تحليل التسجيل والتحقق من مواصفة الإشارات",
+        "topics": [
+          "قراءة CAN من تسجيل",
+          "تحليل التسجيل والتحقق من مواصفة الإشارات"
+        ],
+        "tool_ids": [
+          "can"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "16",
+        "references": [
+          {
+            "name": "Linux SocketCAN",
+            "url": "https://docs.kernel.org/networking/can.html",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.17",
+        "name": "حماية الفضاء",
+        "description": "التحقق من طول الحزمة والحقول وتوثيق حدود التحليل",
+        "topics": [
+          "مراجعة رأس حزمة",
+          "التحقق من طول الحزمة والحقول وتوثيق حدود التحليل"
+        ],
+        "tool_ids": [
+          "ccsds"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "17",
+        "references": [
+          {
+            "name": "CCSDS",
+            "url": "https://public.ccsds.org/Publications/default.aspx",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.18",
+        "name": "حماية الذكاء الاصطناعي",
+        "description": "التحقق من المصدر والمقتطف والمعنى مستقلًا",
+        "topics": [
+          "مراجعة استنتاج مولد",
+          "التحقق من المصدر والمقتطف والمعنى مستقلًا"
+        ],
+        "tool_ids": [
+          "ai-audit"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "18",
+        "references": [
+          {
+            "name": "OWASP GenAI Security",
+            "url": "https://genai.owasp.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.19",
+        "name": "حماية الحوكمة والخصوصية",
+        "description": "مراجعة النسخة المنقحة وتحديد غرض ومتلقي المشاركة",
+        "topics": [
+          "إعداد نسخة للمشاركة",
+          "مراجعة النسخة المنقحة وتحديد غرض ومتلقي المشاركة"
+        ],
+        "tool_ids": [
+          "privacy"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "19",
+        "references": [
+          {
+            "name": "NIST Privacy Framework",
+            "url": "https://www.nist.gov/privacy-framework",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      },
+      {
+        "id": "platform.21.20",
+        "name": "حماية إدارة المنظومة",
+        "description": "مراجعة المصدر والترخيص والصلاحيات والاختبار قبل التفعيل",
+        "topics": [
+          "تقييم بيان إضافة",
+          "مراجعة المصدر والترخيص والصلاحيات والاختبار قبل التفعيل"
+        ],
+        "tool_ids": [
+          "manifest"
+        ],
+        "lesson_ids": [],
+        "related_section_id": "20",
+        "references": [
+          {
+            "name": "The Update Framework",
+            "url": "https://theupdateframework.io/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تحليل وقائي قابل للاختبار؛ ليس تشغيل مراقبة حية لجميع التخصصات"
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "name": "تعلّم الهجوم الأخلاقي",
+    "engine_id": "eng.section.22",
+    "mode": "education",
+    "description": "تعلم المفاهيم الهجومية وتقييم الأخطاء ومعالجتها بشكل أخلاقي",
+    "platforms": [
+      {
+        "id": "platform.22.01",
+        "name": "تعلّم اختبار المؤشرات والمصادر",
+        "description": "المؤشر قرينة تحتاج سياقًا؛ وجود عنوان IP لا يثبت نشاطًا ضارًا.",
+        "topics": [
+          "التعامل مع رابط مجهول",
+          "ربط المصدر والتوقيت والثقة قبل الحظر"
+        ],
+        "tool_ids": [
+          "ioc"
+        ],
+        "lesson_ids": [
+          "lesson.01"
+        ],
+        "related_section_id": "01",
+        "references": [
+          {
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.02",
+        "name": "تعلّم اختبار تطبيقات الويب وAPI",
+        "description": "غياب رأس حماية يحتاج تقييم سياق، ولا يمنح إذنًا لاختبار موقع آخر.",
+        "topics": [
+          "تمييز الملاحظة عن إثبات الثغرة",
+          "توثيق الملاحظة وإعادة التحقق ضمن نطاق مصرح"
+        ],
+        "tool_ids": [
+          "http"
+        ],
+        "lesson_ids": [
+          "lesson.02"
+        ],
+        "related_section_id": "02",
+        "references": [
+          {
+            "name": "OWASP WSTG",
+            "url": "https://owasp.org/www-project-web-security-testing-guide/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.03",
+        "name": "تعلّم اختبار الكشف والاستجابة",
+        "description": "فشل دخول واحد قد يكون خطأ مستخدم؛ تربط الأحداث بزمن وهوية قبل الاستجابة.",
+        "topics": [
+          "تحليل فشل الدخول",
+          "مقارنة الأحداث بالسياق وتجربة قاعدة على بيانات مرجعية"
+        ],
+        "tool_ids": [
+          "events"
+        ],
+        "lesson_ids": [
+          "lesson.03"
+        ],
+        "related_section_id": "03",
+        "references": [
+          {
+            "name": "Sigma",
+            "url": "https://sigmahq.io/docs/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.04",
+        "name": "تعلّم اختبار التحقيق الرقمي",
+        "description": "العمل على نسخة مع بصمة موثقة يتيح كشف تغير الأصل وإعادة المراجعة.",
+        "topics": [
+          "التحقق من سلامة الأصل",
+          "حفظ الأصل والتحقق من SHA256 قبل استخدام النسخة"
+        ],
+        "tool_ids": [
+          "hashes"
+        ],
+        "lesson_ids": [
+          "lesson.04"
+        ],
+        "related_section_id": "04",
+        "references": [
+          {
+            "name": "NIST CFTT",
+            "url": "https://www.nist.gov/itl/ssd/software-quality-group/computer-forensics-tool-testing-program-cftt",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.05",
+        "name": "تعلّم اختبار البرامج والهندسة العكسية",
+        "description": "تحليل الرأس والسلاسل ساكنًا لا يتطلب تنفيذ العينة ولا يثبت سلامة سلوكها.",
+        "topics": [
+          "فحص ملف غير موثوق",
+          "البدء بالتحليل الساكن وحفظ حدود الاستنتاج"
+        ],
+        "tool_ids": [
+          "executable"
+        ],
+        "lesson_ids": [
+          "lesson.05"
+        ],
+        "related_section_id": "05",
+        "references": [
+          {
+            "name": "Ghidra",
+            "url": "https://ghidra-sre.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.06",
+        "name": "تعلّم اختبار الشبكات والاتصالات",
+        "description": "التدفقات بيانات وصفية؛ الحجم الكبير قد يكون نشاطًا مشروعًا ولا يكشف المحتوى وحده.",
+        "topics": [
+          "تفسير حجم تدفق",
+          "مراجعة البروتوكول والوجهة والزمن مع خط أساس"
+        ],
+        "tool_ids": [
+          "flows"
+        ],
+        "lesson_ids": [
+          "lesson.06"
+        ],
+        "related_section_id": "06",
+        "references": [
+          {
+            "name": "Wireshark",
+            "url": "https://www.wireshark.org/docs/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.07",
+        "name": "تعلّم اختبار الأنظمة والهوية",
+        "description": "تزداد مخاطر الحسابات الإدارية دون MFA، وتطبق أقل صلاحية مع استرداد موثق.",
+        "topics": [
+          "مراجعة حساب إداري",
+          "تقليل الامتياز وتفعيل MFA ومراجعة دورة الحساب"
+        ],
+        "tool_ids": [
+          "identity"
+        ],
+        "lesson_ids": [
+          "lesson.07"
+        ],
+        "related_section_id": "07",
+        "references": [
+          {
+            "name": "NIST Digital Identity",
+            "url": "https://pages.nist.gov/800-63-4/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.08",
+        "name": "تعلّم اختبار السحابة والحاويات",
+        "description": "privileged وشبكة المضيف يوسّعان سطح الوصول؛ مراجعة JSON لا تثبت عزل التنفيذ.",
+        "topics": [
+          "تمييز إعداد حاوية خطر",
+          "تقليل الصلاحيات والتحقق من سياسة التنفيذ فعليًا"
+        ],
+        "tool_ids": [
+          "container"
+        ],
+        "lesson_ids": [
+          "lesson.08"
+        ],
+        "related_section_id": "08",
+        "references": [
+          {
+            "name": "Kubernetes Security",
+            "url": "https://kubernetes.io/docs/concepts/security/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.09",
+        "name": "تعلّم اختبار البرمجيات وسلسلة التوريد",
+        "description": "SBOM يسجل المكونات؛ يلزم ربط الإصدارات والتنبيهات والسياق قبل تقرير التأثر.",
+        "topics": [
+          "قراءة جرد مكونات",
+          "توثيق المكون والإصدار والترخيص ومراجعة التنبيهات"
+        ],
+        "tool_ids": [
+          "sbom"
+        ],
+        "lesson_ids": [
+          "lesson.09"
+        ],
+        "related_section_id": "09",
+        "references": [
+          {
+            "name": "CycloneDX",
+            "url": "https://cyclonedx.org/specification/overview/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.10",
+        "name": "تعلّم اختبار المحللات وأبحاث البرمجيات",
+        "description": "المدخل المبتور يجب أن يفشل بوضوح دون قراءة خارج حدوده؛ التجربة هنا بيانات ثابتة.",
+        "topics": [
+          "اختبار طول سجل ثنائي",
+          "التحقق من الطول والحدود قبل قراءة القيمة"
+        ],
+        "tool_ids": [
+          "tlv"
+        ],
+        "lesson_ids": [
+          "lesson.10"
+        ],
+        "related_section_id": "10",
+        "references": [
+          {
+            "name": "LLVM libFuzzer",
+            "url": "https://llvm.org/docs/LibFuzzer.html",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.11",
+        "name": "تعلّم اختبار التشفير والبروتوكولات",
+        "description": "اسم خوارزمية في نص ليس اختبارًا للمفاتيح أو تفاوض البروتوكول.",
+        "topics": [
+          "فهم حدود جرد التشفير",
+          "توثيق الخوارزمية ثم اختبار الإعداد والتوافق بأداة مناسبة"
+        ],
+        "tool_ids": [
+          "crypto"
+        ],
+        "lesson_ids": [
+          "lesson.11"
+        ],
+        "related_section_id": "11",
+        "references": [
+          {
+            "name": "OpenSSL",
+            "url": "https://docs.openssl.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.12",
+        "name": "تعلّم اختبار العتاد والبرامج الثابتة",
+        "description": "ارتفاع entropy قد يدل على ضغط أو تشفير، ولا يثبت برمجية ضارة بمفرده.",
+        "topics": [
+          "تفسير entropy",
+          "ربط التواقيع والبنية والمصدر والتحقق من سلامة التحديث"
+        ],
+        "tool_ids": [
+          "firmware"
+        ],
+        "lesson_ids": [
+          "lesson.12"
+        ],
+        "related_section_id": "12",
+        "references": [
+          {
+            "name": "UEFI",
+            "url": "https://uefi.org/specifications",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.13",
+        "name": "تعلّم اختبار الأنظمة الصناعية وIoT",
+        "description": "نموذج حسابي مبسط يوضح أثر التغذية الراجعة، ولا يثبت سلامة مصنع فعلي.",
+        "topics": [
+          "اختبار نموذج حراري",
+          "قياس النموذج وحدوده قبل أي تكامل مادي مصرح"
+        ],
+        "tool_ids": [
+          "twin"
+        ],
+        "lesson_ids": [
+          "lesson.13"
+        ],
+        "related_section_id": "13",
+        "references": [
+          {
+            "name": "NIST OT Security",
+            "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.14",
+        "name": "تعلّم اختبار الإشارات والاستشعار",
+        "description": "DFT يصف عينات مقدمة؛ تحديد القمة لا يحدد جهازًا أو نيةً أو تصريح بث.",
+        "topics": [
+          "تفسير قمة طيفية",
+          "توثيق العينات ومعدلها وحدود الدقة"
+        ],
+        "tool_ids": [
+          "spectrum"
+        ],
+        "lesson_ids": [
+          "lesson.14"
+        ],
+        "related_section_id": "14",
+        "references": [
+          {
+            "name": "GNU Radio",
+            "url": "https://wiki.gnuradio.org/index.php/Main_Page",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.15",
+        "name": "تعلّم اختبار الطيران والمسيّرات",
+        "description": "فجوة القياسات قد تنتج عن فقد أو إعادة ترتيب؛ تحتاج سياقًا ولا تبرر تحكمًا حيًا.",
+        "topics": [
+          "اكتشاف فجوة تسلسل",
+          "حفظ تسلسل القياسات ومراجعة الفقد والسياق"
+        ],
+        "tool_ids": [
+          "telemetry"
+        ],
+        "lesson_ids": [
+          "lesson.15"
+        ],
+        "related_section_id": "15",
+        "references": [
+          {
+            "name": "MAVLink",
+            "url": "https://mavlink.io/en/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.16",
+        "name": "تعلّم اختبار الروبوتات والمركبات",
+        "description": "قراءة candump لا تتطلب إرسال إطارات، ولا تكشف معنى كل إشارة دون مواصفة.",
+        "topics": [
+          "قراءة CAN من تسجيل",
+          "تحليل التسجيل والتحقق من مواصفة الإشارات"
+        ],
+        "tool_ids": [
+          "can"
+        ],
+        "lesson_ids": [
+          "lesson.16"
+        ],
+        "related_section_id": "16",
+        "references": [
+          {
+            "name": "Linux SocketCAN",
+            "url": "https://docs.kernel.org/networking/can.html",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.17",
+        "name": "تعلّم اختبار الفضاء",
+        "description": "CCSDS يحدد بنية رسائل؛ قراءة الرأس ليست اتصالًا بقمر أو تحليلًا لكل حمولة.",
+        "topics": [
+          "مراجعة رأس حزمة",
+          "التحقق من طول الحزمة والحقول وتوثيق حدود التحليل"
+        ],
+        "tool_ids": [
+          "ccsds"
+        ],
+        "lesson_ids": [
+          "lesson.17"
+        ],
+        "related_section_id": "17",
+        "references": [
+          {
+            "name": "CCSDS",
+            "url": "https://public.ccsds.org/Publications/default.aspx",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.18",
+        "name": "تعلّم اختبار الذكاء الاصطناعي",
+        "description": "مطابقة مقتطف لمصدره لا تثبت أن الاستنتاج صحيح؛ النص غير الموثوق لا يمنح صلاحيات.",
+        "topics": [
+          "مراجعة استنتاج مولد",
+          "التحقق من المصدر والمقتطف والمعنى مستقلًا"
+        ],
+        "tool_ids": [
+          "ai-audit"
+        ],
+        "lesson_ids": [
+          "lesson.18"
+        ],
+        "related_section_id": "18",
+        "references": [
+          {
+            "name": "OWASP GenAI Security",
+            "url": "https://genai.owasp.org/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.19",
+        "name": "تعلّم اختبار الحوكمة والخصوصية",
+        "description": "تنقيح نسخة يترك الأصل سليمًا، لكن الكاشف قد يفوّت أسرارًا فتجب مراجعة بشرية.",
+        "topics": [
+          "إعداد نسخة للمشاركة",
+          "مراجعة النسخة المنقحة وتحديد غرض ومتلقي المشاركة"
+        ],
+        "tool_ids": [
+          "privacy"
+        ],
+        "lesson_ids": [
+          "lesson.19"
+        ],
+        "related_section_id": "19",
+        "references": [
+          {
+            "name": "NIST Privacy Framework",
+            "url": "https://www.nist.gov/privacy-framework",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
+      },
+      {
+        "id": "platform.22.20",
+        "name": "تعلّم اختبار إدارة المنظومة",
+        "description": "البيان والترخيص والصلاحيات تساعد المراجعة؛ لا تشغّل كود الإضافة قبل التحقق والعزل.",
+        "topics": [
+          "تقييم بيان إضافة",
+          "مراجعة المصدر والترخيص والصلاحيات والاختبار قبل التفعيل"
+        ],
+        "tool_ids": [
+          "manifest"
+        ],
+        "lesson_ids": [
+          "lesson.20"
+        ],
+        "related_section_id": "20",
+        "references": [
+          {
+            "name": "The Update Framework",
+            "url": "https://theupdateframework.io/",
+            "kind": "official_reference",
+            "live_updates": false
+          }
+        ],
+        "scope": "تعليم وتحليل بيانات مصرح بها؛ لا عمليات على أهداف خارجية"
       }
     ]
   }

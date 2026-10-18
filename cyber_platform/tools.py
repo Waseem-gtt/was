@@ -255,10 +255,47 @@ def manifest(data):
             "limitations": "تحقق بيان فقط؛ لا تثبيت أو تنفيذ كود إضافة"}
 
 
+def detection_rules(data):
+    """Test exact-match AND selections on provided events. No regex/eval/YAML."""
+    value = obj(data)
+    events, rules = value.get("events"), value.get("rules")
+    if not isinstance(events, list) or len(events) > 10000 or not all(isinstance(e, dict) for e in events):
+        raise ValueError("Expected at most 10000 event objects")
+    if not isinstance(rules, list) or not 1 <= len(rules) <= 50:
+        raise ValueError("Expected 1..50 rules")
+    ids, outputs = set(), []
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError("Rule must be an object")
+        rid, selection = rule.get("id"), rule.get("selection")
+        if not isinstance(rid, str) or not 1 <= len(rid) <= 100 or rid in ids:
+            raise ValueError("Rule IDs must be unique nonempty strings")
+        ids.add(rid)
+        if not isinstance(selection, dict) or not 1 <= len(selection) <= 20:
+            raise ValueError("Each rule needs 1..20 exact-match fields")
+        if any(not isinstance(k, str) or not 1 <= len(k) <= 100 or not isinstance(v, (str, int, float, bool, type(None))) for k, v in selection.items()):
+            raise ValueError("Selection values must be JSON scalars")
+        matches = [i for i, event in enumerate(events) if all(k in event and type(event[k]) is type(v) and event[k] == v for k, v in selection.items())]
+        expected = rule.get("expected_event_indexes")
+        metrics = None
+        if expected is not None:
+            if not isinstance(expected, list) or any(type(i) is not int or not 0 <= i < len(events) for i in expected):
+                raise ValueError("Expected indexes must refer to supplied events")
+            actual, truth = set(matches), set(expected)
+            metrics = {"true_positive": len(actual & truth), "false_positive": len(actual - truth),
+                       "false_negative": len(truth - actual), "true_negative": len(events) - len(actual | truth),
+                       "passed": actual == truth}
+        outputs.append({"id": rid, "matched_event_indexes": matches, "metrics": metrics,
+                        "source": rule.get("source"), "version": rule.get("version"), "license": rule.get("license")})
+    return {"schema": "was.rules/1", "rules": outputs, "event_count": len(events),
+            "evaluated_rules": sum(r["metrics"] is not None for r in outputs),
+            "limitations": "قواعد مطابقة حقول على بيانات مقدمة؛ ليست محرك Sigma كاملًا أو مراقبة حية أو إثبات حماية شاملة"}
+
+
 SPECS = [
     ("ioc", "استخراج المؤشرات", indicators, "نص يحوي عناوين IP وروابط", "Host 192.0.2.1 contacted https://example.test/path"),
     ("http", "مراجعة رؤوس HTTP", http_review, "JSON لرؤوس استجابة", {"status": 200, "headers": {"X-Content-Type-Options": "nosniff"}}),
-    ("events", "توحيد أحداث مختبرية", events, "JSON مصفوفة أحداث", [{"time": "2026-10-17T00:00:00Z", "user": "lab", "action": "login", "outcome": "failure"}]),
+    ("events", "توحيد أحداث تجريبية", events, "JSON مصفوفة أحداث", [{"time": "2026-10-17T00:00:00Z", "user": "lab", "action": "login", "outcome": "failure"}]),
     ("hashes", "بصمات الأدلة", hashes, "أي ملف", "Evidence integrity sample"),
     ("executable", "فحص رؤوس ELF وPE", executable, "ملف تنفيذي للتحليل الساكن", "Static analysis sample, never executed"),
     ("flows", "إحصاء تدفقات الشبكة", network, "CSV: protocol,destination,bytes", "protocol,destination,bytes\nTLS,192.0.2.1,512\nDNS,192.0.2.2,64\n"),
@@ -275,7 +312,8 @@ SPECS = [
     ("ccsds", "رؤوس حزم CCSDS", space, "ملف حزم ثنائي", None),
     ("ai-audit", "تدقيق مقتطفات AI", ai_audit, "JSON: claims,excerpts", {"excerpts": {"e1": "Reference result: 42"}, "claims": [{"text": "Result is 42", "source": "e1", "quote": "result: 42"}]}),
     ("privacy", "تنقيح نسخة نصية", privacy, "نص للتنقيح", "Contact owner@example.test; Bearer SAMPLE_TOKEN_12345"),
-    ("manifest", "تحقق بيان إضافة", manifest, "JSON بيان إضافة", {"id": "lab.example", "version": "1.0", "license": "MIT", "source": "https://example.test", "permissions": ["selected_evidence.read"]}),
+    ("manifest", "تحقق بيان إضافة", manifest, "JSON بيان إضافة", {"id": "plugin.example", "version": "1.0", "license": "MIT", "source": "https://example.test", "permissions": ["selected_evidence.read"]}),
+    ("rules", "اختبار قواعد كشف دفاعية", detection_rules, "JSON: events,rules مع selection ومعايير متوقعة", {"events": [{"action": "login", "outcome": "failure"}, {"action": "login", "outcome": "success"}], "rules": [{"id": "failed-login", "version": "1", "license": "CC0-1.0", "source": "owner-authored synthetic example", "selection": {"action": "login", "outcome": "failure"}, "expected_event_indexes": [0]}]}),
 ]
 REGISTRY = {s[0]: s[2] for s in SPECS}
 

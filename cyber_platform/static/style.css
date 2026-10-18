@@ -567,27 +567,27 @@ tr:last-child td {
 .row:last-child {
   border-bottom: 0;
 }
-.lab {
+.platform {
   border: 1px solid var(--line);
   border-radius: 12px;
   margin-bottom: 12px;
   overflow: hidden;
 }
-.lab summary {
+.platform summary {
   cursor: pointer;
   padding: 15px 18px;
   background: var(--raised);
   font-size: 0.9rem;
 }
-.lab-content {
+.platform-content {
   padding: 16px 22px;
 }
-.lab-content ul {
+.platform-content ul {
   color: var(--muted);
   font-size: 0.86rem;
   margin: 7px 0;
 }
-.lab-content b {
+.platform-content b {
   font-size: 0.9rem;
 }
 .auth {

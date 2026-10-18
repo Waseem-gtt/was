@@ -15,6 +15,11 @@
 | POST | `/api/upload` | `project_id,name,base64`؛ حد الملف16MiB |
 | GET | `/api/evidence?project=…&id=…` | تنزيل بعد تحقق SHA256؛ ترويسة `X-Evidence-SHA256` |
 | POST | `/api/run` | `project_id,name,steps` |
+| POST | `/api/learning/attempt` | `project_id,lesson_id,answer_index`؛ مدخل تعليمي اصطناعي مسجل،وأي حقول إضافية مرفوضة |
+| GET | `/api/knowledge?project=…` | المصادر وحالة اللقطة والجدولة |
+| GET | `/api/knowledge/search?project=…&q=…` | بحث داخل اللقطة،حتى50نتيجة،وحد السؤال120 حرفًا |
+| POST | `/api/knowledge/refresh` | `project_id,source_id`؛ يقبل المصدر المسجل فقط دون URL بديل |
+| POST | `/api/knowledge/settings` | `project_id,enabled,interval_seconds`؛ فاصل60–86400ثانية،جدول واحد للمالك |
 | POST | `/api/relations` | `project_id,source,target,label`؛ الدليلان من المشروع نفسه |
 | GET | `/api/report?project=…` | بيانات وصفية منقحة دون محتوى الأدلة |
 | GET | `/api/audit` | آخر200حدث ونتيجة تحقق السلسلة الكاملة |
