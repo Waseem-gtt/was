@@ -1,0 +1,62 @@
+{
+  "version": "0.9.0",
+  "unit_tests": {
+    "CPython3.11.17": 189,
+    "CPython3.12.14": 189,
+    "CPython3.13.5": 189
+  },
+  "browser": {
+    "groups": 21,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 13
+  },
+  "quality_center": {
+    "synthetic_cases": 45,
+    "tools": 21,
+    "case_tests": "all_passed_in_real_spawned_workers",
+    "batch_max_cases": 3,
+    "between_cases_budget_seconds": 3,
+    "worker_wall_seconds": 3,
+    "worker_cpu_seconds": 3,
+    "worker_memory_limit_bytes": 402653184,
+    "memory_usage_measured": false,
+    "saved_run_limit": 20,
+    "interruption_fail_closed": true,
+    "suite_and_engine_change_detection": true,
+    "regression_and_improvement_comparison": true,
+    "owner_evidence_read": false,
+    "arbitrary_test_inputs_supported": false,
+    "nist_certification": false,
+    "all_specialty_effectiveness_proven": false
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.9.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "runtime_agent_team": "remains_removed",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_api_network_policy",
+  "full_project_complete": false
+}

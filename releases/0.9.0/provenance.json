@@ -1,0 +1,32 @@
+{
+  "version": "0.9.0",
+  "source_commit": "a2efa1c10f618ac549576ac47caf720472783a1b",
+  "files": {
+    "README.md": {
+      "bytes": 1037,
+      "sha256": "571b669b7771c18a6fd2a4a87c0775fe0414520b8e8f39cb4a3e6d22e02c5eaf"
+    },
+    "validation.json": {
+      "bytes": 1699,
+      "sha256": "fcd77c319967844ef425209746d87e69b0726a6f6c67be7e55e7e2470784ac13"
+    },
+    "was-cyber-platform-0.9.0-source.zip": {
+      "bytes": 3277913,
+      "sha256": "794a6cf15b2d0b801e94fbf11292825e133de563597495eea490f8c115cdd7b6"
+    },
+    "was_cyber_platform-0.9.0-py3-none-any.whl": {
+      "bytes": 169666,
+      "sha256": "e3aae3f2e8c671b1c5b0b7be29c716a33052745cbba450e9cbb1f22a7918fd3e"
+    }
+  },
+  "verification": {
+    "source_archive_exact_tracked_files": 104,
+    "wheel_package_files_exact": 25,
+    "runtime_agent_modules": "absent",
+    "installed_wheel": "passed_including_all_45_synthetic_quality_cases",
+    "real_model_inference": false,
+    "github_actions_result": "not_observed"
+  },
+  "signature": "unsigned; SHA-256 is not a publisher signature",
+  "privacy": "No owner runtime database, evidence, backup, enrollment token, credentials, private keys, or model weights included."
+}
