@@ -1,0 +1,43 @@
+{
+  "version": "0.7.0",
+  "unit_tests": {
+    "CPython3.11.17": 143,
+    "CPython3.12.14": 143,
+    "CPython3.13.5": 143
+  },
+  "browser": {
+    "groups": 20,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 12
+  },
+  "runtime_agent_team": "removed_from_code_ui_api_and_current_distribution",
+  "historical_owner_records": "preserved_and_inert",
+  "historical_0_6_executables": "withdrawn_from_main_tree",
+  "single_local_chat": "retained_optional_with_synthetic_transport_test",
+  "real_model_inference_tested": false,
+  "integrity": {
+    "resumable": true,
+    "batch_files": 100,
+    "batch_bytes": 67108864,
+    "evidence_read_seconds": 3,
+    "snapshot_max_files": 10000,
+    "retained_scans": 20,
+    "fixture_large_files": 601,
+    "fixture_large_bytes": 83886080,
+    "unsafe_storage_writes": "blocked"
+  },
+  "installed_wheel": "passed_and_removed_agent_modules_absent",
+  "security": {
+    "bandit_unresolved": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "github_actions": "not_observed_api_network_policy",
+  "full_project_complete": false
+}
