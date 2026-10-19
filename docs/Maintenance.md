@@ -17,7 +17,7 @@
 من المستودع الخاص، اجلب main بالطريقة المعتادة، ثم اختر SHA كاملًا راجعته. لا تغير الأداة عنوان المستودع أو خصوصيته، ولا تنسخ بيانات التشغيل. اختر مجلد إصدارات جديدًا خاصًا بصلاحية0700 خارج مجلد الأدلة:
 
 ```bash
-git fetch origin main
+git fetch origin main:refs/remotes/origin/main
 # استبدل REVIEWED_COMMIT_SHA بقيمة كاملة من40محرفًا بعد مراجعتها
 bash scripts/release.sh prepare REVIEWED_COMMIT_SHA /absolute/private/was-releases
 ```

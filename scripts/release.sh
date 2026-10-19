@@ -64,17 +64,17 @@ case "$operation" in
       [[ "$file" == */ ]] || sha256sum -- "$file"
     done > .release-sha256
     python3 -m venv .venv
-    .venv/bin/python -m pip install --disable-pip-version-check --require-hashes -r requirements.lock
+    .venv/bin/python -m pip install --cache-dir "$prefix/pip-cache" --disable-pip-version-check --require-hashes -r requirements.lock
     .venv/bin/python scripts/build_requirements.py --check
     .venv/bin/python -m unittest discover -v
     node --check cyber_platform/static/app.js
     python3 -m venv .checks
-    .checks/bin/python -m pip install --disable-pip-version-check -r requirements-security.txt playwright==1.58.0
-    .checks/bin/python -m pip install --require-hashes -r requirements.lock
+    .checks/bin/python -m pip install --cache-dir "$prefix/pip-cache" --disable-pip-version-check -r requirements-security.txt playwright==1.58.0
+    .checks/bin/python -m pip install --cache-dir "$prefix/pip-cache" --require-hashes -r requirements.lock
     .checks/bin/bandit -r cyber_platform
     .checks/bin/pip-audit --require-hashes --disable-pip --strict -r requirements.lock --cache-dir "$prefix/audit-cache"
     .checks/bin/python -m tests.browser_smoke
-    .venv/bin/python -m pip wheel --no-deps --wheel-dir .state/dist .
+    .venv/bin/python -m pip wheel --cache-dir "$prefix/pip-cache" --no-deps --wheel-dir .state/dist .
     sha256sum --quiet --check .release-sha256
     printf '%s\n' "$revision" > .ready
     echo 'All required checks passed. This release is prepared but not activated.'

@@ -58,6 +58,30 @@ class MaintenanceTests(StoreCase):
         self.assertTrue(path.is_symlink())
         self.assertEqual(other.stat().st_mode & 0o777, 0o644)
 
+    def test_fifo_evidence_and_setup_token_refused_without_blocking(self):
+        e = self.evidence()
+        evidence_path = self.store.blobs / e['id']
+        evidence_path.unlink()
+        os.mkfifo(evidence_path,0o600)
+        os.mkfifo(self.store.root/'setup-token',0o600)
+        program = '''import sys
+from cyber_platform.store import Store, Problem
+s = Store(sys.argv[1])
+try:
+    if sys.argv[2] == 'setup':
+        s.setup_token()
+    else:
+        s.read_evidence(sys.argv[2],sys.argv[3])
+except Problem:
+    sys.exit(0)
+finally:
+    s.close()
+sys.exit(1)
+'''
+        for args in [('setup',),(self.pid,e['id'])]:
+            result = subprocess.run([sys.executable,'-c',program,str(self.store.root),*args],capture_output=True,timeout=3)
+            self.assertEqual(result.returncode,0,result.stderr)
+
     def test_worker_failure_is_failed_check(self):
         with patch('cyber_platform.maintenance.worker.analyze', side_effect=ValueError('limit')):
             result = maintenance.check(self.store, section_id='01')

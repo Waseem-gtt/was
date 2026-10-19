@@ -81,7 +81,7 @@ class Store:
             fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
         except FileExistsError:
             try:
-                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             except OSError:
                 raise Problem("ملف رمز التهيئة غير آمن") from None
             with os.fdopen(fd, "rb") as file:
@@ -220,7 +220,7 @@ class Store:
         record = self.evidence(project_id, eid)
         path = self.blobs / record["id"]
         try:
-            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         except OSError:
             raise Problem("ملف الدليل مفقود أو غير آمن", 409) from None
         with os.fdopen(fd, "rb") as file:
