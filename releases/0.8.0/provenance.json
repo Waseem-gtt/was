@@ -1,0 +1,43 @@
+{
+  "version": "0.8.0",
+  "source_commit": "85f5002312899d89a972b012a7c659b0a7666578",
+  "files": {
+    "README.md": {
+      "bytes": 1148,
+      "sha256": "b77fc5bf0d231c979b55a0562c3b5531b609326a23aa0c3941d37525ab3ca1fa"
+    },
+    "validation.json": {
+      "bytes": 1565,
+      "sha256": "39e81658beb63758520abc8a50e912740e294b78f79d3c725224d6fe72dc173f"
+    },
+    "was-cyber-platform-0.8.0-source.zip": {
+      "bytes": 1551992,
+      "sha256": "fd88330106c874347650c3d7e9a99a8cb37ae9c3bcaf1f9eda8320f82b1d3260"
+    },
+    "was_cyber_platform-0.8.0-py3-none-any.whl": {
+      "bytes": 157129,
+      "sha256": "1c04562e5349f1b27c963756d1b6badd1da64b6c15d1a3dedfe7d2db7217bfd3"
+    }
+  },
+  "verification": {
+    "source_archive_exact_tracked_files": 91,
+    "wheel_package_files_exact": 23,
+    "runtime_agent_modules": "absent",
+    "signed_source_end_to_end": {
+      "source_commit": "85f5002312899d89a972b012a7c659b0a7666578",
+      "signed_prepare": true,
+      "signed_activation": true,
+      "source_artifact_checked": true,
+      "unsigned_activation_rejected": true,
+      "sequence_downgrade_rejected": true,
+      "trust_substitution_rejected": true,
+      "idempotent_retry": true,
+      "temporary_test_keys_only": true
+    },
+    "installed_wheel": "passed",
+    "real_model_inference": false,
+    "github_actions_result": "not_observed"
+  },
+  "signature": "unsigned; SHA-256 is not a publisher signature; test signing keys are not owner trust",
+  "privacy": "No owner runtime database, evidence, backup, enrollment token, credentials, private keys, or model weights included."
+}

@@ -39,5 +39,16 @@
   "source_exact_check": "passed",
   "runtime_agent_team": "remains_removed",
   "github_actions": "not_observed_api_network_policy",
-  "full_project_complete": false
+  "full_project_complete": false,
+  "signed_source_end_to_end": {
+    "source_commit": "85f5002312899d89a972b012a7c659b0a7666578",
+    "signed_prepare": true,
+    "signed_activation": true,
+    "source_artifact_checked": true,
+    "unsigned_activation_rejected": true,
+    "sequence_downgrade_rejected": true,
+    "trust_substitution_rejected": true,
+    "idempotent_retry": true,
+    "temporary_test_keys_only": true
+  }
 }

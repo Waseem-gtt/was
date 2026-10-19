@@ -1,0 +1,54 @@
+{
+  "version": "0.8.0",
+  "unit_tests": {
+    "CPython3.11.17": 169,
+    "CPython3.12.14": 169,
+    "CPython3.13.5": 169
+  },
+  "browser": {
+    "groups": 20,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 12
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "signing": {
+    "algorithm": "Ed25519",
+    "max_trust_keys": 8,
+    "max_metadata_bytes": 32768,
+    "max_validity_days": 30,
+    "repository_and_commit_binding": true,
+    "pinned_trust_digest": true,
+    "antirollback_sequence": true,
+    "activation_requires_signature_after_pin": true,
+    "explicit_local_rollback_preserves_high_watermark": true,
+    "private_owner_keys_generated": false,
+    "temporary_test_keys_only": true,
+    "publisher_signature_on_delivery_bundle": false,
+    "tuf_implemented": false
+  },
+  "installed_wheel_smoke": "passed_including_temporary_signing_fixture",
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "runtime_agent_team": "remains_removed",
+  "github_actions": "not_observed_api_network_policy",
+  "full_project_complete": false,
+  "signed_source_end_to_end": {
+    "source_commit": "85f5002312899d89a972b012a7c659b0a7666578",
+    "signed_prepare": true,
+    "signed_activation": true,
+    "source_artifact_checked": true,
+    "unsigned_activation_rejected": true,
+    "sequence_downgrade_rejected": true,
+    "trust_substitution_rejected": true,
+    "idempotent_retry": true,
+    "temporary_test_keys_only": true
+  }
+}
