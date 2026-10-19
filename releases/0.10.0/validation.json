@@ -1,0 +1,109 @@
+{
+  "version": "0.10.0",
+  "unit_tests": {
+    "CPython3.11.17": 241,
+    "CPython3.12.14": 241,
+    "CPython3.13.5": 241
+  },
+  "new_unit_tests": 52,
+  "browser": {
+    "groups": 25,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 16
+  },
+  "event_adapters": {
+    "formats": [
+      "windows-json",
+      "syslog-rfc5424",
+      "flows-csv"
+    ],
+    "maximum_source_bytes": 1048576,
+    "maximum_records": 1000,
+    "all_or_nothing": true,
+    "originals_preserved": true,
+    "replay_verified_provenance": true,
+    "full_ocsf": false,
+    "live_collection": false
+  },
+  "detection": {
+    "builtin_rules": 8,
+    "builtin_license": "CC0-1.0",
+    "maximum_owner_rule_ids_per_project": 50,
+    "maximum_revisions_per_rule": 10,
+    "immutable_revisions": true,
+    "truth_required_for_pass": true,
+    "metrics": [
+      "true_positive",
+      "false_positive",
+      "false_negative",
+      "true_negative",
+      "precision",
+      "recall"
+    ],
+    "full_sigma": false,
+    "publisher_signed_library": false
+  },
+  "defense_coverage": {
+    "maximum_assets_per_project": 100,
+    "maximum_assessments_per_project": 200,
+    "maximum_distinct_detection_replays_per_view": 3,
+    "verification_budget_bytes": 67108864,
+    "between_replays_budget_seconds": 3,
+    "excess_verification_status": "unverified",
+    "positive_truth_opportunities_required_for_support": true,
+    "source_rule_engine_provenance_verified": true,
+    "ordinary_evidence_proves_protection": false,
+    "live_protection_claim": false,
+    "full_d3fend": false
+  },
+  "quality_center": {
+    "synthetic_cases": 48,
+    "tools": 21,
+    "all_cases_passed_in_spawned_workers": true,
+    "memory_usage_measured": false
+  },
+  "regressions": {
+    "heavy_slot_released_before_response_publication": true,
+    "event_publication_transaction_rollback": true,
+    "encrypted_backup_restore_of_new_features": true,
+    "csp_preserved_without_unsafe_eval": true
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.10.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "runtime_agent_team": "remains_removed",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_api_network_policy",
+  "requirements_advanced_but_still_partial": [
+    "F03",
+    "F04",
+    "N06"
+  ],
+  "full_project_complete": false
+}
