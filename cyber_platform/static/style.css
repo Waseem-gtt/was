@@ -284,6 +284,9 @@ small,
   gap: 16px;
   margin-bottom: 26px;
 }
+.maintenance-toolbar { margin-bottom: 18px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; }
+.maintenance-toolbar summary { cursor: pointer; }
+.maintenance-toolbar .actions { margin-top: 12px; flex-wrap: wrap; }
 .eyebrow {
   font-size: 0.73rem;
   letter-spacing: 2px;

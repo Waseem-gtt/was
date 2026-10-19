@@ -1,6 +1,8 @@
 import argparse
 import getpass
 import os
+import threading
+import webbrowser
 from pathlib import Path
 from . import backup
 from .server import App
@@ -10,7 +12,7 @@ from .store import Problem, Store
 def main():
     parser = argparse.ArgumentParser(description="WAS local cyber research platform")
     sub = parser.add_subparsers(dest="command", required=True)
-    serve = sub.add_parser("serve")
+    serve = sub.add_parser("serve", aliases=["desktop"])
     serve.add_argument("--data", default=os.environ.get("WAS_DATA_DIR", str(Path.home() / ".local/share/was-platform")))
     serve.add_argument("--port", type=int, default=8080)
     serve.add_argument("--quota", type=int, default=2_000_000_000)
@@ -32,13 +34,15 @@ def main():
         if not store.setting("owner"):
             print("Owner enrollment requires the private setup-token file in the data directory. Read it locally; do not share it in chat or Git.", flush=True)
         try:
+            if args.command == "desktop":
+                threading.Thread(target=webbrowser.open, args=(f"http://127.0.0.1:{app.server_port}",), daemon=True).start()
             app.serve_forever()
         except KeyboardInterrupt:
             pass
         finally:
             app.server_close()
             store.close()
-    except Problem as exc:
+    except (Problem, OSError) as exc:
         parser.exit(1, str(exc) + "\n")
 
 

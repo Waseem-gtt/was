@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=واس — منصة البحث السيبراني
+Comment=Private Arabic cyber research application
+Exec=/ABSOLUTE/PATH/was/scripts/desktop.sh
+Terminal=true
+Categories=Education;Development;
+StartupNotify=true

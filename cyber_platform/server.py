@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, comparison, engine, knowledge, learning, local_ai, requirements, sandbox, tools
+from . import __version__, backup, comparison, engine, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -172,6 +172,8 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/maintenance":
+                return self.reply(maintenance.history(self.store))
             if path == "/api/requirements":
                 return self.reply(requirements.view(query.get("q", [""])[0], query.get("status", [""])[0],
                                                     int(query.get("page", ["1"])[0]), query.get("mode", ["requirements"])[0]))
@@ -265,6 +267,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"ok": True}, headers={"Set-Cookie": "was_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0"})
             if path == "/api/projects":
                 return self.reply(self.store.create_project(body.get("name"), body.get("description", "")), 201)
+            if path == "/api/development":
+                return self.reply(maintenance.task(self.store, body))
             if path == "/api/knowledge/settings":
                 if set(body) != {"project_id", "enabled", "interval_seconds"}:
                     raise Problem("إعدادات الجدولة غير صالحة")
@@ -278,10 +282,14 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/maintenance":
+                        if set(body) != {"operation", "section_id"}:
+                            raise Problem("حقول الصيانة غير صالحة")
+                        return self.reply(maintenance.check(self.store, body["operation"], body["section_id"]))
                     if path == "/api/workflows/resume":
                         if not {"project_id", "source_job_id", "steps"} <= set(body) or set(body) - {"project_id", "source_job_id", "steps", "name"}:
                             raise Problem("حقول الاستكمال غير صالحة")

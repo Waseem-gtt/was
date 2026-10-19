@@ -63,6 +63,10 @@ class Store:
           target TEXT NOT NULL, label TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS audit(seq INTEGER PRIMARY KEY, time REAL NOT NULL, action TEXT NOT NULL, details TEXT NOT NULL,
           previous TEXT NOT NULL, hash TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS maintenance_runs(id TEXT PRIMARY KEY, created REAL NOT NULL, operation TEXT NOT NULL,
+          section_id TEXT, report TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS development_tasks(id TEXT PRIMARY KEY, created REAL NOT NULL, updated REAL NOT NULL,
+          section_id TEXT NOT NULL, title TEXT NOT NULL, status TEXT NOT NULL);
         """)
         self.db.commit()
         os.chmod(self.root / "platform.db", 0o600)

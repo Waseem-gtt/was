@@ -58,7 +58,8 @@ class RequirementsTests(unittest.TestCase):
                 break
         self.assertEqual(all_items, requirements.DATA["blocks"])
         self.assertTrue(requirements.view("0.13", mode="source")["matches"])
-        self.assertEqual(requirements.view("F05")["items"][0]["status"], "not_implemented")
+        update = requirements.view("F05")["items"][0]
+        self.assertEqual(update["status"], "partial")
         self.assertTrue(all(r["status"] == "blocked" for r in requirements.view(status="blocked")["items"]))
 
     def test_historical_claims_do_not_mark_features_complete(self):
@@ -100,7 +101,7 @@ class RequirementsHTTPTests(core.StoreCase):
         status,_,body=self.request('/api/requirements?q=F05')
         self.assertEqual(status,200)
         record=json.loads(body)['items'][0]
-        self.assertEqual(record['status'],'not_implemented')
+        self.assertEqual(record['status'],'partial')
         status,_,body=self.request('/api/requirements/block?id='+record['source_ids'][0])
         self.assertEqual(status,200)
         self.assertIn('F05',json.loads(body)['block']['text'])

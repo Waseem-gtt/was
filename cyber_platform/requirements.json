@@ -3359,10 +3359,11 @@
       "id": "F05",
       "title": "تحديثات موثوقة",
       "group": "F",
-      "status": "not_implemented",
-      "scope": "لا تحديثات كود موقعة أو TUF أو مسار تثبيت وترحيل تلقائي",
+      "status": "partial",
+      "scope": "ترقية لينكس من التزام Git محدد مع اختبار نسخة مستقلة وتفعيل وتراجع؛ لا توقيعات إصدار أو TUF أو تحديث آلي",
       "evidence_paths": [
-        "docs/Implementation-Status.md"
+        "scripts/release.sh",
+        "docs/Maintenance.md"
       ],
       "source_ids": [
         "source.0031"
@@ -3509,10 +3510,10 @@
       "title": "تعديل سهل وصيانة تلقائية ومعالجة انتهاء الدعم وقابلية نقل طويلة الأمد",
       "group": "E",
       "status": "partial",
-      "scope": "نسخ واستعادة وتعليمات تشغيل؛ لا إصلاح مستقل لكل مكون أو ضمان صيانة لعقود",
+      "scope": "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود",
       "evidence_paths": [
-        "cyber_platform/backup.py",
-        "docs/Linux-Deployment.md"
+        "cyber_platform/maintenance.py",
+        "docs/Maintenance.md"
       ],
       "source_ids": [
         "source.0050"

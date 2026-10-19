@@ -22,6 +22,7 @@ const nav = [
   ["assistant", "✧", "المساعد المحلي"],
   ["audit", "≡", "سجل التدقيق"],
   ["settings", "⚙", "إدارة المنظومة"],
+  ["maintenance", "⟳", "التحديث والصيانة"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -129,7 +130,7 @@ async function refresh() {
 function go(view, section = null) {
   state.view = view;
   state.section = section;
-  const hash = section ? "section-" + section : view;
+  const hash = section && view === "sections" ? "section-" + section : view;
   if (location.hash !== "#" + hash) history.pushState(null, "", "#" + hash);
   render();
   window.scrollTo(0, 0);
@@ -410,7 +411,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.4.0"),
+      el("small", {}, "نسخة البناء 0.5.0"),
     ),
   );
   const select = el(
@@ -435,6 +436,12 @@ function render() {
   );
   const content = el("div", { class: "content" });
   const current = nav.find((n) => n[0] === state.view);
+  content.append(el("div", {class:"maintenance-toolbar"},
+    el("details", {}, el("summary", {}, "إدارة البرنامج ▾"),
+      el("div", {class:"actions"},
+        button("فحص وصيانة جميع الأقسام", () => go("maintenance")),
+        button("تحديث المعرفة", () => go("knowledge")),
+        button("التطوير وترقية البرنامج", () => go("maintenance"))))));
   content.append(
     el(
       "header",
@@ -446,7 +453,7 @@ function render() {
         el(
           "h1",
           {},
-          state.section
+          state.section && state.view === "sections"
             ? state.boot.catalog.find((s) => s.id === state.section)?.name
             : current?.[2],
         ),
@@ -479,6 +486,7 @@ function render() {
     assistant,
     audit: auditPage,
     settings,
+    maintenance: maintenancePage,
   };
   content.append(
     views[state.view]?.() || dashboard(),
@@ -807,6 +815,7 @@ function sections() {
       "div",
       {},
       button("→ جميع الأقسام", () => go("sections"), "small ghost"),
+      button("صيانة وتطوير هذا القسم", () => go("maintenance", s.id), "small"),
       el("div", { class: "divider" }),
       el(
         "div",
@@ -2113,7 +2122,7 @@ function settings() {
           [
             "المعرفة وتحديث البرامج",
             badge("جلب معرفة متاح", "good"),
-            "فهرس CISA وجدولة اختيارية؛ تثبيت تحديثات البرامج غير منفذ",
+            "فهرس CISA وجدولة اختيارية؛ ترقية البرنامج عبر إصدار Git محدد ومختبر من طرفية لينكس",
           ],
           [
             "VirtualBox / OVA",
@@ -2125,6 +2134,65 @@ function settings() {
       ),
     ),
   );
+}
+function maintenancePage() {
+  const scope = el("select", {"aria-label":"نطاق الصيانة"},
+    el("option", {value:""}, "جميع الأقسام"),
+    state.boot.catalog.map(s => el("option", {value:s.id, selected:s.id === state.section}, s.name)));
+  const output = el("div", {"aria-live":"polite"});
+  const history = el("div");
+  const tasks = el("div");
+  const labels = {open:"مفتوح", in_progress:"قيد التطوير", done:"منجز حسب مراجعة المالك"};
+  function showReport(r) {
+    output.replaceChildren(panel("نتيجة الفحص", badge(r.passed ? "اجتاز الفحص المحدد" : "توجد ملاحظات أو فحص غير مكتمل", r.passed ? "good":"warn"),
+      el("p", {}, r.limitation),
+      table(["الفحص", "النتيجة", "التفاصيل"], r.checks.map(c => [c.id, c.status === "passed" ? "اجتاز":"يحتاج مراجعة", pre(c.detail)])),
+      el("p", {}, "إصلاحات صلاحيات: " + r.repairs.length)));
+  }
+  function showTasks(rows) {
+    tasks.replaceChildren(...rows.map(t => {
+      const select = el("select", {"aria-label":"حالة طلب " + t.title},
+        Object.entries(labels).map(([value,label]) => el("option", {value, selected:t.status===value}, label)));
+      return el("article", {class:"card"}, el("h3", {}, t.title),
+        el("p", {}, state.boot.catalog.find(s=>s.id===t.section_id)?.name), select,
+        button("حفظ حالة الطلب", () => action(async () => {
+          const result = await api("development", {id:t.id, status:select.value});
+          showTasks(result.tasks);
+        })));
+    }));
+  }
+  async function load() {
+    const data = await api("maintenance");
+    history.replaceChildren(...data.runs.map(r => button(when(r.created) + " · " + (r.operation === "repair" ? "إصلاح":"فحص") + " · " + (r.report.passed ? "اجتاز":"ملاحظات"), () => showReport(r.report), "small ghost")));
+    showTasks(data.tasks);
+  }
+  const run = operation => action(async () => {
+    output.replaceChildren(el("p", {}, "يجري التحقق من البيانات وتشغيل عينات الأدوات…"));
+    const result = await api("maintenance", {operation, section_id:scope.value || null});
+    showReport(result);
+    await load();
+  });
+  const title = el("input", {maxlength:300, minlength:3, required:true});
+  const taskScope = el("select", {}, state.boot.catalog.map(s=>el("option", {value:s.id, selected:s.id===state.section}, s.name)));
+  const form = el("form", {onsubmit:e=>{
+    e.preventDefault();
+    action(async ()=>{
+      const result = await api("development", {section_id:taskScope.value, title:title.value});
+      title.value="";
+      showTasks(result.tasks);
+      toast("حُفظ طلب التطوير للمراجعة والتنفيذ");
+    });
+  }}, field("قسم طلب التطوير", taskScope), field("عنوان طلب التطوير أو الخطأ", title),
+  el("button", {type:"submit", class:"primary"}, "تسجيل طلب تطوير"));
+  load().catch(e=>toast(e.message,true));
+  return el("div", {}, panel("فحص وصيانة الأقسام", field("نطاق الصيانة", scope),
+    el("p", {}, "فحص قاعدة البيانات وسلسلة التدقيق وبصمات الأدلة وصلاحيات الملفات، مع تشغيل عينات ثابتة للأدوات المرتبطة بالقسم. الإصلاح يضبط صلاحيات الملفات المعروفة المتحققة فقط؛ لا يحذف الأدلة أو يعيد كتابة سجل تالف."),
+    el("div", {class:"actions"}, button("تشغيل الفحص", ()=>run("check"), "primary"), button("إصلاح الصلاحيات وإعادة الفحص", ()=>run("repair")), button("تحديث المعرفة العالمية", ()=>go("knowledge")))),
+    output, panel("سجل آخر الفحوص", history),
+    panel("التطوير والإبلاغ عن الأخطاء", el("p", {}, "طلبات متابعة يراجعها المالك؛ تسجيل الطلب لا يغيّر كود البرنامج ولا يعني تنفيذ الإصلاح."), form, tasks),
+    panel("ترقية برنامج لينكس", el("p", {}, "تُجهّز نسخة مستقلة من التزام Git محدد، وتُفحص قبل تفعيلها. نزّل نسخة احتياطية مشفرة وأوقف الخدمة قبل تبديل الإصدار. نفّذ الأوامر من طرفية لينكس داخل المستودع الخاص؛ التفاصيل في docs/Maintenance.md."),
+      pre("bash scripts/release.sh prepare COMMIT_SHA /path/to/private-releases\nbash scripts/release.sh activate COMMIT_SHA /path/to/private-releases\nbash scripts/release.sh rollback /path/to/private-releases"),
+      el("p", {}, "ترقيات حزم النظام والأدوات الخارجية تحتاج مستودعاتها الموقعة وإدارة لينكس. لا يمكن لهذا الفحص ضمان إصلاح جميع الأعطال تلقائيًا.")));
 }
 window.addEventListener("hashchange", () => {
   const hash = location.hash.slice(1);
