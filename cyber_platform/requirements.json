@@ -3581,10 +3581,11 @@
       "title": "مركز قياس صحة النتائج وجودة الأدوات",
       "group": "N",
       "status": "partial",
-      "scope": "اختبارات مرجعية للمحللات والقواعد؛ لا مركز تقييم عام",
+      "scope": "مركز جودة بحالات اصطناعية ثابتة وتقدم محفوظ وزمن جداري ومقارنة تراجع؛ لا تقييم شامل لكل التخصصات أو قياس ذاكرة فعلي",
       "evidence_paths": [
-        "tests/test_platform.py",
-        "docs/Validation.md"
+        "cyber_platform/quality.py",
+        "cyber_platform/quality_cases.json",
+        "docs/Quality-Center.md"
       ],
       "source_ids": [
         "source.0059"

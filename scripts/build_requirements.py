@@ -27,7 +27,7 @@ REVIEWS = {
     "N02": ("superseded", "اشتراط إنشاء مختبرات ألغي؛ توليد منصات وإضافات عامة غير منفذ", "docs/Scope-Update-0.2.md"),
     "N03": ("superseded", "ألغى المالك فريق الوكلاء داخل المنتج؛ مساعدو تطوير المشروع خارج التطبيق ولا يمثلون قدرة تشغيل داخله", "docs/Scope-Update-0.7.md"),
     "N04": ("partial", "حفظ نتائج ومدخلات وبصمات ومقارنة بنيوية محدودة لنتائج موثقة؛ لا snapshots محاكاة", "cyber_platform/engine.py", "cyber_platform/comparison.py", "tests/test_workflow_progress.py"),
-    "N05": ("partial", "اختبارات مرجعية للمحللات والقواعد؛ لا مركز تقييم عام", "tests/test_platform.py", "docs/Validation.md"),
+    "N05": ("partial", "مركز جودة بحالات اصطناعية ثابتة وتقدم محفوظ وزمن جداري ومقارنة تراجع؛ لا تقييم شامل لكل التخصصات أو قياس ذاكرة فعلي", "cyber_platform/quality.py", "cyber_platform/quality_cases.json", "docs/Quality-Center.md"),
     "N06": ("partial", "علاقات أدلة؛ لا تقييم دفاعي شامل أو ادعاء فعالية دون تجارب", "cyber_platform/store.py"),
     "Q01": ("partial", "جرد SBOM وبيان إضافة؛ لا مصدرية بناء أو سلسلة تحديث موقعة", "cyber_platform/tools.py"),
     "Q02": ("partial", "مراجعة إعدادات حاويات من ملف؛ لا إثبات سياسة Kubernetes أو عزل سحابة حية", "cyber_platform/tools.py"),

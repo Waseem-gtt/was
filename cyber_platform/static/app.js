@@ -8,6 +8,7 @@ const state = {
   csrf: "",
   busy: false,
   integrityScan: null,
+  qualityRun: null,
 };
 const nav = [
   ["dashboard", "◈", "نظرة عامة"],
@@ -24,6 +25,7 @@ const nav = [
   ["audit", "≡", "سجل التدقيق"],
   ["settings", "⚙", "إدارة المنظومة"],
   ["maintenance", "⟳", "التحديث والصيانة"],
+  ["quality", "✓", "جودة الأدوات"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -412,7 +414,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.8.0"),
+      el("small", {}, "نسخة البناء 0.9.0"),
     ),
   );
   const select = el(
@@ -488,6 +490,7 @@ function render() {
     audit: auditPage,
     settings,
     maintenance: maintenancePage,
+    quality: qualityPage,
   };
   content.append(
     views[state.view]?.() || dashboard(),
@@ -558,6 +561,7 @@ function subtitle() {
     assistant: "محرك محلي مشترك، مع أدلة تختارها أنت.",
     audit: "سجل إجراءات بسلسلة بصمات محلية قابلة للتحقق.",
     settings: "الموارد والنسخ الاحتياطية وحدود التشغيل.",
+    quality: "عينات اصطناعية ثابتة ونتائج محفوظة؛ نجاحها لا يقيس الفعالية في العالم الحقيقي.",
   }[state.view];
 }
 function dashboard() {
@@ -2136,6 +2140,98 @@ function settings() {
       ),
     ),
   );
+}
+function qualityPage() {
+  const labels = {pending:"بانتظار الدفعة الأولى", running:"قيد الفحص", completed:"اكتملت جميع الحالات", failed:"توقف الفحص ويحتاج مراجعة"};
+  const output = el("div", {"aria-live":"polite"});
+  const comparison = el("div", {"aria-live":"polite"});
+  let selectedRun = null;
+  const exportRun = button("تنزيل تقرير الجودة JSON", () => {
+    if (selectedRun) download(new Blob([JSON.stringify(selectedRun, null, 2)], {type:"application/json"}), "quality-" + selectedRun.id + ".json");
+  });
+  exportRun.disabled = true;
+  const catalog = el("div");
+  const saved = el("select", {"aria-label":"فحص جودة محفوظ"});
+  const left = el("select", {"aria-label":"فحص الجودة الأول"});
+  const right = el("select", {"aria-label":"فحص الجودة الثاني"});
+  const advance = button("تشغيل دفعة الجودة التالية", () => action(async () => {
+    if (!state.qualityRun) return;
+    show(await api("quality/advance", {run_id:state.qualityRun}));
+    await history();
+  }));
+  advance.disabled = true;
+  function show(run) {
+    state.qualityRun = run.id;
+    selectedRun = run;
+    exportRun.disabled = false;
+    advance.disabled = !["pending", "running"].includes(run.status);
+    const counts = run.counts;
+    const passed = run.status === "completed" && run.passed === true;
+    output.replaceChildren(
+      el("p", {}, badge(passed ? "اجتازت جميع العينات الاصطناعية" : labels[run.status] || run.status, passed ? "good":"warn")),
+      el("p", {}, "معرّف فحص الجودة: ", el("span", {class:"code"}, run.id)),
+      el("progress", {max:Math.max(counts.total, 1), value:counts.completed, "aria-label":"تقدم حالات الجودة"}),
+      el("p", {}, "نُفّذ: " + counts.completed + " / " + counts.total + " · اجتاز: " + counts.passed + " · أخفق: " + counts.failed + " · متبقٍ: " + Math.max(0, counts.total - counts.completed)),
+      run.error_code ? el("p", {class:"notice"}, "توقف التحقق: " + run.error_code + "؛ ابدأ فحصًا جديدًا بعد المراجعة.") : null,
+      run.status === "completed" && !passed ? el("p", {class:"notice"}, "اكتمل التنفيذ مع حالات أخفقت؛ راجع التفاصيل قبل الاعتماد على التغيير.") : null,
+      el("details", {}, el("summary", {}, "بصمات نطاق الفحص والمحرك"), pre({version:run.version, suite_sha256:run.suite_sha256, engine_sha256:run.engine_sha256})),
+      run.results.length ? table(["الحالة", "الأداة", "النتيجة", "الوقت والبصمات"], run.results.map(result => [
+        result.case_id, result.tool, result.status === "passed" ? "اجتاز" : "أخفق",
+        el("details", {}, el("summary", {}, String(result.elapsed_ms) + " ms زمن منقضٍ"), pre({error_code:result.error_code || null, input_sha256:result.input_sha256, expected_sha256:result.expected_sha256, result_sha256:result.result_sha256})),
+      ])) : el("p", {class:"muted"}, "لم تُنفّذ أي حالة بعد؛ شغّل الدفعة التالية."));
+  }
+  async function history() {
+    const data = await api("quality/history");
+    if (!saved.isConnected) return;
+    for (const [select, prompt, rows] of [
+      [saved, "اختر فحص جودة محفوظًا", data.runs],
+      [left, "اختر الفحص الأول", data.runs.filter(run => run.status === "completed")],
+      [right, "اختر الفحص الثاني", data.runs.filter(run => run.status === "completed")],
+    ]) {
+      const selected = select === saved ? state.qualityRun || select.value : select.value;
+      select.replaceChildren(el("option", {value:""}, prompt), ...rows.map(run =>
+        el("option", {value:run.id, selected:run.id === selected}, run.id + " · " + (labels[run.status] || run.status))));
+    }
+  }
+  const result = el("div", {}, panel("نطاق جودة الأدوات",
+    el("p", {class:"notice"}, "هذا فحص لعينات اصطناعية ثابتة داخل البرنامج. نجاحه لا يثبت جودة كل المدخلات أو فعالية الحماية في العالم الحقيقي، ولا يمثل نسبة اكتمال المشروع."), catalog),
+    panel("تشغيل فحص الجودة وحفظه", el("p", {}, "التشغيل يدوي وعلى دفعات محدودة. تُحفظ كل نتيجة ويمكن متابعة الفحص بعد مغادرة الصفحة أو إعادة تحميلها؛ لا تُرسل أدلة المشاريع إلى هذا الفحص."),
+      el("div", {class:"actions"}, button("بدء فحص جودة جديد", () => action(async () => {
+        show(await api("quality/start", {}));
+        await history();
+      }), "primary"), advance),
+      field("فحص جودة محفوظ", saved), button("عرض فحص الجودة المحفوظ", () => action(async () => {
+        if (!saved.value) throw Error("اختر فحص جودة محفوظًا أولًا");
+        show(await api("quality?run=" + encodeURIComponent(saved.value)));
+      })), exportRun, output),
+    panel("مقارنة فحصين مكتملين", el("p", {}, "قارن ترتيب النتائج من الأول إلى الثاني. تظهر حالات التراجع والتحسن؛ اختلاف المحرك معلومة مستقلة، ولا تعني النتائج المتطابقة تطابق الكود."),
+      field("فحص الجودة الأول", left), field("فحص الجودة الثاني", right),
+      button("مقارنة فحوص الجودة", () => action(async () => {
+        if (!left.value || !right.value) throw Error("اختر فحصين مكتملين أولًا");
+        const data = await api("quality/compare", {left_id:left.value, right_id:right.value});
+        comparison.replaceChildren(
+          el("p", {}, "حالات تراجع: " + data.regressions.length + " · حالات تحسن: " + data.improvements.length + " · دون تغير: " + data.unchanged.length),
+          data.left_id === data.right_id ? el("p", {class:"notice"}, "مقارنة الفحص بنفسه؛ هذه مراجعة للنتائج المحفوظة وليست تشغيلًا مستقلًا جديدًا.") : null,
+          data.engine_changed ? el("p", {class:"notice"}, "بصمة المحرك مختلفة بين الفحصين.") : null,
+          data.regressions.length ? el("p", {}, "حالات التراجع: " + data.regressions.join("، ")) : el("p", {}, "لا توجد حالات تراجع ضمن هذه العينات"),
+          data.improvements.length ? el("p", {}, "حالات التحسن: " + data.improvements.join("، ")) : null,
+          table(["الحالة", "الأداة", "الفحص الأول", "الفحص الثاني"], data.transitions.map(item => [item.case_id, item.tool, item.left === "passed" ? "اجتاز":"أخفق", item.right === "passed" ? "اجتاز":"أخفق"])));
+      })), comparison));
+  api("quality/catalog").then(data => {
+    if (!catalog.isConnected) return;
+    catalog.replaceChildren(el("p", {}, data.notice),
+      el("p", {class:"muted"}, "الوقت في النتائج هو الزمن المنقضي المقاس؛ قيود التشغيل ليست قياسات لاستهلاك الذاكرة."),
+      el("p", {}, "حد الدفعة: " + data.limits.batch_cases + " حالات · " + data.limits.batch_seconds + " ثوانٍ · أقصى احتفاظ: " + data.limits.runs + " فحصًا"),
+      el("details", {}, el("summary", {}, "حالات الفحص وبصماته"), pre({suite_sha256:data.suite_sha256, engine_sha256:data.engine_sha256}), table(["الحالة", "الأداة", "الوصف"], data.cases.map(item => [item.id, item.tool, item.title]))));
+  }).catch(e => { if (catalog.isConnected) toast(e.message, true); });
+  history().catch(e => { if (saved.isConnected) toast(e.message, true); });
+  if (state.qualityRun) {
+    const id = state.qualityRun;
+    api("quality?run=" + encodeURIComponent(id)).then(run => {
+      if (output.isConnected && state.qualityRun === id) show(run);
+    }).catch(e => { if (output.isConnected) toast(e.message, true); });
+  }
+  return result;
 }
 function maintenancePage() {
   const integrityScope = el("select", {"aria-label":"نطاق فحص بصمات الأدلة"},

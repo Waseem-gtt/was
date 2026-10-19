@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, comparison, engine, integrity, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
+from . import __version__, backup, comparison, engine, integrity, knowledge, learning, local_ai, maintenance, quality, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -183,6 +183,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
             if path == "/api/maintenance":
                 return self.reply(maintenance.history(self.store))
+            if path == "/api/quality/catalog":
+                return self.reply(quality.catalog())
+            if path == "/api/quality/history":
+                return self.reply(quality.history(self.store))
+            if path == "/api/quality":
+                return self.reply(quality.status(self.store, query.get("run", [""])[0]))
             if path == "/api/integrity":
                 return self.reply(integrity.status(self.store, query.get("scan", [""])[0]))
             if path == "/api/integrity/history":
@@ -297,10 +303,22 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/quality/start":
+                        if body:
+                            raise Problem("اختبار الجودة يستخدم الحالات المرجعية المرفقة فقط")
+                        return self.reply(quality.start(self.store))
+                    if path == "/api/quality/advance":
+                        if set(body) != {"run_id"}:
+                            raise Problem("حدد معرف اختبار الجودة المحفوظ فقط")
+                        return self.reply(quality.advance(self.store, body["run_id"]))
+                    if path == "/api/quality/compare":
+                        if set(body) != {"left_id", "right_id"}:
+                            raise Problem("اختر اختباري الجودة للمقارنة فقط")
+                        return self.reply(quality.compare(self.store, body["left_id"], body["right_id"]))
                     if path == "/api/integrity/start":
                         if set(body) != {"project_id"}:
                             raise Problem("حدد مشروع الفحص أو جميع المشاريع فقط")

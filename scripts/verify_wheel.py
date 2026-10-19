@@ -35,7 +35,7 @@ def verify_signing_fixture(folder):
     identifier = signed_release.key_id(public)
     now = int(time.time())
     payload = {"schema": "was.release/1", "repository": signed_release.REPOSITORY, "sequence": 1,
-               "version": "0.8.0", "commit": "e" * 40, "issued_at": now - 1, "expires_at": now + 600,
+               "version": cyber_platform.__version__, "commit": "e" * 40, "issued_at": now - 1, "expires_at": now + 600,
                "artifacts": [{"name": "signing-fixture.bin", "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}]}
     trust = {"schema": "was.trust/1", "repository": signed_release.REPOSITORY, "threshold": 1,
              "keys": [{"key_id": identifier, "public_key": base64.b64encode(public).decode()}]}
@@ -109,13 +109,19 @@ def main():
                 scan = json.loads(request("/api/integrity/start", {"project_id": pid})[0])
                 scan = json.loads(request("/api/integrity/advance", {"scan_id": scan["id"]})[0])
                 assert scan["passed"] and scan["status"] == "completed", scan
+                quality_run = json.loads(request("/api/quality/start", {})[0])
+                while quality_run["status"] in ("pending", "running"):
+                    quality_run = json.loads(request("/api/quality/advance", {"run_id": quality_run["id"]})[0])
+                assert quality_run["passed"] and quality_run["counts"]["completed"] == quality_run["counts"]["total"], quality_run
+                compared = json.loads(request("/api/quality/compare", {"left_id": quality_run["id"], "right_id": quality_run["id"]})[0])
+                assert not compared["regressions"] and not compared["improvements"]
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

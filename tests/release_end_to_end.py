@@ -18,7 +18,7 @@ import time
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-from cyber_platform import release_admin, signed_release
+from cyber_platform import __version__, release_admin, signed_release
 
 
 def main():
@@ -40,7 +40,7 @@ def main():
         subprocess.run(["git", "archive", "--format=zip", "-o", str(source), args.commit], cwd=repository, check=True)
         now = int(time.time())
         payload = {"schema": "was.release/1", "repository": signed_release.REPOSITORY,
-                   "sequence": 10, "version": "0.8.0", "commit": args.commit,
+                   "sequence": 10, "version": __version__, "commit": args.commit,
                    "issued_at": now - 1, "expires_at": now + 3600,
                    "artifacts": [{"name": source.name, "size": source.stat().st_size,
                                   "sha256": hashlib.sha256(source.read_bytes()).hexdigest()}]}

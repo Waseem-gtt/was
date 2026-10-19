@@ -1,0 +1,812 @@
+{
+  "schema": "was.quality-cases/1",
+  "cases": [
+    {
+      "id": "ioc-reference",
+      "tool": "ioc",
+      "title": "عينة مرجعية: استخراج المؤشرات",
+      "input_base64": "SG9zdCAxOTIuMC4yLjEgY29udGFjdGVkIGh0dHBzOi8vZXhhbXBsZS50ZXN0L3BhdGg=",
+      "expected": {
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "urls": [
+          "https://example.test/path"
+        ],
+        "sha256": [],
+        "source_bytes": 50
+      }
+    },
+    {
+      "id": "http-reference",
+      "tool": "http",
+      "title": "عينة مرجعية: مراجعة رؤوس HTTP",
+      "input_base64": "eyJzdGF0dXMiOiAyMDAsICJoZWFkZXJzIjogeyJYLUNvbnRlbnQtVHlwZS1PcHRpb25zIjogIm5vc25pZmYifX0=",
+      "expected": {
+        "missing_headers": [
+          "content-security-policy",
+          "referrer-policy"
+        ],
+        "status": 200
+      }
+    },
+    {
+      "id": "events-reference",
+      "tool": "events",
+      "title": "عينة مرجعية: توحيد أحداث تجريبية",
+      "input_base64": "W3sidGltZSI6ICIyMDI2LTEwLTE3VDAwOjAwOjAwWiIsICJ1c2VyIjogImxhYiIsICJhY3Rpb24iOiAibG9naW4iLCAib3V0Y29tZSI6ICJmYWlsdXJlIn1d",
+      "expected": {
+        "schema": "was.event/1",
+        "count": 1,
+        "failed": 1,
+        "events": [
+          {
+            "actor": "lab",
+            "action": "login",
+            "outcome": "failure",
+            "original": {
+              "user": "lab",
+              "action": "login",
+              "outcome": "failure"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "hashes-reference",
+      "tool": "hashes",
+      "title": "عينة مرجعية: بصمات الأدلة",
+      "input_base64": "RXZpZGVuY2UgaW50ZWdyaXR5IHNhbXBsZQ==",
+      "expected": {
+        "sha256": "17a05404605a3886f457bc4f73099617301c87f817ee673a3aafb77800c84e4f",
+        "bytes": 25,
+        "sha512": "ef80a35b62e7a2db998dd5aa589d1f3e0cb3bf7fc7a0170101063a3deca8e5f653982817c2750412d492cfe098d43fc13ead8ad0addf422941c4418c20efe4f5"
+      }
+    },
+    {
+      "id": "executable-reference",
+      "tool": "executable",
+      "title": "عينة مرجعية: فحص رؤوس ELF وPE",
+      "input_base64": "U3RhdGljIGFuYWx5c2lzIHNhbXBsZSwgbmV2ZXIgZXhlY3V0ZWQ=",
+      "expected": {
+        "format": "unknown",
+        "strings": [
+          "Static analysis sample, never executed"
+        ],
+        "executed": false
+      }
+    },
+    {
+      "id": "flows-reference",
+      "tool": "flows",
+      "title": "عينة مرجعية: إحصاء تدفقات الشبكة",
+      "input_base64": "cHJvdG9jb2wsZGVzdGluYXRpb24sYnl0ZXMKVExTLDE5Mi4wLjIuMSw1MTIKRE5TLDE5Mi4wLjIuMiw2NAo=",
+      "expected": {
+        "flows": 2,
+        "bytes": 576,
+        "protocols": {
+          "TLS": 1,
+          "DNS": 1
+        },
+        "destinations": {
+          "192.0.2.1": 1,
+          "192.0.2.2": 1
+        }
+      }
+    },
+    {
+      "id": "identity-reference",
+      "tool": "identity",
+      "title": "عينة مرجعية: مراجعة حسابات وصلاحيات",
+      "input_base64": "W3sibmFtZSI6ICJsYWItYWRtaW4iLCAiYWRtaW4iOiB0cnVlLCAiYWN0aXZlIjogdHJ1ZSwgIm1mYSI6IGZhbHNlfV0=",
+      "expected": {
+        "review": [
+          {
+            "name": "lab-admin",
+            "admin": true,
+            "stale": false,
+            "mfa_missing": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "container-reference",
+      "tool": "container",
+      "title": "عينة مرجعية: مراجعة وصف حاوية",
+      "input_base64": "eyJwcml2aWxlZ2VkIjogdHJ1ZSwgInVzZXIiOiAicm9vdCIsICJuZXR3b3JrX21vZGUiOiAiaG9zdCJ9",
+      "expected": {
+        "findings": [
+          "privileged",
+          "root_user",
+          "host_network",
+          "writable_root"
+        ],
+        "count": 4
+      }
+    },
+    {
+      "id": "sbom-reference",
+      "tool": "sbom",
+      "title": "عينة مرجعية: جرد CycloneDX وSPDX",
+      "input_base64": "eyJib21Gb3JtYXQiOiAiQ3ljbG9uZURYIiwgInNwZWNWZXJzaW9uIjogIjEuNiIsICJjb21wb25lbnRzIjogW3sibmFtZSI6ICJleGFtcGxlIiwgInZlcnNpb24iOiAiMS4wIiwgImxpY2Vuc2VzIjogW3sibGljZW5zZSI6IHsiaWQiOiAiTUlUIn19XX1dfQ==",
+      "expected": {
+        "format": "CycloneDX",
+        "count": 1,
+        "components": [
+          {
+            "name": "example",
+            "version": "1.0",
+            "licenses": [
+              {
+                "license": {
+                  "id": "MIT"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "tlv-reference",
+      "tool": "tlv",
+      "title": "عينة مرجعية: تحليل سجلات TLV",
+      "input_base64": "AQJBQg==",
+      "expected": {
+        "records": [
+          {
+            "type": 1,
+            "length": 2,
+            "hex": "4142"
+          }
+        ],
+        "count": 1
+      }
+    },
+    {
+      "id": "crypto-reference",
+      "tool": "crypto",
+      "title": "عينة مرجعية: جرد خوارزميات نصي",
+      "input_base64": "VExTdjEuMyBBRVMgRWQyNTUxOSBNTC1LRU0=",
+      "expected": {
+        "algorithms": [
+          "AES",
+          "Ed25519",
+          "ML-KEM",
+          "TLSv1.3"
+        ],
+        "private_key_markers": 0
+      }
+    },
+    {
+      "id": "firmware-reference",
+      "tool": "firmware",
+      "title": "عينة مرجعية: جرد تواقيع Firmware",
+      "input_base64": "RmlybXdhcmUgcmVmZXJlbmNlIGhzcXM=",
+      "expected": {
+        "bytes": 23,
+        "entropy_bits_per_byte": 3.49706,
+        "signatures": {
+          "SquashFS-le": 19
+        }
+      }
+    },
+    {
+      "id": "twin-reference",
+      "tool": "twin",
+      "title": "عينة مرجعية: توأم حراري مبسط",
+      "input_base64": "eyJzdGVwcyI6IDYwLCAidGFyZ2V0IjogMzV9",
+      "expected": {
+        "final": 32.973,
+        "trace": [
+          {
+            "step": 0
+          },
+          {
+            "step": 1
+          },
+          {
+            "step": 2
+          },
+          {
+            "step": 3
+          },
+          {
+            "step": 4
+          },
+          {
+            "step": 5
+          },
+          {
+            "step": 6
+          },
+          {
+            "step": 7
+          },
+          {
+            "step": 8
+          },
+          {
+            "step": 9
+          },
+          {
+            "step": 10
+          },
+          {
+            "step": 11
+          },
+          {
+            "step": 12
+          },
+          {
+            "step": 13
+          },
+          {
+            "step": 14
+          },
+          {
+            "step": 15
+          },
+          {
+            "step": 16
+          },
+          {
+            "step": 17
+          },
+          {
+            "step": 18
+          },
+          {
+            "step": 19
+          },
+          {
+            "step": 20
+          },
+          {
+            "step": 21
+          },
+          {
+            "step": 22
+          },
+          {
+            "step": 23
+          },
+          {
+            "step": 24
+          },
+          {
+            "step": 25
+          },
+          {
+            "step": 26
+          },
+          {
+            "step": 27
+          },
+          {
+            "step": 28
+          },
+          {
+            "step": 29
+          },
+          {
+            "step": 30
+          },
+          {
+            "step": 31
+          },
+          {
+            "step": 32
+          },
+          {
+            "step": 33
+          },
+          {
+            "step": 34
+          },
+          {
+            "step": 35
+          },
+          {
+            "step": 36
+          },
+          {
+            "step": 37
+          },
+          {
+            "step": 38
+          },
+          {
+            "step": 39
+          },
+          {
+            "step": 40
+          },
+          {
+            "step": 41
+          },
+          {
+            "step": 42
+          },
+          {
+            "step": 43
+          },
+          {
+            "step": 44
+          },
+          {
+            "step": 45
+          },
+          {
+            "step": 46
+          },
+          {
+            "step": 47
+          },
+          {
+            "step": 48
+          },
+          {
+            "step": 49
+          },
+          {
+            "step": 50
+          },
+          {
+            "step": 51
+          },
+          {
+            "step": 52
+          },
+          {
+            "step": 53
+          },
+          {
+            "step": 54
+          },
+          {
+            "step": 55
+          },
+          {
+            "step": 56
+          },
+          {
+            "step": 57
+          },
+          {
+            "step": 58
+          },
+          {
+            "step": 59
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectrum-reference",
+      "tool": "spectrum",
+      "title": "عينة مرجعية: طيف عينات قصيرة",
+      "input_base64": "WzAsIDEsIDAsIC0xLCAwLCAxLCAwLCAtMV0=",
+      "expected": {
+        "power": [
+          0.0,
+          0.0,
+          2.0,
+          0.0,
+          0.0
+        ],
+        "peak_bin": 2,
+        "normalized_frequency": 0.25
+      }
+    },
+    {
+      "id": "telemetry-reference",
+      "tool": "telemetry",
+      "title": "عينة مرجعية: جودة تسلسل قياسات",
+      "input_base64": "c2VxdWVuY2UsdmFsdWUKMSwyMAoyLDIxCjQsMjMK",
+      "expected": {
+        "records": 3,
+        "gaps": [
+          {
+            "row": 3,
+            "previous": 2,
+            "current": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "can-reference",
+      "tool": "can",
+      "title": "عينة مرجعية: قراءة CAN كلاسيكي",
+      "input_base64": "KDEuMDAwKSB2Y2FuMCAxMjMjMDEwMjAzMDQKKDEuMDEwKSB2Y2FuMCAxMjQjQUFCQgo=",
+      "expected": {
+        "count": 2,
+        "invalid_lines": [],
+        "frames": [
+          {
+            "id": 291,
+            "data": "01020304",
+            "length": 4
+          },
+          {
+            "id": 292,
+            "data": "AABB",
+            "length": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "ccsds-reference",
+      "tool": "ccsds",
+      "title": "عينة مرجعية: رؤوس حزم CCSDS",
+      "input_base64": "AAHAAAAAQQ==",
+      "expected": {
+        "count": 1,
+        "packets": [
+          {
+            "version": 0,
+            "apid": 1,
+            "sequence": 0,
+            "bytes": 7
+          }
+        ]
+      }
+    },
+    {
+      "id": "ai-audit-reference",
+      "tool": "ai-audit",
+      "title": "عينة مرجعية: تدقيق مقتطفات AI",
+      "input_base64": "eyJleGNlcnB0cyI6IHsiZTEiOiAiUmVmZXJlbmNlIHJlc3VsdDogNDIifSwgImNsYWltcyI6IFt7InRleHQiOiAiUmVzdWx0IGlzIDQyIiwgInNvdXJjZSI6ICJlMSIsICJxdW90ZSI6ICJyZXN1bHQ6IDQyIn1dfQ==",
+      "expected": {
+        "unsupported": 0,
+        "claims": [
+          {
+            "claim": "Result is 42",
+            "source": "e1",
+            "quote_present": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "privacy-reference",
+      "tool": "privacy",
+      "title": "عينة مرجعية: تنقيح نسخة نصية",
+      "input_base64": "Q29udGFjdCBvd25lckBleGFtcGxlLnRlc3Q7IEJlYXJlciBTQU1QTEVfVE9LRU5fMTIzNDU=",
+      "expected": {
+        "redacted": "Contact [REDACTED:email]; [REDACTED:bearer]",
+        "matches": {
+          "email": 1,
+          "bearer": 1,
+          "private_key": 0
+        }
+      }
+    },
+    {
+      "id": "manifest-reference",
+      "tool": "manifest",
+      "title": "عينة مرجعية: تحقق بيان إضافة",
+      "input_base64": "eyJpZCI6ICJwbHVnaW4uZXhhbXBsZSIsICJ2ZXJzaW9uIjogIjEuMCIsICJsaWNlbnNlIjogIk1JVCIsICJzb3VyY2UiOiAiaHR0cHM6Ly9leGFtcGxlLnRlc3QiLCAicGVybWlzc2lvbnMiOiBbInNlbGVjdGVkX2V2aWRlbmNlLnJlYWQiXX0=",
+      "expected": {
+        "missing": [],
+        "valid_structure": true,
+        "permissions": [
+          "selected_evidence.read"
+        ],
+        "activated": false
+      }
+    },
+    {
+      "id": "rules-reference",
+      "tool": "rules",
+      "title": "عينة مرجعية: اختبار قواعد كشف دفاعية",
+      "input_base64": "eyJldmVudHMiOiBbeyJhY3Rpb24iOiAibG9naW4iLCAib3V0Y29tZSI6ICJmYWlsdXJlIn0sIHsiYWN0aW9uIjogImxvZ2luIiwgIm91dGNvbWUiOiAic3VjY2VzcyJ9XSwgInJ1bGVzIjogW3siaWQiOiAiZmFpbGVkLWxvZ2luIiwgInZlcnNpb24iOiAiMSIsICJsaWNlbnNlIjogIkNDMC0xLjAiLCAic291cmNlIjogIm93bmVyLWF1dGhvcmVkIHN5bnRoZXRpYyBleGFtcGxlIiwgInNlbGVjdGlvbiI6IHsiYWN0aW9uIjogImxvZ2luIiwgIm91dGNvbWUiOiAiZmFpbHVyZSJ9LCAiZXhwZWN0ZWRfZXZlbnRfaW5kZXhlcyI6IFswXX1dfQ==",
+      "expected": {
+        "schema": "was.rules/1",
+        "event_count": 2,
+        "evaluated_rules": 1,
+        "rules": [
+          {
+            "id": "failed-login",
+            "matched_event_indexes": [
+              0
+            ],
+            "metrics": {
+              "true_positive": 1,
+              "false_positive": 0,
+              "false_negative": 0,
+              "true_negative": 1,
+              "passed": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ioc-invalid-ip",
+      "tool": "ioc",
+      "title": "حالة حدودية: invalid-ip",
+      "input_utf8": "999.1.2.3 and 192.0.2.2",
+      "expected": {
+        "ipv4": [
+          "192.0.2.2"
+        ],
+        "urls": [],
+        "sha256": []
+      }
+    },
+    {
+      "id": "http-complete-headers",
+      "tool": "http",
+      "title": "حالة حدودية: complete-headers",
+      "input_utf8": "{\"status\":204,\"headers\":{\"Content-Security-Policy\":\"default-src none\",\"X-Content-Type-Options\":\"nosniff\",\"Referrer-Policy\":\"no-referrer\"}}",
+      "expected": {
+        "missing_headers": [],
+        "status": 204
+      }
+    },
+    {
+      "id": "events-object-rejected",
+      "tool": "events",
+      "title": "حالة حدودية: object-rejected",
+      "input_utf8": "{}",
+      "reject": "ValueError",
+      "error_message": "Expected at most 20000 events"
+    },
+    {
+      "id": "hashes-empty",
+      "tool": "hashes",
+      "title": "حالة حدودية: empty",
+      "input_utf8": "",
+      "expected": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha512": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
+      }
+    },
+    {
+      "id": "executable-truncated-dos",
+      "tool": "executable",
+      "title": "حالة حدودية: truncated-dos",
+      "input_utf8": "MZ",
+      "reject": "ValueError",
+      "error_message": "Truncated DOS header"
+    },
+    {
+      "id": "flows-negative-clamped",
+      "tool": "flows",
+      "title": "حالة حدودية: negative-clamped",
+      "input_utf8": "protocol,destination,bytes\nTLS,192.0.2.3,-50\n",
+      "expected": {
+        "flows": 1,
+        "bytes": 0,
+        "protocols": {
+          "TLS": 1
+        }
+      }
+    },
+    {
+      "id": "identity-inactive-mfa",
+      "tool": "identity",
+      "title": "حالة حدودية: inactive-mfa",
+      "input_utf8": "[{\"name\":\"synthetic\",\"active\":false,\"mfa\":true,\"admin\":false}]",
+      "expected": {
+        "review": [
+          {
+            "name": "synthetic",
+            "admin": false,
+            "stale": true,
+            "mfa_missing": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "container-hardened",
+      "tool": "container",
+      "title": "حالة حدودية: hardened",
+      "input_utf8": "{\"user\":\"1000\",\"privileged\":false,\"read_only\":true,\"network_mode\":\"none\"}",
+      "expected": {
+        "findings": [],
+        "count": 0
+      }
+    },
+    {
+      "id": "sbom-unknown-format",
+      "tool": "sbom",
+      "title": "حالة حدودية: unknown-format",
+      "input_utf8": "{}",
+      "reject": "ValueError",
+      "error_message": "Expected CycloneDX or SPDX JSON"
+    },
+    {
+      "id": "tlv-truncated",
+      "tool": "tlv",
+      "title": "حالة حدودية: truncated",
+      "input_utf8": "\u0001\u0004AB",
+      "reject": "ValueError",
+      "error_message": "TLV length exceeds input"
+    },
+    {
+      "id": "crypto-no-algorithm",
+      "tool": "crypto",
+      "title": "حالة حدودية: no-algorithm",
+      "input_utf8": "ordinary text",
+      "expected": {
+        "algorithms": [],
+        "private_key_markers": 0
+      }
+    },
+    {
+      "id": "firmware-empty",
+      "tool": "firmware",
+      "title": "حالة حدودية: empty",
+      "input_utf8": "",
+      "expected": {
+        "bytes": 0,
+        "entropy_bits_per_byte": 0,
+        "signatures": {}
+      }
+    },
+    {
+      "id": "twin-invalid-steps",
+      "tool": "twin",
+      "title": "حالة حدودية: invalid-steps",
+      "input_utf8": "{\"steps\":1001}",
+      "reject": "ValueError",
+      "error_message": "steps must be 1..1000"
+    },
+    {
+      "id": "spectrum-too-short",
+      "tool": "spectrum",
+      "title": "حالة حدودية: too-short",
+      "input_utf8": "[1,2,3]",
+      "reject": "ValueError",
+      "error_message": "Expected 4..256 real samples"
+    },
+    {
+      "id": "telemetry-wraparound",
+      "tool": "telemetry",
+      "title": "حالة حدودية: wraparound",
+      "input_utf8": "sequence,value\n255,1\n0,2\n1,3\n",
+      "expected": {
+        "records": 3,
+        "gaps": []
+      }
+    },
+    {
+      "id": "can-odd-nibble",
+      "tool": "can",
+      "title": "حالة حدودية: odd-nibble",
+      "input_utf8": "123#ABC\n124#\n",
+      "expected": {
+        "count": 1,
+        "invalid_lines": [
+          1
+        ],
+        "frames": [
+          {
+            "id": 292,
+            "data": "",
+            "length": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "ccsds-truncated",
+      "tool": "ccsds",
+      "title": "حالة حدودية: truncated",
+      "input_utf8": "ABC",
+      "reject": "ValueError",
+      "error_message": "Truncated CCSDS header"
+    },
+    {
+      "id": "ai-audit-missing-quote",
+      "tool": "ai-audit",
+      "title": "حالة حدودية: missing-quote",
+      "input_utf8": "{\"excerpts\":{\"s\":\"safe text\"},\"claims\":[{\"text\":\"synthetic\",\"source\":\"s\",\"quote\":\"absent\"}]}",
+      "expected": {
+        "unsupported": 1,
+        "claims": [
+          {
+            "claim": "synthetic",
+            "source": "s",
+            "quote_present": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "privacy-no-secrets",
+      "tool": "privacy",
+      "title": "حالة حدودية: no-secrets",
+      "input_utf8": "synthetic public text",
+      "expected": {
+        "redacted": "synthetic public text",
+        "matches": {
+          "email": 0,
+          "bearer": 0,
+          "private_key": 0
+        }
+      }
+    },
+    {
+      "id": "manifest-missing-fields",
+      "tool": "manifest",
+      "title": "حالة حدودية: missing-fields",
+      "input_utf8": "{}",
+      "expected": {
+        "missing": [
+          "id",
+          "version",
+          "license",
+          "source",
+          "permissions"
+        ],
+        "valid_structure": false,
+        "activated": false
+      }
+    },
+    {
+      "id": "rules-exact-types",
+      "tool": "rules",
+      "title": "حالة حدودية: exact-types",
+      "input_utf8": "{\"events\":[{\"ok\":true},{\"ok\":1}],\"rules\":[{\"id\":\"typed\",\"selection\":{\"ok\":true},\"expected_event_indexes\":[0]}]}",
+      "expected": {
+        "rules": [
+          {
+            "id": "typed",
+            "matched_event_indexes": [
+              0
+            ],
+            "metrics": {
+              "true_positive": 1,
+              "false_positive": 0,
+              "false_negative": 0,
+              "true_negative": 1,
+              "passed": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "rules-empty-selection",
+      "tool": "rules",
+      "title": "حالة حدودية: empty-selection",
+      "input_utf8": "{\"events\":[],\"rules\":[{\"id\":\"bad\",\"selection\":{}}]}",
+      "reject": "ValueError",
+      "error_message": "Each rule needs 1..20 exact-match fields"
+    },
+    {
+      "id": "telemetry-out-of-range",
+      "tool": "telemetry",
+      "title": "حالة حدودية: out-of-range",
+      "input_utf8": "sequence,value\n256,1\n",
+      "reject": "ValueError",
+      "error_message": "Sequence must be 0..255"
+    },
+    {
+      "id": "sbom-spdx",
+      "tool": "sbom",
+      "title": "حالة حدودية: spdx",
+      "input_utf8": "{\"spdxVersion\":\"SPDX-2.3\",\"packages\":[{\"name\":\"synthetic\",\"versionInfo\":\"2\",\"licenseConcluded\":\"MIT\"}]}",
+      "expected": {
+        "format": "SPDX",
+        "count": 1,
+        "components": [
+          {
+            "name": "synthetic",
+            "version": "2",
+            "licenses": "MIT"
+          }
+        ]
+      }
+    }
+  ]
+}

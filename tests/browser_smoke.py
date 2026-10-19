@@ -206,16 +206,60 @@ def main():
                 page.get_by_role("button", name="صيانة وتطوير هذا القسم", exact=True).click()
                 expect(page.get_by_label("نطاق الصيانة", exact=True)).to_have_value("01")
                 checks.append("maintenance all-section check, persistent development lifecycle and section-scoped entry")
+                page.get_by_role("link", name="جودة الأدوات", exact=True).click()
+                expect(page.get_by_role("heading", name="جودة الأدوات", exact=True)).to_be_visible()
+                with page.expect_response(lambda response: response.url.endswith("/api/quality/start")) as started:
+                    page.get_by_role("button", name="بدء فحص جودة جديد", exact=True).click()
+                quality_run = started.value.json()
+                page.wait_for_function("!state.busy")
+                assert quality_run["status"] == "pending" and not quality_run["passed"]
+                quality_id = quality_run["id"]
+                expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
+                page.get_by_role("link", name="نظرة عامة", exact=True).click()
+                page.get_by_role("link", name="جودة الأدوات", exact=True).click()
+                expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
+                page.reload()
+                expect(page.get_by_label("فحص جودة محفوظ", exact=True).locator("option")).to_have_count(2)
+                page.get_by_label("فحص جودة محفوظ", exact=True).select_option(quality_id)
+                page.get_by_role("button", name="عرض فحص الجودة المحفوظ", exact=True).click()
+                expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
+                for _ in range(50):
+                    with page.expect_response(lambda response: response.url.endswith("/api/quality/advance")) as advanced:
+                        page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True).click()
+                    quality_run = advanced.value.json()
+                    page.wait_for_function("!state.busy")
+                    if quality_run["status"] not in ("pending", "running"):
+                        break
+                    expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
+                assert quality_run["status"] == "completed" and quality_run["passed"] is True, quality_run
+                assert quality_run["counts"]["completed"] == quality_run["counts"]["total"]
+                expect(page.get_by_text("اجتازت جميع العينات الاصطناعية", exact=True)).to_be_visible()
+                expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_disabled()
+                with page.expect_download() as quality_download:
+                    page.get_by_role("button", name="تنزيل تقرير الجودة JSON", exact=True).click()
+                exported_quality = json.loads(Path(quality_download.value.path()).read_text())
+                assert exported_quality["id"] == quality_id and exported_quality["passed"] is True
+                page.reload()
+                expect(page.get_by_label("فحص جودة محفوظ", exact=True).locator("option")).to_have_count(2)
+                page.get_by_label("فحص جودة محفوظ", exact=True).select_option(quality_id)
+                page.get_by_role("button", name="عرض فحص الجودة المحفوظ", exact=True).click()
+                expect(page.get_by_text("اجتازت جميع العينات الاصطناعية", exact=True)).to_be_visible()
+                page.get_by_label("فحص الجودة الأول", exact=True).select_option(quality_id)
+                page.get_by_label("فحص الجودة الثاني", exact=True).select_option(quality_id)
+                page.get_by_role("button", name="مقارنة فحوص الجودة", exact=True).click()
+                expect(page.get_by_text("لا توجد حالات تراجع ضمن هذه العينات", exact=True)).to_be_visible()
+                expect(page.get_by_text("مقارنة الفحص بنفسه؛ هذه مراجعة للنتائج المحفوظة وليست تشغيلًا مستقلًا جديدًا.", exact=True)).to_be_visible()
+                checks.append("synthetic quality batches resume after reload, complete, export and compare persisted results")
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):
                     page.set_viewport_size({"width": width, "height": 844})
-                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance"):
+                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality"):
                         page.evaluate("hash => location.hash=hash", view)
                         page.wait_for_timeout(80)
                         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (width, view)
                     page.screenshot(path=str(output / f"mobile-{width}.png"), full_page=True)
-                    checks.append(f"no page overflow at {width}px across 12 pages")
+                    checks.append(f"no page overflow at {width}px across 13 pages")
                 page.get_by_role("button", name="خروج", exact=True).click()
                 expect(page.get_by_role("button", name="دخول مساحة العمل")).to_be_visible()
                 checks.append("logout revokes session")
