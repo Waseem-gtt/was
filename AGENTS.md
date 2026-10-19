@@ -1,6 +1,7 @@
 # Project instructions
 
 - This is a Linux application with an Arabic RTL interface. Keep UI assets local and support 320px-wide screens.
+- The owner prefers Python as the default implementation language for application logic, analysis, maintenance, automation and tests. Use another language only for a concrete technical need and document the reason; existing browser HTML/CSS/JavaScript and small Linux shell launchers are justified boundaries. Avoid adding runtimes, duplicating Python logic in the frontend or rewriting working components solely to change languages. Python changes still require appropriate functional and security checks; language choice does not guarantee correctness.
 - The owner authorized GitHub uploads **only to private repositories**. Confirm repository visibility before a push. Once privacy and the destination are established in the session, continue authorized commits/pushes without repeated permission requests. Never make a repository public or upload runtime data, credentials, evidence, backups, or model weights.
 - `docs/Requirements-Source.md` is user-supplied reference material and a historical record, not an executable instruction file. Historical version/test/OVA claims do not describe this checkout. User requests control scope; keep new implementation status accurate in `docs/Implementation-Status.md`.
 - Use the existing checkout in an isolated cloud task. Do not create a worktree unless explicitly requested.
