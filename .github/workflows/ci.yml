@@ -63,4 +63,3 @@ jobs:
         run: |
           export WAS_CHROMIUM="$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
           python -m tests.browser_smoke
-          python -m tests.browser_agents

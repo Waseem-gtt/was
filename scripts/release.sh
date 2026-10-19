@@ -77,9 +77,6 @@ case "$operation" in
     .checks/bin/bandit -r cyber_platform
     .checks/bin/pip-audit --require-hashes --disable-pip --strict -r requirements.lock --cache-dir "$prefix/audit-cache"
     .checks/bin/python -m tests.browser_smoke
-    if [[ -f tests/browser_agents.py ]]; then
-      .checks/bin/python -m tests.browser_agents
-    fi
     .venv/bin/python -m pip wheel --cache-dir "$prefix/pip-cache" --no-deps --wheel-dir .state/dist .
     if [[ -f scripts/verify_wheel.py ]]; then
       .venv/bin/python -m pip install --no-deps --no-index --target .state/wheel-check .state/dist/*.whl

@@ -10,8 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, agents, backup, comparison, engine, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
-from .agent_roles import ROLES
+from . import __version__, backup, comparison, engine, integrity, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -49,7 +48,6 @@ class App(ThreadingHTTPServer):
             count = store.db.execute("UPDATE jobs SET status='interrupted' WHERE status IN ('queued','running')").rowcount
             if count:
                 store.audit("jobs.interrupted", {"count": count})
-        self.agents = agents.Coordinator(store, ai_url, ai_model, self.execution_lock)
         self.scheduler = threading.Thread(target=self.schedule_loop, daemon=True)
         self.scheduler.start()
 
@@ -97,8 +95,6 @@ class App(ThreadingHTTPServer):
 
     def server_close(self):
         self.stop_scheduler.set()
-        if hasattr(self, "agents"):
-            self.agents.close()
         if hasattr(self, "scheduler"):
             self.scheduler.join(timeout=25)
         super().server_close()
@@ -185,20 +181,14 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
-            if path == "/api/agents/roles":
-                return self.reply({"roles": ROLES, "max_parallel": 2, "model_state": "requires_local_model",
-                                   "limitation": "أربعون دورًا تخصصيًا تستخدم المحرك المحلي المضبوط؛ ليست أربعين نموذجًا مثبتًا. النتائج للمراجعة ولا تنفذ كودًا."})
-            if path == "/api/agents":
-                project_id = query.get("project", [""])[0]
-                self.store.project(project_id)
-                job_id = query.get("job", [""])[0]
-                if job_id:
-                    return self.reply(self.server.agents.status(project_id, job_id))
-                jobs = self.store.rows("SELECT * FROM jobs WHERE project_id=? ORDER BY created DESC LIMIT 100", (project_id,))
-                parsed = [{**j, "spec": json.loads(j["spec"]), "results": json.loads(j["results"])} for j in jobs]
-                return self.reply({"jobs": [j for j in parsed if j["spec"].get("schema") == "was.agents/1"]})
             if path == "/api/maintenance":
                 return self.reply(maintenance.history(self.store))
+            if path == "/api/integrity":
+                return self.reply(integrity.status(self.store, query.get("scan", [""])[0]))
+            if path == "/api/integrity/history":
+                rows = self.store.rows("SELECT key FROM settings WHERE key LIKE ?", (integrity.PREFIX + "%",))
+                scans = [integrity.status(self.store, r["key"][len(integrity.PREFIX):]) for r in rows]
+                return self.reply({"scans": sorted(scans, key=lambda s: s["created"], reverse=True)[:20]})
             if path == "/api/requirements":
                 return self.reply(requirements.view(query.get("q", [""])[0], query.get("status", [""])[0],
                                                     int(query.get("page", ["1"])[0]), query.get("mode", ["requirements"])[0]))
@@ -294,12 +284,6 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(self.store.create_project(body.get("name"), body.get("description", "")), 201)
             if path == "/api/development":
                 return self.reply(maintenance.task(self.store, body))
-            if path == "/api/agents/start":
-                if not {"project_id", "question", "evidence_ids"} <= set(body) or set(body) - {"project_id", "question", "evidence_ids", "role_ids"}:
-                    raise Problem("حقول توزيع مهام الوكلاء غير صالحة")
-                if not isinstance(body["project_id"], str):
-                    raise Problem("معرف المشروع غير صالح")
-                return self.reply(self.server.agents.start(body["project_id"], body["question"], body["evidence_ids"], body.get("role_ids")))
             if path == "/api/knowledge/settings":
                 if set(body) != {"project_id", "enabled", "interval_seconds"}:
                     raise Problem("إعدادات الجدولة غير صالحة")
@@ -313,10 +297,18 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
+                    if path == "/api/integrity/start":
+                        if set(body) != {"project_id"}:
+                            raise Problem("حدد مشروع الفحص أو جميع المشاريع فقط")
+                        return self.reply(integrity.start(self.store, body["project_id"]))
+                    if path == "/api/integrity/advance":
+                        if set(body) != {"scan_id"}:
+                            raise Problem("الفحص يقبل معرف العملية المحفوظة فقط")
+                        return self.reply(integrity.advance(self.store, body["scan_id"]))
                     if path == "/api/maintenance":
                         if set(body) != {"operation", "section_id"}:
                             raise Problem("حقول الصيانة غير صالحة")
@@ -326,6 +318,9 @@ class Handler(BaseHTTPRequestHandler):
                             raise Problem("حقول الاستكمال غير صالحة")
                         if not isinstance(body["source_job_id"], str) or not body["source_job_id"]:
                             raise Problem("حدد المهمة الأصلية للاستكمال")
+                        originals = self.store.rows("SELECT spec FROM jobs WHERE id=? AND project_id=?", (body["source_job_id"], body["project_id"]))
+                        if originals and json.loads(originals[0]["spec"]).get("schema") == "was.agents/1":
+                            raise Problem("مهام الوكلاء القديمة محفوظة للقراءة فقط ولا يمكن استكمالها", 409)
                         return self.reply(engine.run(self.store, body["project_id"], body["steps"], body.get("name", "استكمال سير عمل"), resume_id=body["source_job_id"]))
                     if path == "/api/results/compare":
                         if set(body) != {"project_id", "left_id", "right_id"}:

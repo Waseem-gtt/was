@@ -37,6 +37,8 @@ class SyntheticModel(BaseHTTPRequestHandler):
 
 def main():
     assert Path(cyber_platform.__file__).resolve().is_relative_to(PACKAGE_ROOT), "Imported checkout instead of installed wheel"
+    assert not (PACKAGE_ROOT / "cyber_platform/agents.py").exists(), "Removed agent runtime leaked into wheel"
+    assert not (PACKAGE_ROOT / "cyber_platform/agent_roles.py").exists(), "Removed roles leaked into wheel"
     fixture = ThreadingHTTPServer(("127.0.0.1", 0), SyntheticModel)
     fixture_thread = threading.Thread(target=fixture.serve_forever, daemon=True)
     fixture_thread.start()
@@ -61,7 +63,8 @@ def main():
 
             try:
                 assert json.loads(request("/healthz")[0])["database"]
-                assert b"agentsPage" in request("/app.js")[0]
+                asset = request("/app.js")[0]
+                assert b"maintenancePage" in asset and b"function agentsPage" not in asset
                 raw, headers = request("/api/setup", {"password": "Synthetic-wheel-password-123", "setup_token": store.setup_token()})
                 cookie, csrf = headers["Set-Cookie"].split(";")[0], json.loads(raw)["csrf"]
                 project = json.loads(request("/api/projects", {"name": "Synthetic installed wheel"})[0])
@@ -71,19 +74,15 @@ def main():
                 assert job["status"] == "succeeded", job
                 report = json.loads(request("/api/maintenance", {"operation": "repair", "section_id": "01"})[0])
                 assert report["passed"] and report["repair_transaction"]["verification"], report
-                assert len(json.loads(request("/api/agents/roles")[0])["roles"]) == 40
-                job = json.loads(request("/api/agents/start", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
-                deadline = time.monotonic() + 10
-                while job["status"] in ("queued", "running") and time.monotonic() < deadline:
-                    time.sleep(.01)
-                    job = json.loads(request(f"/api/agents?project={pid}&job={job['id']}")[0])
-                assert job["status"] == "succeeded" and len(job["results"]) == 3, job
-                artifact = json.loads(request(f"/api/evidence?project={pid}&id={job['report_evidence_id']}")[0])
-                assert artifact["execution_authority"] is False
+                scan = json.loads(request("/api/integrity/start", {"project_id": pid})[0])
+                scan = json.loads(request("/api/integrity/advance", {"scan_id": scan["id"]})[0])
+                assert scan["passed"] and scan["status"] == "completed", scan
+                answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
+                assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
-                                  "bounded_analysis": True, "maintenance": True, "agents_fixture": True,
-                                  "agent_report": True, "audit": True, "real_model_inference": False}))
+                                  "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
+                                  "runtime_agent_team_removed": True, "integrity_batches": True, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()
