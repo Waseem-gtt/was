@@ -1,0 +1,52 @@
+{
+  "version": "0.6.0",
+  "date_utc": "2026-10-19",
+  "unit_tests": {
+    "CPython3.11.17": 133,
+    "CPython3.12.14": 133,
+    "CPython3.13.5": 133
+  },
+  "browser": {
+    "main_groups": 18,
+    "agent_groups": 9,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 13,
+    "agent_fixture_completions": 40,
+    "max_parallel_requests": 2
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "reviewed_local_exceptions": 4,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "source": {
+    "bytes": 173726,
+    "blocks": 411,
+    "requirements": 61,
+    "exact_source_check": "passed"
+  },
+  "installed_wheel_smoke": "passed_health_auth_analysis_maintenance_agents_fixture_report_audit",
+  "agents": {
+    "specialist_roles": 40,
+    "shared_configured_model": true,
+    "max_parallel_requests": 2,
+    "real_model_inference_tested": false,
+    "execution_authority": false
+  },
+  "maintenance": {
+    "same_descriptor_integrity": true,
+    "postcondition_checks": true,
+    "permission_rollback_fault_tests": true,
+    "semantic_tool_selfchecks": 21,
+    "universal_automatic_bug_repair": false
+  },
+  "github_actions": "not_observed_api_network_policy",
+  "scope": "Current implementation remains partial against full requirements; no global certification claim.",
+  "scheduler_idle_execution_gate_regression": "covered_disabled_future_due_busy_and_exception_paths"
+}
