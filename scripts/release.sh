@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # Explicit local administration of reviewed commits; never called by HTTP/model output.
+# Parse the complete operation before executing: a checkout may be updated while
+# the long-running candidate checks are still in progress.
+main() {
 set -euo pipefail
 project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 operation="${1:-}"
@@ -87,3 +90,5 @@ case "$operation" in
     switch_to "${previous#releases/}"
     ;;
 esac
+}
+main "$@"; exit $?
