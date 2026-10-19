@@ -115,13 +115,28 @@ def main():
                 assert quality_run["passed"] and quality_run["counts"]["completed"] == quality_run["counts"]["total"], quality_run
                 compared = json.loads(request("/api/quality/compare", {"left_id": quality_run["id"], "right_id": quality_run["id"]})[0])
                 assert not compared["regressions"] and not compared["improvements"]
+                adapters = json.loads(request("/api/events/adapters")[0])["adapters"]
+                assert len(adapters) == 3
+                sample = next(a for a in adapters if a["id"] == "windows-json")
+                original_events = store.add_evidence(pid, "synthetic-windows.json", sample["example_content"].encode())
+                normalized = json.loads(request("/api/events/normalize", {"project_id":pid, "evidence_id":original_events["id"], "adapter":sample["id"]})[0])
+                assert normalized["report"]["input_sha256"] == original_events["sha256"]
+                library = json.loads(request("/api/detection/library?project=" + pid)[0])
+                original_fixture = store.add_evidence(pid, "synthetic-detection.json", json.dumps(library["fixtures"][0]["input"]).encode())
+                tested = json.loads(request("/api/detection/test", {"project_id":pid, "evidence_id":original_fixture["id"], "rule_ids":[r["id"] for r in library["rules"]]})[0])
+                assert tested["report"]["passed"] and tested["report"]["evaluated_rules"] == 8
+                asset = json.loads(request("/api/coverage/asset", {"project_id":pid, "name":"Synthetic wheel service", "kind":"service"})[0])
+                assessed = json.loads(request("/api/coverage/assessment", {"project_id":pid, "asset_id":asset["id"], "threat":"Synthetic threat", "control":"Synthetic detection", "evidence_id":tested["evidence"]["id"]})[0])
+                assert assessed["status"] == "supported"
+                coverage = json.loads(request("/api/coverage?project=" + pid)[0])
+                assert coverage["summary"]["supported"] == 1 and coverage["edges"]
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

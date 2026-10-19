@@ -9,6 +9,7 @@ import math
 import re
 import struct
 from datetime import datetime
+from . import event_adapters
 
 
 def text(data):
@@ -41,6 +42,13 @@ def http_review(data):
 
 def events(data):
     items = obj(data)
+    if isinstance(items, dict):
+        envelope = event_adapters.strict_json(data.decode("utf-8-sig"))
+        if not {"adapter", "content"} & set(envelope):
+            raise ValueError("Expected at most 20000 events")
+        if set(envelope) != {"adapter", "content"}:
+            raise ValueError("Event adapter envelope requires only adapter and content")
+        return event_adapters.normalize(envelope["adapter"], envelope["content"])
     if not isinstance(items, list) or len(items) > 20000:
         raise ValueError("Expected at most 20000 events")
     normalized = []

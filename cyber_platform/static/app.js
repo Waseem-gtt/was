@@ -26,6 +26,9 @@ const nav = [
   ["settings", "⚙", "إدارة المنظومة"],
   ["maintenance", "⟳", "التحديث والصيانة"],
   ["quality", "✓", "جودة الأدوات"],
+  ["events", "⇥", "توحيد الأحداث"],
+  ["detection", "⌕", "مكتبة الكشف"],
+  ["coverage", "◉", "التغطية الدفاعية"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -414,7 +417,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.9.0"),
+      el("small", {}, "نسخة البناء 0.10.0"),
     ),
   );
   const select = el(
@@ -491,6 +494,9 @@ function render() {
     settings,
     maintenance: maintenancePage,
     quality: qualityPage,
+    events: eventAdaptersPage,
+    detection: detectionLibraryPage,
+    coverage: defenseCoveragePage,
   };
   content.append(
     views[state.view]?.() || dashboard(),

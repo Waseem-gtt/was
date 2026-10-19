@@ -8,9 +8,12 @@ import os
 import tempfile
 import threading
 from pathlib import Path
+from tests.browser_helpers import wait_for_idle
 from playwright.sync_api import sync_playwright, expect
 from cyber_platform.server import App
 from cyber_platform.store import Store
+from tests.browser_research import run_research_checks
+from tests.browser_coverage import run_coverage_checks
 
 
 def main():
@@ -211,7 +214,7 @@ def main():
                 with page.expect_response(lambda response: response.url.endswith("/api/quality/start")) as started:
                     page.get_by_role("button", name="بدء فحص جودة جديد", exact=True).click()
                 quality_run = started.value.json()
-                page.wait_for_function("!state.busy")
+                wait_for_idle(page)
                 assert quality_run["status"] == "pending" and not quality_run["passed"]
                 quality_id = quality_run["id"]
                 expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
@@ -227,7 +230,7 @@ def main():
                     with page.expect_response(lambda response: response.url.endswith("/api/quality/advance")) as advanced:
                         page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True).click()
                     quality_run = advanced.value.json()
-                    page.wait_for_function("!state.busy")
+                    wait_for_idle(page)
                     if quality_run["status"] not in ("pending", "running"):
                         break
                     expect(page.get_by_role("button", name="تشغيل دفعة الجودة التالية", exact=True)).to_be_enabled()
@@ -250,16 +253,18 @@ def main():
                 expect(page.get_by_text("لا توجد حالات تراجع ضمن هذه العينات", exact=True)).to_be_visible()
                 expect(page.get_by_text("مقارنة الفحص بنفسه؛ هذه مراجعة للنتائج المحفوظة وليست تشغيلًا مستقلًا جديدًا.", exact=True)).to_be_visible()
                 checks.append("synthetic quality batches resume after reload, complete, export and compare persisted results")
+                run_research_checks(page, expect, checks)
+                run_coverage_checks(page, expect, checks)
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):
                     page.set_viewport_size({"width": width, "height": 844})
-                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality"):
+                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality", "events", "detection", "coverage"):
                         page.evaluate("hash => location.hash=hash", view)
                         page.wait_for_timeout(80)
                         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (width, view)
                     page.screenshot(path=str(output / f"mobile-{width}.png"), full_page=True)
-                    checks.append(f"no page overflow at {width}px across 13 pages")
+                    checks.append(f"no page overflow at {width}px across 16 pages")
                 page.get_by_role("button", name="خروج", exact=True).click()
                 expect(page.get_by_role("button", name="دخول مساحة العمل")).to_be_visible()
                 checks.append("logout revokes session")

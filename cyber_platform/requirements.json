@@ -3332,10 +3332,11 @@
       "title": "لغة مشتركة للأحداث الأمنية",
       "group": "F",
       "status": "partial",
-      "scope": "صيغة أحداث was.event/1 مع حفظ الأصل؛ ليس توافق OCSF كاملًا",
+      "scope": "محولات Windows JSON وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ ليس OCSF كاملًا أو مستشعرًا حيًا",
       "evidence_paths": [
-        "cyber_platform/tools.py",
-        "tests/test_platform.py"
+        "cyber_platform/event_adapters.py",
+        "cyber_platform/event_ingest.py",
+        "docs/Event-Adapters.md"
       ],
       "source_ids": [
         "source.0029"
@@ -3346,10 +3347,11 @@
       "title": "مكتبة قواعد كشف قابلة للاختبار",
       "group": "F",
       "status": "partial",
-      "scope": "اختبار قواعد was.rules/1 بمرجع ومقاييس؛ لا Sigma كامل أو مراقبة حية",
+      "scope": "مكتبة8قواعد واختبارات مرجعية ومراجعات مالك ثابتة وتقارير TP/FP/FN/TN والتحقق من المصدر؛ لا Sigma كامل أو مكتبة ناشر موقعة أو مراقبة حية",
       "evidence_paths": [
-        "cyber_platform/tools.py",
-        "tests/test_platform.py"
+        "cyber_platform/detection.py",
+        "cyber_platform/detection_packs.json",
+        "docs/Detection-Library.md"
       ],
       "source_ids": [
         "source.0030"
@@ -3596,9 +3598,10 @@
       "title": "خريطة تغطية دفاعية وفجوات تحقق",
       "group": "N",
       "status": "partial",
-      "scope": "علاقات أدلة؛ لا تقييم دفاعي شامل أو ادعاء فعالية دون تجارب",
+      "scope": "أصول وتقييمات ثابتة تربط التهديد والإجراء باختبارات كشف متحققة وتظهر الفجوات والتعارض والقدم؛ لا قياس دفاعي حي أو D3FEND كامل",
       "evidence_paths": [
-        "cyber_platform/store.py"
+        "cyber_platform/coverage.py",
+        "docs/Defense-Coverage.md"
       ],
       "source_ids": [
         "source.0060"

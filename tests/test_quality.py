@@ -24,7 +24,7 @@ class QualityTests(StoreCase):
         before = self.evidence(b'owner evidence must not be analyzed')
         catalog = quality.catalog()
         self.assertEqual({c['tool'] for c in catalog['cases']}, set(tools.REGISTRY))
-        self.assertEqual(len(catalog['cases']), 45)
+        self.assertEqual(len(catalog['cases']), 48)
         self.assertNotIn('input_utf8', encode(catalog))
         run = quality.start(self.store)
         self.assertFalse(run['passed'])
@@ -37,14 +37,14 @@ class QualityTests(StoreCase):
         run = self.finish(first)
         self.assertEqual(run['status'], 'completed')
         self.assertTrue(run['passed'], [r for r in run['results'] if r['status'] != 'passed'])
-        self.assertEqual(run['counts'], {'total':45, 'completed':45, 'passed':45, 'failed':0})
-        self.assertEqual(len(run['results']), 45)
+        self.assertEqual(run['counts'], {'total':48, 'completed':48, 'passed':48, 'failed':0})
+        self.assertEqual(len(run['results']), 48)
         self.assertTrue(all(type(r['elapsed_ms']) is int and len(r['result_sha256']) == 64 for r in run['results']))
         self.assertEqual(self.store.read_evidence(self.pid, before['id']), b'owner evidence must not be analyzed')
         self.assertTrue(self.store.verify_audit()['valid'])
         self.assertEqual(quality.advance(self.store, run['id']), run)
         comparison = quality.compare(self.store, run['id'], run['id'])
-        self.assertEqual(len(comparison['unchanged']),45)
+        self.assertEqual(len(comparison['unchanged']),48)
         self.assertEqual(comparison['regressions'], [])
 
     def test_subset_strict_types_lists_and_extra_findings(self):
@@ -78,16 +78,16 @@ class QualityTests(StoreCase):
             bad = self.finish(quality.start(self.store))
         self.assertEqual(bad['status'], 'completed')
         self.assertFalse(bad['passed'])
-        self.assertEqual(bad['counts']['failed'],45)
+        self.assertEqual(bad['counts']['failed'],48)
         comparison = quality.compare(self.store,good['id'],bad['id'])
         self.assertTrue(comparison['engine_changed'])
-        self.assertEqual(len(comparison['regressions']),45)
+        self.assertEqual(len(comparison['regressions']),48)
         reverse = quality.compare(self.store,bad['id'],good['id'])
-        self.assertEqual(len(reverse['improvements']),45)
+        self.assertEqual(len(reverse['improvements']),48)
         self.assertEqual(good['engine_sha256'],engine)
 
     def test_corrupt_state_and_forged_counts_fail_closed(self):
-        for field, value in [('counts',{'total':45,'completed':45,'passed':45,'failed':0}), ('status','completed'), ('manifest',[]), ('passed',True), ('in_flight','bogus')]:
+        for field, value in [('counts',{'total':48,'completed':48,'passed':48,'failed':0}), ('status','completed'), ('manifest',[]), ('passed',True), ('in_flight','bogus')]:
             run=quality.start(self.store)
             self.change_saved(run['id'],lambda r:r.update({field:value}))
             with self.subTest(field=field),self.assertRaises(Problem):

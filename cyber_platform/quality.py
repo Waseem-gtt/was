@@ -83,7 +83,7 @@ def _engine():
     root = Path(__file__).parent
     return _digest({"version": __version__, "files": {
         name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-        for name in ("quality.py", "tools.py", "worker.py")}})
+        for name in ("quality.py", "tools.py", "worker.py", "event_adapters.py")}})
 
 
 def catalog():

@@ -807,6 +807,67 @@
           }
         ]
       }
+    },
+    {
+      "id": "windows-normalized",
+      "tool": "events",
+      "title": "تحقق محول windows-json",
+      "input_utf8": "{\"adapter\": \"windows-json\", \"content\": \"[{\\\"time\\\": \\\"2026-10-19T00:00:00Z\\\", \\\"event_id\\\": 4625, \\\"actor\\\": \\\"sample\\\", \\\"action\\\": \\\"login\\\", \\\"outcome\\\": \\\"failure\\\"}]\"}",
+      "expected": {
+        "schema": "was.event/1",
+        "adapter": "windows-json",
+        "count": 1,
+        "failed": 1,
+        "events": [
+          {
+            "event_id": 4625,
+            "actor": "sample",
+            "outcome": "failure"
+          }
+        ]
+      }
+    },
+    {
+      "id": "syslog-normalized",
+      "tool": "events",
+      "title": "تحقق محول syslog-rfc5424",
+      "input_utf8": "{\"adapter\": \"syslog-rfc5424\", \"content\": \"<34>1 2026-10-19T00:00:00Z host app 7 ID47 - synthetic message\"}",
+      "expected": {
+        "schema": "was.event/1",
+        "adapter": "syslog-rfc5424",
+        "count": 1,
+        "failed": 0,
+        "events": [
+          {
+            "host": "host",
+            "facility": 4,
+            "severity": 2,
+            "message": "synthetic message",
+            "action": "unknown",
+            "outcome": "unknown"
+          }
+        ]
+      }
+    },
+    {
+      "id": "flows-normalized",
+      "tool": "events",
+      "title": "تحقق محول flows-csv",
+      "input_utf8": "{\"adapter\": \"flows-csv\", \"content\": \"time,source,destination,protocol,bytes\\n2026-10-19T00:00:00Z,192.0.2.1,192.0.2.2,TLS,10\\n\"}",
+      "expected": {
+        "schema": "was.event/1",
+        "adapter": "flows-csv",
+        "count": 1,
+        "failed": 0,
+        "events": [
+          {
+            "source": "192.0.2.1",
+            "destination": "192.0.2.2",
+            "protocol": "TLS",
+            "bytes": 10
+          }
+        ]
+      }
     }
   ]
 }

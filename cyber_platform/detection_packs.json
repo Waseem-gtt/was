@@ -1,0 +1,190 @@
+{
+  "schema": "was.detection-pack/1",
+  "rules": [
+    {
+      "id": "was-login-failure",
+      "title": "فشل تسجيل الدخول",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "login",
+        "outcome": "failure"
+      }
+    },
+    {
+      "id": "was-privilege-change",
+      "title": "تغيير صلاحية إدارية",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "privilege_change",
+        "outcome": "success"
+      }
+    },
+    {
+      "id": "was-audit-disabled",
+      "title": "تعطيل سجل التدقيق",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "audit_disable",
+        "outcome": "success"
+      }
+    },
+    {
+      "id": "was-firewall-disabled",
+      "title": "تعطيل جدار الحماية",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "firewall_disable",
+        "outcome": "success"
+      }
+    },
+    {
+      "id": "was-malware-alert",
+      "title": "تنبيه برمجية ضارة",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "malware_detected",
+        "outcome": "blocked"
+      }
+    },
+    {
+      "id": "was-access-denied",
+      "title": "رفض الوصول",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "file_access",
+        "outcome": "denied"
+      }
+    },
+    {
+      "id": "was-account-created",
+      "title": "إنشاء حساب",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "account_create",
+        "outcome": "success"
+      }
+    },
+    {
+      "id": "was-configuration-change",
+      "title": "تغيير إعداد أمني",
+      "version": "1.0.0",
+      "license": "CC0-1.0",
+      "source": "WAS original synthetic defensive example",
+      "selection": {
+        "action": "security_config_change",
+        "outcome": "success"
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "defensive-baseline",
+      "title": "أحداث دفاعية اصطناعية مع تسميات مرجعية صريحة",
+      "input": {
+        "schema": "was.event/1",
+        "events": [
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "login",
+            "outcome": "failure"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "privilege_change",
+            "outcome": "success"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "audit_disable",
+            "outcome": "success"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "firewall_disable",
+            "outcome": "success"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "malware_detected",
+            "outcome": "blocked"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "file_access",
+            "outcome": "denied"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "account_create",
+            "outcome": "success"
+          },
+          {
+            "time": "2026-10-19T00:00:00Z",
+            "user": "synthetic-owner",
+            "action": "security_config_change",
+            "outcome": "success"
+          },
+          {
+            "action": "login",
+            "outcome": "success"
+          },
+          {
+            "action": "LOGIN",
+            "outcome": "failure"
+          },
+          {
+            "action": "login",
+            "outcome": true
+          }
+        ],
+        "expected_matches": {
+          "was-login-failure": [
+            0
+          ],
+          "was-privilege-change": [
+            1
+          ],
+          "was-audit-disabled": [
+            2
+          ],
+          "was-firewall-disabled": [
+            3
+          ],
+          "was-malware-alert": [
+            4
+          ],
+          "was-access-denied": [
+            5
+          ],
+          "was-account-created": [
+            6
+          ],
+          "was-configuration-change": [
+            7
+          ]
+        }
+      }
+    }
+  ]
+}

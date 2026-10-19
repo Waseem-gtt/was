@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, comparison, engine, integrity, knowledge, learning, local_ai, maintenance, quality, requirements, sandbox, tools
+from . import __version__, backup, comparison, coverage, detection, engine, event_adapters, event_ingest, integrity, knowledge, learning, local_ai, maintenance, quality, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
@@ -181,6 +181,18 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/events/adapters":
+                return self.reply({"adapters": event_adapters.catalog()})
+            if path == "/api/detection/library":
+                return self.reply(detection.library(self.store, query.get("project", [""])[0]))
+            if path == "/api/coverage":
+                if not self.server.execution_lock.acquire(blocking=False):
+                    raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
+                try:
+                    result = coverage.view(self.store, query.get("project", [""])[0])
+                finally:
+                    self.server.execution_lock.release()
+                return self.reply(result)
             if path == "/api/maintenance":
                 return self.reply(maintenance.history(self.store))
             if path == "/api/quality/catalog":
@@ -303,74 +315,14 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
-                    if path == "/api/quality/start":
-                        if body:
-                            raise Problem("اختبار الجودة يستخدم الحالات المرجعية المرفقة فقط")
-                        return self.reply(quality.start(self.store))
-                    if path == "/api/quality/advance":
-                        if set(body) != {"run_id"}:
-                            raise Problem("حدد معرف اختبار الجودة المحفوظ فقط")
-                        return self.reply(quality.advance(self.store, body["run_id"]))
-                    if path == "/api/quality/compare":
-                        if set(body) != {"left_id", "right_id"}:
-                            raise Problem("اختر اختباري الجودة للمقارنة فقط")
-                        return self.reply(quality.compare(self.store, body["left_id"], body["right_id"]))
-                    if path == "/api/integrity/start":
-                        if set(body) != {"project_id"}:
-                            raise Problem("حدد مشروع الفحص أو جميع المشاريع فقط")
-                        return self.reply(integrity.start(self.store, body["project_id"]))
-                    if path == "/api/integrity/advance":
-                        if set(body) != {"scan_id"}:
-                            raise Problem("الفحص يقبل معرف العملية المحفوظة فقط")
-                        return self.reply(integrity.advance(self.store, body["scan_id"]))
-                    if path == "/api/maintenance":
-                        if set(body) != {"operation", "section_id"}:
-                            raise Problem("حقول الصيانة غير صالحة")
-                        return self.reply(maintenance.check(self.store, body["operation"], body["section_id"]))
-                    if path == "/api/workflows/resume":
-                        if not {"project_id", "source_job_id", "steps"} <= set(body) or set(body) - {"project_id", "source_job_id", "steps", "name"}:
-                            raise Problem("حقول الاستكمال غير صالحة")
-                        if not isinstance(body["source_job_id"], str) or not body["source_job_id"]:
-                            raise Problem("حدد المهمة الأصلية للاستكمال")
-                        originals = self.store.rows("SELECT spec FROM jobs WHERE id=? AND project_id=?", (body["source_job_id"], body["project_id"]))
-                        if originals and json.loads(originals[0]["spec"]).get("schema") == "was.agents/1":
-                            raise Problem("مهام الوكلاء القديمة محفوظة للقراءة فقط ولا يمكن استكمالها", 409)
-                        return self.reply(engine.run(self.store, body["project_id"], body["steps"], body.get("name", "استكمال سير عمل"), resume_id=body["source_job_id"]))
-                    if path == "/api/results/compare":
-                        if set(body) != {"project_id", "left_id", "right_id"}:
-                            raise Problem("اختر المشروع ونتيجتي التحليل فقط")
-                        return self.reply(comparison.compare(self.store, body["project_id"], body["left_id"], body["right_id"]))
-                    if path == "/api/requirements/import":
-                        if set(body) != {"project_id"}:
-                            raise Problem("الاستيراد يقبل معرف المشروع فقط")
-                        return self.reply(requirements.import_source(self.store, body["project_id"]))
-                    if path == "/api/knowledge/refresh":
-                        if set(body) != {"project_id", "source_id"}:
-                            raise Problem("الجلب يقبل معرف مصدر مسجل فقط")
-                        return self.reply(knowledge.refresh(self.store, body["project_id"], body["source_id"]))
-                    if path == "/api/learning/attempt":
-                        if set(body) != {"project_id", "lesson_id", "answer_index"}:
-                            raise Problem("المحاولة تقبل مشروعًا ودرسًا واختيار إجابة فقط")
-                        return self.reply(learning.attempt(self.store, body["project_id"], body["lesson_id"], body["answer_index"]))
-                    if path == "/api/run":
-                        return self.reply(engine.run(self.store, body.get("project_id"), body.get("steps"), body.get("name", "تحليل محلي")))
-                    if path == "/api/workshop":
-                        project_id = body.get("project_id")
-                        self.store.project(project_id)
-                        result = sandbox.run(body.get("code"))
-                        evidence = self.store.add_evidence(project_id, "workshop-result.json", encode({"code": body["code"], "result": result}).encode(), "workshop")
-                        return self.reply({"result": result, "evidence": evidence})
-                    if path == "/api/chat":
-                        self.store.project(body.get("project_id"))
-                        return self.reply(local_ai.chat(self.store, body.get("project_id"), body.get("question"), body.get("evidence_ids", []), self.server.ai_url, self.server.ai_model))
-                    return self.reply(backup.export(self.store, body.get("password")), content_type="application/octet-stream",
-                                      headers={"Content-Disposition": 'attachment; filename="platform.cyberbackup"'})
+                    args, options = self.heavy_response(path, body)
                 finally:
                     self.server.execution_lock.release()
+                return self.reply(*args, **options)
             raise Problem("المسار غير موجود", 404)
         except Problem as exc:
             self.reply({"error": str(exc)}, exc.status)
@@ -380,3 +332,96 @@ class Handler(BaseHTTPRequestHandler):
             pass
         except Exception:
             self.reply({"error": "فشل الطلب؛ لم يُعلن نجاح المهمة"}, 500)
+
+
+    def heavy_response(self, path, body):
+        """Compute a response while owning the slot; publish after releasing it."""
+        def reply_data(*args, **kwargs):
+            return args, kwargs
+
+        if path == "/api/events/normalize":
+            if set(body) != {"project_id", "evidence_id", "adapter"}:
+                raise Problem("حدد المشروع والدليل ومحول الأحداث فقط")
+            return reply_data(event_ingest.normalize(self.store, body["project_id"], body["evidence_id"], body["adapter"]))
+        if path == "/api/detection/save":
+            if set(body) != {"project_id", "rule"}:
+                raise Problem("حدد المشروع وقاعدة الكشف فقط")
+            return reply_data(detection.save(self.store, body["project_id"], body["rule"]))
+        if path == "/api/detection/test":
+            if set(body) != {"project_id", "evidence_id", "rule_ids"}:
+                raise Problem("حدد المشروع ودليل الأحداث وقواعد الكشف فقط")
+            return reply_data(detection.test(self.store, body["project_id"], body["evidence_id"], body["rule_ids"]))
+        if path == "/api/coverage/asset":
+            if set(body) != {"project_id", "name", "kind"}:
+                raise Problem("حقول الأصل غير صالحة")
+            return reply_data(coverage.asset(self.store, body["project_id"], body["name"], body["kind"]))
+        if path == "/api/coverage/assessment":
+            if set(body) != {"project_id", "asset_id", "threat", "control", "evidence_id"}:
+                raise Problem("حقول تقييم التغطية غير صالحة")
+            return reply_data(coverage.assess(self.store, body["project_id"], body["asset_id"], body["threat"], body["control"], body["evidence_id"]))
+        if path == "/api/coverage/remove":
+            if set(body) != {"project_id", "assessment_id"}:
+                raise Problem("حدد المشروع وارتباط التغطية فقط")
+            return reply_data(coverage.remove(self.store, body["project_id"], body["assessment_id"]))
+        if path == "/api/quality/start":
+            if body:
+                raise Problem("اختبار الجودة يستخدم الحالات المرجعية المرفقة فقط")
+            return reply_data(quality.start(self.store))
+        if path == "/api/quality/advance":
+            if set(body) != {"run_id"}:
+                raise Problem("حدد معرف اختبار الجودة المحفوظ فقط")
+            return reply_data(quality.advance(self.store, body["run_id"]))
+        if path == "/api/quality/compare":
+            if set(body) != {"left_id", "right_id"}:
+                raise Problem("اختر اختباري الجودة للمقارنة فقط")
+            return reply_data(quality.compare(self.store, body["left_id"], body["right_id"]))
+        if path == "/api/integrity/start":
+            if set(body) != {"project_id"}:
+                raise Problem("حدد مشروع الفحص أو جميع المشاريع فقط")
+            return reply_data(integrity.start(self.store, body["project_id"]))
+        if path == "/api/integrity/advance":
+            if set(body) != {"scan_id"}:
+                raise Problem("الفحص يقبل معرف العملية المحفوظة فقط")
+            return reply_data(integrity.advance(self.store, body["scan_id"]))
+        if path == "/api/maintenance":
+            if set(body) != {"operation", "section_id"}:
+                raise Problem("حقول الصيانة غير صالحة")
+            return reply_data(maintenance.check(self.store, body["operation"], body["section_id"]))
+        if path == "/api/workflows/resume":
+            if not {"project_id", "source_job_id", "steps"} <= set(body) or set(body) - {"project_id", "source_job_id", "steps", "name"}:
+                raise Problem("حقول الاستكمال غير صالحة")
+            if not isinstance(body["source_job_id"], str) or not body["source_job_id"]:
+                raise Problem("حدد المهمة الأصلية للاستكمال")
+            originals = self.store.rows("SELECT spec FROM jobs WHERE id=? AND project_id=?", (body["source_job_id"], body["project_id"]))
+            if originals and json.loads(originals[0]["spec"]).get("schema") == "was.agents/1":
+                raise Problem("مهام الوكلاء القديمة محفوظة للقراءة فقط ولا يمكن استكمالها", 409)
+            return reply_data(engine.run(self.store, body["project_id"], body["steps"], body.get("name", "استكمال سير عمل"), resume_id=body["source_job_id"]))
+        if path == "/api/results/compare":
+            if set(body) != {"project_id", "left_id", "right_id"}:
+                raise Problem("اختر المشروع ونتيجتي التحليل فقط")
+            return reply_data(comparison.compare(self.store, body["project_id"], body["left_id"], body["right_id"]))
+        if path == "/api/requirements/import":
+            if set(body) != {"project_id"}:
+                raise Problem("الاستيراد يقبل معرف المشروع فقط")
+            return reply_data(requirements.import_source(self.store, body["project_id"]))
+        if path == "/api/knowledge/refresh":
+            if set(body) != {"project_id", "source_id"}:
+                raise Problem("الجلب يقبل معرف مصدر مسجل فقط")
+            return reply_data(knowledge.refresh(self.store, body["project_id"], body["source_id"]))
+        if path == "/api/learning/attempt":
+            if set(body) != {"project_id", "lesson_id", "answer_index"}:
+                raise Problem("المحاولة تقبل مشروعًا ودرسًا واختيار إجابة فقط")
+            return reply_data(learning.attempt(self.store, body["project_id"], body["lesson_id"], body["answer_index"]))
+        if path == "/api/run":
+            return reply_data(engine.run(self.store, body.get("project_id"), body.get("steps"), body.get("name", "تحليل محلي")))
+        if path == "/api/workshop":
+            project_id = body.get("project_id")
+            self.store.project(project_id)
+            result = sandbox.run(body.get("code"))
+            evidence = self.store.add_evidence(project_id, "workshop-result.json", encode({"code": body["code"], "result": result}).encode(), "workshop")
+            return reply_data({"result": result, "evidence": evidence})
+        if path == "/api/chat":
+            self.store.project(body.get("project_id"))
+            return reply_data(local_ai.chat(self.store, body.get("project_id"), body.get("question"), body.get("evidence_ids", []), self.server.ai_url, self.server.ai_model))
+        return reply_data(backup.export(self.store, body.get("password")), content_type="application/octet-stream",
+                          headers={"Content-Disposition": 'attachment; filename="platform.cyberbackup"'})
