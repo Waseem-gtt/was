@@ -80,11 +80,20 @@ class App(ThreadingHTTPServer):
 
     def schedule_loop(self):
         while not self.stop_scheduler.wait(1):
-            if self.execution_lock.acquire(blocking=False):
-                try:
-                    knowledge.scheduled_tick(self.store)
-                finally:
-                    self.execution_lock.release()
+            self.run_scheduled_tick()
+
+    def run_scheduled_tick(self):
+        # An idle/disabled scheduler must not briefly reject owner operations.
+        config = self.store.setting("knowledge_schedule", {})
+        if not config.get("enabled") or config.get("next_at", 0) > time.time():
+            return False
+        if not self.execution_lock.acquire(blocking=False):
+            return False
+        try:
+            # Recheck the persisted schedule under the execution gate.
+            return knowledge.scheduled_tick(self.store)
+        finally:
+            self.execution_lock.release()
 
     def server_close(self):
         self.stop_scheduler.set()

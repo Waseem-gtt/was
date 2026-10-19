@@ -2,9 +2,9 @@
   "version": "0.6.0",
   "date_utc": "2026-10-19",
   "unit_tests": {
-    "CPython3.11.17": 131,
-    "CPython3.12.14": 131,
-    "CPython3.13.5": 131
+    "CPython3.11.17": 133,
+    "CPython3.12.14": 133,
+    "CPython3.13.5": 133
   },
   "browser": {
     "main_groups": 18,
@@ -47,5 +47,6 @@
     "universal_automatic_bug_repair": false
   },
   "github_actions": "not_observed_api_network_policy",
-  "scope": "Current implementation remains partial against full requirements; no global certification claim."
+  "scope": "Current implementation remains partial against full requirements; no global certification claim.",
+  "scheduler_idle_execution_gate_regression": "covered_disabled_future_due_busy_and_exception_paths"
 }
