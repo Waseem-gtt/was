@@ -412,7 +412,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.7.0"),
+      el("small", {}, "نسخة البناء 0.8.0"),
     ),
   );
   const select = el(
@@ -2246,6 +2246,7 @@ function maintenancePage() {
     output, integrityPanel, panel("سجل آخر الفحوص", history),
     panel("التطوير والإبلاغ عن الأخطاء", el("p", {}, "طلبات متابعة يراجعها المالك؛ تسجيل الطلب لا يغيّر كود البرنامج ولا يعني تنفيذ الإصلاح."), form, tasks),
     panel("ترقية برنامج لينكس", el("p", {}, "تُجهّز نسخة مستقلة من التزام Git محدد، وتُفحص قبل تفعيلها. نزّل نسخة احتياطية مشفرة وأوقف الخدمة قبل تبديل الإصدار. نفّذ الأوامر من طرفية لينكس داخل المستودع الخاص؛ التفاصيل في docs/Maintenance.md."),
+      el("p", {}, "للترقية الموقعة: أضف --signed ENVELOPE TRUST إلى أمر التجهيز والتفعيل بعد إعداد مفتاحك وثقتك محليًا. تُثبت بصمة الثقة ويُمنع التفعيل غير الموقّع لهذه البادئة. راجع docs/Signed-Releases.md. لا ترفع المفتاح الخاص أو كلمة حمايته إلى المشروع."),
       pre("bash scripts/release.sh prepare COMMIT_SHA /path/to/private-releases\nbash scripts/release.sh activate COMMIT_SHA /path/to/private-releases\nbash scripts/release.sh rollback /path/to/private-releases"),
       el("p", {}, "ترقيات حزم النظام والأدوات الخارجية تحتاج مستودعاتها الموقعة وإدارة لينكس. لا يمكن لهذا الفحص ضمان إصلاح جميع الأعطال تلقائيًا.")));
 }

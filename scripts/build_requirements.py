@@ -16,7 +16,7 @@ REVIEWS = {
     "F02": ("partial", "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف", "cyber_platform/store.py", "cyber_platform/worker.py", "tests/test_security.py"),
     "F03": ("partial", "صيغة أحداث was.event/1 مع حفظ الأصل؛ ليس توافق OCSF كاملًا", "cyber_platform/tools.py", "tests/test_platform.py"),
     "F04": ("partial", "اختبار قواعد was.rules/1 بمرجع ومقاييس؛ لا Sigma كامل أو مراقبة حية", "cyber_platform/tools.py", "tests/test_platform.py"),
-    "F05": ("partial", "ترقية لينكس من التزام Git محدد مع اختبار نسخة مستقلة وتفعيل وتراجع؛ لا توقيعات إصدار أو TUF أو تحديث آلي", "scripts/release.sh", "docs/Maintenance.md"),
+    "F05": ("partial", "ترقية لينكس متحققة مع بيان Ed25519اختياري وثقة مثبتة وتسلسل مانع للتراجع وانتهاء صلاحية؛ لا TUFأو تحديث آلي أو مفتاح ناشر مهيأ افتراضيًا", "scripts/release.sh", "cyber_platform/signed_release.py", "cyber_platform/release_admin.py", "docs/Signed-Releases.md"),
     "F06": ("partial", "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة", "cyber_platform/store.py", "tests/test_platform.py"),
     "E01": ("blocked", "الورشة ترفض عند غياب namespaces؛ لا تنفيذ معزول ناجح على هذا المضيف", "cyber_platform/sandbox.py", "docs/Validation.md"),
     "E02": ("partial", "22 قسمًا و109 منصات بهويات وصفحات؛ ليست جميع تكاملات التخصصات مكتملة", "cyber_platform/catalog.json", "tests/browser_smoke.py"),

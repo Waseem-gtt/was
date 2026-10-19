@@ -4,6 +4,8 @@ Run with the package dependencies installed: python scripts/verify_wheel.py TARG
 TARGET is the directory populated by pip install --no-deps --target TARGET WHEEL.
 No real model inference or owner data is used.
 """
+import base64
+import hashlib
 import http.client
 import json
 from pathlib import Path
@@ -18,6 +20,35 @@ sys.path.insert(0, str(PACKAGE_ROOT))
 import cyber_platform
 from cyber_platform.server import App
 from cyber_platform.store import Store
+from cyber_platform import release_admin, signed_release
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+
+def verify_signing_fixture(folder):
+    """Ephemeral test key only; never configure a real owner trust root."""
+    root = Path(folder)
+    data = b"synthetic signed artifact"
+    (root / "signing-fixture.bin").write_bytes(data)
+    key = Ed25519PrivateKey.generate()
+    public = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    identifier = signed_release.key_id(public)
+    now = int(time.time())
+    payload = {"schema": "was.release/1", "repository": signed_release.REPOSITORY, "sequence": 1,
+               "version": "0.8.0", "commit": "e" * 40, "issued_at": now - 1, "expires_at": now + 600,
+               "artifacts": [{"name": "signing-fixture.bin", "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}]}
+    trust = {"schema": "was.trust/1", "repository": signed_release.REPOSITORY, "threshold": 1,
+             "keys": [{"key_id": identifier, "public_key": base64.b64encode(public).decode()}]}
+    envelope = {"signed": payload, "signatures": [{"key_id": identifier,
+                "signature": base64.b64encode(key.sign(signed_release.canonical(payload))).decode()}]}
+    for name, value in (("fixture-trust.json", trust), ("fixture-envelope.json", envelope)):
+        path = root / name
+        path.write_bytes(signed_release.canonical(value))
+        path.chmod(0o600)
+    result = release_admin.run_verify(root / "fixture-envelope.json", root / "fixture-trust.json", "e" * 40,
+                                      root / "signature-state", artifacts=root, record=True,
+                                      expected_trust_digest=hashlib.sha256(signed_release.canonical(trust)).hexdigest())
+    assert result["recorded"] and result["artifacts_verified"] == 1
 
 
 class SyntheticModel(BaseHTTPRequestHandler):
@@ -44,6 +75,7 @@ def main():
     fixture_thread.start()
     try:
         with tempfile.TemporaryDirectory() as folder:
+            verify_signing_fixture(folder)
             store = Store(folder)
             app = App(("127.0.0.1", 0), store, f"http://127.0.0.1:{fixture.server_port}/v1", "installed-wheel-fixture")
             thread = threading.Thread(target=app.serve_forever, daemon=True)
@@ -82,7 +114,8 @@ def main():
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
-                                  "runtime_agent_team_removed": True, "integrity_batches": True, "audit": True, "real_model_inference": False}))
+                                  "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
+                                  "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

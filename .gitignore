@@ -12,3 +12,7 @@ dist/
 build/
 *.egg-info/
 setup-token
+*.pem
+*.key
+.require-signatures
+signature-state/
