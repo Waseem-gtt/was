@@ -25,7 +25,7 @@ REVIEWS = {
     "E05": ("partial", "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود", "cyber_platform/maintenance.py", "docs/Maintenance.md"),
     "N01": ("partial", "سير عمل وقبول واستكمال يدوي يتحقق من بصمات المنجز؛ لا تفرع أو توازٍ أو استكمال تلقائي", "cyber_platform/engine.py", "tests/test_workflow_progress.py"),
     "N02": ("superseded", "اشتراط إنشاء مختبرات ألغي؛ توليد منصات وإضافات عامة غير منفذ", "docs/Scope-Update-0.2.md"),
-    "N03": ("not_implemented", "لا تعاون تنفيذي بين مساعدين؛ موصل النموذج ليس تعاون وكلاء", "docs/Implementation-Status.md"),
+    "N03": ("partial", "أربعون دور مراجعة بمحرك محلي مشترك، توزيع مهام وطابور وتزامن عاملين وحفظ نتائج؛ يتطلب نموذجًا محليًا حقيقيًا، ولا تنفيذ أو تعديل كود من مخرجاته", "cyber_platform/agents.py", "cyber_platform/agent_roles.py", "docs/Agents.md"),
     "N04": ("partial", "حفظ نتائج ومدخلات وبصمات ومقارنة بنيوية محدودة لنتائج موثقة؛ لا snapshots محاكاة", "cyber_platform/engine.py", "cyber_platform/comparison.py", "tests/test_workflow_progress.py"),
     "N05": ("partial", "اختبارات مرجعية للمحللات والقواعد؛ لا مركز تقييم عام", "tests/test_platform.py", "docs/Validation.md"),
     "N06": ("partial", "علاقات أدلة؛ لا تقييم دفاعي شامل أو ادعاء فعالية دون تجارب", "cyber_platform/store.py"),

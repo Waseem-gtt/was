@@ -1,0 +1,24 @@
+{
+  "version": "0.5.0",
+  "source_repository": "Waseem-gtt/was",
+  "source_commit": "de4622f60580bb456d35ca3b70d31de3e5672236",
+  "source_snapshot_verified_against_git_tree": true,
+  "wheel_package_files_verified_against_git_tree": true,
+  "source_archive_git_tracked_files": 53,
+  "artifacts": [
+    {
+      "file": "was-cyber-platform-0.5.0-source.zip",
+      "bytes": 258707,
+      "sha256": "0c31393b3040e0bf8c892fe08ca500ad4c06f50168bf407531c17a6399cce8e1"
+    },
+    {
+      "file": "was_cyber_platform-0.5.0-py3-none-any.whl",
+      "bytes": 141130,
+      "sha256": "f5f997635f43b922b30244654efe0d268b3fe53a0bf24c69c83ed4d059cb7fb9"
+    }
+  ],
+  "verification_scope": "Hashes detect changes relative to this record; this is not a publisher signature. Historical 0.5.0 artifacts are preserved, not rebuilt from later repository changes.",
+  "signature": null,
+  "validation_report": "../../reports/validation-0.5.json",
+  "excluded": "No runtime state, owner credentials, evidence, database, encrypted backup, model weights or raw execution logs."
+}

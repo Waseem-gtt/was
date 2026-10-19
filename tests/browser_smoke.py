@@ -187,12 +187,12 @@ def main():
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):
                     page.set_viewport_size({"width": width, "height": 844})
-                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance"):
+                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "agents", "workshop", "knowledge", "requirements", "settings", "maintenance"):
                         page.evaluate("hash => location.hash=hash", view)
                         page.wait_for_timeout(80)
                         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (width, view)
                     page.screenshot(path=str(output / f"mobile-{width}.png"), full_page=True)
-                    checks.append(f"no page overflow at {width}px across 12 pages")
+                    checks.append(f"no page overflow at {width}px across 13 pages")
                 page.get_by_role("button", name="خروج", exact=True).click()
                 expect(page.get_by_role("button", name="دخول مساحة العمل")).to_be_visible()
                 checks.append("logout revokes session")

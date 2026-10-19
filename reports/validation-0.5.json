@@ -1,0 +1,30 @@
+{
+  "version": "0.5.0",
+  "commit": "de4622f60580bb456d35ca3b70d31de3e5672236",
+  "unit_tests": {
+    "3.11": 106,
+    "3.12": 106,
+    "3.13": 106
+  },
+  "browser_groups": 18,
+  "javascript_errors": 0,
+  "bandit_unresolved": 0,
+  "known_runtime_vulnerabilities": 0,
+  "runtime_packages_audited": 3,
+  "source_bytes": 173726,
+  "source_blocks": 411,
+  "requirements_reviewed": 61,
+  "release_prepare": "passed",
+  "release_activate_and_rollback": "passed_in_isolated_release_directory",
+  "installed_wheel_smoke": "passed_auth_worker_maintenance_development",
+  "production_health": "0.5.0_loopback_database_ok",
+  "remote_git_sha_verified": true,
+  "github_actions_result": "not_observed_api_network_policy",
+  "limits": [
+    "no_universal_automatic_bug_repair",
+    "no_signed_publisher_releases_or_TUF",
+    "no_tested_graphical_desktop_session",
+    "no_OVA_or_real_local_model_inference",
+    "not_all_requirements_implemented"
+  ]
+}

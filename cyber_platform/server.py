@@ -10,7 +10,8 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, comparison, engine, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
+from . import __version__, agents, backup, comparison, engine, knowledge, learning, local_ai, maintenance, requirements, sandbox, tools
+from .agent_roles import ROLES
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -45,9 +46,10 @@ class App(ThreadingHTTPServer):
         super().__init__(address, Handler)
         # Recover interrupted tasks without claiming successful completion.
         with store.lock, store.db:
-            count = store.db.execute("UPDATE jobs SET status='interrupted' WHERE status='running'").rowcount
+            count = store.db.execute("UPDATE jobs SET status='interrupted' WHERE status IN ('queued','running')").rowcount
             if count:
                 store.audit("jobs.interrupted", {"count": count})
+        self.agents = agents.Coordinator(store, ai_url, ai_model, self.execution_lock)
         self.scheduler = threading.Thread(target=self.schedule_loop, daemon=True)
         self.scheduler.start()
 
@@ -86,6 +88,8 @@ class App(ThreadingHTTPServer):
 
     def server_close(self):
         self.stop_scheduler.set()
+        if hasattr(self, "agents"):
+            self.agents.close()
         if hasattr(self, "scheduler"):
             self.scheduler.join(timeout=25)
         super().server_close()
@@ -172,6 +176,18 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/agents/roles":
+                return self.reply({"roles": ROLES, "max_parallel": 2, "model_state": "requires_local_model",
+                                   "limitation": "أربعون دورًا تخصصيًا تستخدم المحرك المحلي المضبوط؛ ليست أربعين نموذجًا مثبتًا. النتائج للمراجعة ولا تنفذ كودًا."})
+            if path == "/api/agents":
+                project_id = query.get("project", [""])[0]
+                self.store.project(project_id)
+                job_id = query.get("job", [""])[0]
+                if job_id:
+                    return self.reply(self.server.agents.status(project_id, job_id))
+                jobs = self.store.rows("SELECT * FROM jobs WHERE project_id=? ORDER BY created DESC LIMIT 100", (project_id,))
+                parsed = [{**j, "spec": json.loads(j["spec"]), "results": json.loads(j["results"])} for j in jobs]
+                return self.reply({"jobs": [j for j in parsed if j["spec"].get("schema") == "was.agents/1"]})
             if path == "/api/maintenance":
                 return self.reply(maintenance.history(self.store))
             if path == "/api/requirements":
@@ -269,6 +285,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(self.store.create_project(body.get("name"), body.get("description", "")), 201)
             if path == "/api/development":
                 return self.reply(maintenance.task(self.store, body))
+            if path == "/api/agents/start":
+                if not {"project_id", "question", "evidence_ids"} <= set(body) or set(body) - {"project_id", "question", "evidence_ids", "role_ids"}:
+                    raise Problem("حقول توزيع مهام الوكلاء غير صالحة")
+                if not isinstance(body["project_id"], str):
+                    raise Problem("معرف المشروع غير صالح")
+                return self.reply(self.server.agents.start(body["project_id"], body["question"], body["evidence_ids"], body.get("role_ids")))
             if path == "/api/knowledge/settings":
                 if set(body) != {"project_id", "enabled", "interval_seconds"}:
                     raise Problem("إعدادات الجدولة غير صالحة")

@@ -82,6 +82,27 @@ sys.exit(1)
             result = subprocess.run([sys.executable,'-c',program,str(self.store.root),*args],capture_output=True,timeout=3)
             self.assertEqual(result.returncode,0,result.stderr)
 
+    def test_all_tool_selfchecks_reject_empty_or_semantically_wrong_results(self):
+        self.assertEqual(set(maintenance._TOOL_EXPECTATIONS), {item['id'] for item in maintenance.tools.describe()})
+        for item in maintenance.tools.describe():
+            tool = item['id']
+            raw = item['sample'].encode() if item['sample'] is not None else (b'\x01\x02AB' if tool == 'tlv' else b'\x00\x01\xc0\x00\x00\x00A')
+            result = maintenance.tools.analyze(tool, raw)
+            with self.subTest(tool=tool):
+                self.assertTrue(maintenance._tool_selfcheck(tool, result, raw))
+                self.assertFalse(maintenance._tool_selfcheck(tool, {}, raw))
+                self.assertFalse(maintenance._tool_selfcheck(tool, {'count': 1}, raw))
+                corrupted = dict(result)
+                key = next(iter(maintenance._TOOL_EXPECTATIONS[tool]))
+                corrupted[key] = None
+                self.assertFalse(maintenance._tool_selfcheck(tool, corrupted, raw))
+        with patch('cyber_platform.maintenance.worker.analyze', return_value={}):
+            result = maintenance.check(self.store)
+        tool_checks = [check for check in result['checks'] if check['id'].startswith('tool:')]
+        self.assertEqual(len(tool_checks), 21)
+        self.assertTrue(all(check['status'] == 'failed' for check in tool_checks))
+        self.assertFalse(result['passed'])
+
     def test_worker_failure_is_failed_check(self):
         with patch('cyber_platform.maintenance.worker.analyze', side_effect=ValueError('limit')):
             result = maintenance.check(self.store, section_id='01')
@@ -97,6 +118,180 @@ sys.exit(1)
         detail = next(c['detail'] for c in result['checks'] if c['id']=='evidence')
         self.assertFalse(detail['complete'])
         self.assertEqual(detail['verified'], 0)
+
+    def test_transaction_rolls_back_partial_fchmod_failure(self):
+        first, second = self.evidence(b'one'), self.evidence(b'two')
+        paths = [self.store.blobs / item['id'] for item in [first, second]]
+        for path in paths:
+            path.chmod(0o644)
+        real = os.fchmod
+        calls = []
+        def failing(fd, mode):
+            calls.append(mode)
+            if len(calls) == 2:
+                raise OSError('synthetic permission denial')
+            return real(fd, mode)
+        with patch('cyber_platform.maintenance.os.fchmod', side_effect=failing):
+            result = maintenance.check(self.store, 'repair', '01')
+        self.assertFalse(result['passed'])
+        self.assertEqual(result['repair_transaction']['status'], 'rolled_back')
+        self.assertEqual(result['repairs'], [])
+        self.assertTrue(all(path.stat().st_mode & 0o777 == 0o644 for path in paths))
+        self.assertTrue(self.store.verify_audit()['valid'])
+
+    def test_transaction_reports_rollback_failure(self):
+        first, second = self.evidence(b'one'), self.evidence(b'two')
+        for item in [first, second]:
+            (self.store.blobs / item['id']).chmod(0o644)
+        real = os.fchmod
+        calls = []
+        def failing(fd, mode):
+            calls.append(mode)
+            if len(calls) > 1:
+                raise OSError('synthetic denial including rollback')
+            return real(fd, mode)
+        with patch('cyber_platform.maintenance.os.fchmod', side_effect=failing):
+            result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'rollback_failed')
+        self.assertTrue(result['repair_transaction']['rollback_errors'])
+        self.assertEqual(result['repairs'], [])
+
+    def test_corrupt_audit_blocks_all_repairs_without_rewriting_chain(self):
+        item = self.evidence()
+        path = self.store.blobs / item['id']
+        path.chmod(0o644)
+        with self.store.db:
+            self.store.db.execute("UPDATE audit SET hash='corrupt' WHERE seq=1")
+        before = self.store.rows('SELECT * FROM audit')
+        result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'blocked')
+        self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(self.store.rows('SELECT * FROM audit'), before)
+
+    def test_hardlinked_evidence_is_not_repaired(self):
+        item = self.evidence()
+        path = self.store.blobs / item['id']
+        path.chmod(0o644)
+        alias = self.store.root / 'outside-evidence'
+        os.link(path, alias)
+        result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'blocked')
+        self.assertEqual(alias.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(result['repairs'], [])
+
+    def test_evidence_directory_replacement_never_changes_external_target(self):
+        self.evidence()
+        external = self.store.root / 'external'
+        external.mkdir(mode=0o755)
+        external.chmod(0o755)
+        original = self.store.root / 'saved-evidence'
+        self.store.blobs.rename(original)
+        self.store.blobs.symlink_to(external, target_is_directory=True)
+        result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'blocked')
+        self.assertEqual(external.stat().st_mode & 0o777, 0o755)
+
+    def test_postflight_path_replacement_rolls_back_pinned_object(self):
+        item = self.evidence()
+        path = self.store.blobs / item['id']
+        path.chmod(0o644)
+        original = self.store.root / 'original-evidence'
+        real = os.fchmod
+        swapped = []
+        def replace_after_mutation(fd, mode):
+            real(fd, mode)
+            if not swapped:
+                swapped.append(True)
+                path.rename(original)
+                path.write_bytes(b'external')
+                path.chmod(0o644)
+        with patch('cyber_platform.maintenance.os.fchmod', side_effect=replace_after_mutation):
+            result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'rolled_back')
+        self.assertEqual(original.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(path.read_bytes(), b'external')
+        self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(result['repairs'], [])
+
+    def test_preexisting_database_replacement_blocks_repair(self):
+        path = self.store.root / 'platform.db'
+        previous = path.stat()
+        self.store.storage_identity = {'platform.db': (previous.st_dev, previous.st_ino)}
+        saved = self.store.root / 'saved.db'
+        path.rename(saved)
+        path.write_bytes(b'unrelated database')
+        path.chmod(0o644)
+        result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'blocked')
+        self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(path.read_bytes(), b'unrelated database')
+
+    def test_preexisting_root_replacement_blocks_repair(self):
+        root = self.store.root
+        previous = root.stat()
+        self.store.storage_identity = {'root': (previous.st_dev, previous.st_ino)}
+        saved = root.with_name('saved-root')
+        root.rename(saved)
+        root.mkdir(mode=0o700)
+        (root / 'evidence').mkdir(mode=0o700)
+        (root / 'platform.db').write_bytes(b'unrelated database')
+        result = maintenance.check(self.store, 'repair', '01')
+        self.assertEqual(result['repair_transaction']['status'], 'blocked')
+        self.assertEqual((root / 'platform.db').read_bytes(), b'unrelated database')
+
+    def test_content_change_during_commit_is_detected_and_modes_rolled_back(self):
+        item = self.evidence()
+        path = self.store.blobs / item['id']
+        path.chmod(0o644)
+        real = os.fchmod
+        modified = []
+        writer = os.open(path, os.O_WRONLY)
+        def mutate(fd, mode):
+            real(fd, mode)
+            if not modified:
+                modified.append(True)
+                os.write(writer, b'evil')
+        try:
+            with patch('cyber_platform.maintenance.os.fchmod', side_effect=mutate):
+                result = maintenance.check(self.store, 'repair', '01')
+        finally:
+            os.close(writer)
+        self.assertEqual(result['repair_transaction']['status'], 'rolled_back')
+        self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+        self.assertEqual(path.read_bytes(), b'evil')
+        self.assertEqual(result['repairs'], [])
+        evidence_check = next(check for check in result['checks'] if check['id'] == 'evidence')
+        self.assertEqual(evidence_check['status'], 'failed')
+        self.assertIn(item['id'], evidence_check['detail']['damaged'])
+
+    def test_transaction_closes_every_pinned_descriptor_on_failure(self):
+        item = self.evidence()
+        (self.store.blobs / item['id']).chmod(0o644)
+        records = self.store.rows('SELECT id,project_id,size,sha256 FROM evidence')
+        opened = []
+        real = os.open
+        def capture(*args, **kwargs):
+            fd = real(*args, **kwargs)
+            opened.append(fd)
+            return fd
+        with patch('cyber_platform.maintenance.os.open', side_effect=capture), patch('cyber_platform.maintenance.os.fchmod', side_effect=OSError('denied')):
+            result = maintenance._permission_transaction(self.store, 'repair', records, True)
+        self.assertEqual(result[0]['status'], 'rollback_failed')
+        self.assertEqual(len(opened), 4)
+        for fd in opened:
+            with self.assertRaises(OSError):
+                os.fstat(fd)
+
+    def test_tool_failure_after_permissions_does_not_claim_rollback(self):
+        item = self.evidence()
+        path = self.store.blobs / item['id']
+        path.chmod(0o644)
+        with patch('cyber_platform.maintenance.worker.analyze', side_effect=ValueError('tool failure')):
+            result = maintenance.check(self.store, 'repair', '01')
+        self.assertFalse(result['passed'])
+        self.assertEqual(result['repair_transaction']['status'], 'applied')
+        self.assertTrue(result['repair_transaction']['verification'])
+        self.assertEqual(path.stat().st_mode & 0o777, 0o400)
 
     def test_invalid_scope_and_arbitrary_operation_rejected(self):
         for operation, section in [('shell',None),('check','bad'),('check',[]),('repair','99')]:

@@ -3550,10 +3550,12 @@
       "id": "N03",
       "title": "تعاون مساعدين متخصصين على مشروع واحد",
       "group": "N",
-      "status": "not_implemented",
-      "scope": "لا تعاون تنفيذي بين مساعدين؛ موصل النموذج ليس تعاون وكلاء",
+      "status": "partial",
+      "scope": "أربعون دور مراجعة بمحرك محلي مشترك، توزيع مهام وطابور وتزامن عاملين وحفظ نتائج؛ يتطلب نموذجًا محليًا حقيقيًا، ولا تنفيذ أو تعديل كود من مخرجاته",
       "evidence_paths": [
-        "docs/Implementation-Status.md"
+        "cyber_platform/agents.py",
+        "cyber_platform/agent_roles.py",
+        "docs/Agents.md"
       ],
       "source_ids": [
         "source.0057"

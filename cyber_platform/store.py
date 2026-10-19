@@ -70,6 +70,10 @@ class Store:
         """)
         self.db.commit()
         os.chmod(self.root / "platform.db", 0o600)
+        self.storage_identity = {}
+        for name, path in (("root", self.root), ("evidence", self.blobs), ("platform.db", self.root / "platform.db")):
+            info = path.stat(follow_symlinks=False)
+            self.storage_identity[name] = (info.st_dev, info.st_ino)
 
     def close(self):
         self.db.close()

@@ -66,7 +66,8 @@ class RequirementsTests(unittest.TestCase):
         self.assertTrue(any(b["kind"] == "historical" and "OVA" in b["text"] for b in requirements.DATA["blocks"]))
         records = {r["id"]: r for r in requirements.DATA["requirements"]}
         self.assertEqual(records["N02"]["status"], "superseded")
-        self.assertEqual(records["N03"]["status"], "not_implemented")
+        self.assertEqual(records["N03"]["status"], "partial")
+        self.assertIn("cyber_platform/agents.py", records["N03"]["evidence_paths"])
         self.assertEqual(records["E01"]["status"], "blocked")
         self.assertTrue(any("35GB" in o for o in requirements.DATA["overrides"]))
 

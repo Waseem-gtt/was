@@ -7,6 +7,7 @@ const state = {
   section: null,
   csrf: "",
   busy: false,
+  agentsJobs: {},
 };
 const nav = [
   ["dashboard", "◈", "نظرة عامة"],
@@ -20,6 +21,7 @@ const nav = [
   ["map", "⌗", "خريطة الأدلة"],
   ["workshop", "⌨", "ورشة البرمجة"],
   ["assistant", "✧", "المساعد المحلي"],
+  ["agents", "♧", "فريق الوكلاء"],
   ["audit", "≡", "سجل التدقيق"],
   ["settings", "⚙", "إدارة المنظومة"],
   ["maintenance", "⟳", "التحديث والصيانة"],
@@ -411,7 +413,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.5.0"),
+      el("small", {}, "نسخة البناء 0.6.0"),
     ),
   );
   const select = el(
@@ -484,6 +486,7 @@ function render() {
     map: mapPage,
     workshop,
     assistant,
+    agents: agentsPage,
     audit: auditPage,
     settings,
     maintenance: maintenancePage,
@@ -555,6 +558,7 @@ function subtitle() {
     map: "كل علاقة تبدأ بدليل؛ اضغط عقدة لعرض سجلها.",
     workshop: "تعلّم وجرّب Python داخل عزل Linux، عند توفره.",
     assistant: "محرك محلي مشترك، مع أدلة تختارها أنت.",
+    agents: "أدوار تخصصية توزّع المراجعة، ونتائج محفوظة تحتاج اعتمادك.",
     audit: "سجل إجراءات بسلسلة بصمات محلية قابلة للتحقق.",
     settings: "الموارد والنسخ الاحتياطية وحدود التشغيل.",
   }[state.view];
@@ -1354,8 +1358,8 @@ function workflows() {
     ),
     panel(
       "مهام المشروع",
-      state.project.jobs.length
-        ? state.project.jobs.map((j) =>
+      state.project.jobs.filter((j) => j.spec?.schema !== "was.agents/1").length
+        ? state.project.jobs.filter((j) => j.spec?.schema !== "was.agents/1").map((j) =>
             el(
               "div",
               { class: "row" },
@@ -1630,6 +1634,115 @@ function assistant() {
     ),
     output,
   );
+}
+function agentsPage() {
+  const missing = requireProject();
+  if (missing) return missing;
+  const pid = state.project.project.id;
+  const holder = el("div", { class: "stack" });
+  const output = panel("متابعة الفريق", el("p", {}, "لم تبدأ مهمة في هذه الصفحة."));
+  const active = () => holder.isConnected && state.view === "agents" && state.project?.project.id === pid;
+  const names = new Map();
+  const labels = {
+    queued: "في الانتظار", running: "قيد التنفيذ", succeeded: "اكتملت",
+    partial: "اكتملت جزئيًا", failed: "فشلت", cancelled: "أُلغيت", interrupted: "توقفت عند إعادة التشغيل",
+  };
+  function drawJob(job) {
+    const results = job.results || [];
+    output.replaceChildren(
+      el("h2", {}, "متابعة الفريق"),
+      el("p", { role: "status", "aria-live": "polite" }, "حالة الفريق: " + (labels[job.status] || job.status)),
+      el("p", { class: "muted" }, "معرّف المهمة: " + job.id),
+      ...results.map((result) => panel(
+        names.get(result.role_id) || result.role_id,
+        badge(labels[result.status] || result.status),
+        result.answer ? pre(result.answer) : null,
+        result.error ? el("p", { class: "notice" }, result.error) : null,
+      )),
+      job.report_evidence_id ? button("تنزيل تقرير الفريق", () => action(async () => {
+        const blob = await api("evidence?project=" + pid + "&id=" + job.report_evidence_id, undefined, true);
+        download(blob, "agents-report-" + job.id + ".json");
+      })) : null,
+    );
+  }
+  async function poll(jobId) {
+    if (!active()) return;
+    try {
+      const data = await api("agents?project=" + pid + "&job=" + jobId);
+      if (!active() || state.agentsJobs[pid] !== jobId) return;
+      const job = data.job || data;
+      drawJob(job);
+      if (["queued", "running"].includes(job.status)) setTimeout(() => poll(jobId), 1500);
+    } catch (e) {
+      if (active()) output.replaceChildren(el("h2", {}, "متابعة الفريق"), el("p", { role: "alert" }, e.message),
+        button("إعادة متابعة المهمة", () => poll(jobId)));
+    }
+  }
+  holder.append(panel("تحميل أدوار الفريق", el("p", {}, "جارٍ التحميل…")), output);
+  api("agents/roles").then((data) => {
+    if (!active()) return;
+    const selected = new Set();
+    const question = el("textarea", { maxlength: 4000, rows: 4, required: true, placeholder: "حدد مهمة مشتركة يراجعها كل دور من تخصصه" });
+    const chosen = new Set();
+    const evidenceList = el("div", { class: "checklist" }, state.project.evidence.map((item) => el("label", {},
+      el("input", { type: "checkbox", value: item.id, onchange: (event) => {
+        if (event.target.checked && chosen.size >= 4) {
+          event.target.checked = false;
+          toast("اختر حتى أربعة أدلة", true);
+          return;
+        }
+        if (event.target.checked) chosen.add(item.id); else chosen.delete(item.id);
+      } }), item.name)));
+    const boxes = [];
+    const defaults = ["researcher", "defender", "reviewer"];
+    const roleList = el("div", { class: "checklist" }, data.roles.map((role) => {
+      names.set(role.id, role.name);
+      const checked = defaults.includes(role.id);
+      if (checked) selected.add(role.id);
+      const box = el("input", { type: "checkbox", value: role.id, checked, onchange: () => {
+        if (box.checked) selected.add(role.id); else selected.delete(role.id);
+      } });
+      boxes.push(box);
+      return el("label", { title: role.instructions }, box, role.name);
+    }));
+    if (!selected.size && boxes.length) { boxes[0].checked = true; selected.add(boxes[0].value); }
+    const send = button("توزيع المهمة على الوكلاء", () => action(async () => {
+      if (!question.value.trim()) throw Error("اكتب المهمة المشتركة أولًا");
+      if (!selected.size) throw Error("اختر دورًا واحدًا على الأقل");
+      const data = await api("agents/start", {
+        project_id: pid, question: question.value, evidence_ids: [...chosen], role_ids: [...selected],
+      });
+      const job = data.job || data;
+      state.agentsJobs[pid] = job.id;
+      if (active()) { drawJob(job); poll(job.id); }
+    }, send), "primary");
+    holder.firstChild.replaceWith(panel("فريق من " + data.roles.length + " دورًا تخصصيًا",
+      el("div", { class: "notice info" },
+        "تستخدم الأدوار المحرك المحلي نفسه؛ ليست نماذج مستقلة. حتى " + data.max_parallel +
+        " مهام متزامنة، والبقية تنتظر. يلزم إعداد نموذج محلي؛ لا تُشغّل الإجابات أوامر ولا تعدّل المشروع تلقائيًا، وتحتاج مراجعتك."),
+      el("div", { class: "stack" },
+        field("المهمة المشتركة", question),
+        el("fieldset", { class: "panel" }, el("legend", {}, "الأدلة المسموح بمشاركتها (حتى 4)"), evidenceList),
+        el("div", { class: "actions" },
+          button("اختيار جميع الأدوار", () => boxes.forEach((box) => { box.checked = true; selected.add(box.value); })),
+          button("إلغاء اختيار الأدوار", () => { boxes.forEach((box) => { box.checked = false; }); selected.clear(); })),
+        el("fieldset", { class: "panel" }, el("legend", {}, "الأدوار المشاركة"), roleList), send)));
+    const history = panel("مهام الفريق المحفوظة", el("p", {}, "جارٍ تحميل السجل…"));
+    holder.append(history);
+    api("agents?project=" + pid).then((saved) => {
+      if (!active()) return;
+      history.replaceChildren(el("h2", {}, "مهام الفريق المحفوظة"),
+        ...(saved.jobs.length ? saved.jobs.map((job) => el("div", { class: "row" },
+          el("span", {}, job.name || job.id), badge(labels[job.status] || job.status),
+          button("عرض مهمة الفريق", () => { state.agentsJobs[pid] = job.id; poll(job.id); }, "small")))
+          : [el("p", {}, "لا توجد مهام فريق محفوظة بعد.")]));
+      if (!state.agentsJobs[pid] && saved.jobs.length) state.agentsJobs[pid] = saved.jobs[0].id;
+      if (state.agentsJobs[pid]) poll(state.agentsJobs[pid]);
+    }).catch((e) => { if (active()) history.replaceChildren(el("p", { role: "alert" }, e.message)); });
+  }).catch((e) => {
+    if (active()) holder.firstChild.replaceWith(panel("تعذر تحميل الأدوار", el("p", { role: "alert" }, e.message)));
+  });
+  return holder;
 }
 function auditPage() {
   const holder = panel("سلسلة الإجراءات", el("p", {}, "تحميل السجل…"));
