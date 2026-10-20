@@ -69,5 +69,6 @@ function defenseCoveragePage() {
       panel("الفجوات وما يحتاج مراجعة", data.gaps.length ? table(["الأصل", "الحالة", "سبب المراجعة"], data.gaps.map(item => [assetName(item.asset_id), status(item.status), reasonLabels[item.reason] || labels[item.reason] || item.reason])) : el("p", {}, "لا توجد فجوات مسجلة ضمن العلاقات الحالية؛ هذا لا يثبت اكتمال الحماية.")));
   }
   load().catch(error => { if (holder.isConnected) toast(error.message, true); });
+  holder.append(coverageScansPanel(pid));
   return holder;
 }

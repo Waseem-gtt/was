@@ -1,0 +1,374 @@
+{
+  "schema": "was.plan-template-pack/1",
+  "templates": [
+    {
+      "id": "was-file-triage",
+      "title": "فرز ملف وبصمة النتائج",
+      "version": "1.0.0",
+      "description": "فحص رؤوس ملف ساكنًا ثم بصمة تقريره دون تنفيذ الملف.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "فرز ملف وبصمة النتائج",
+        "nodes": [
+          {
+            "id": "header",
+            "tool": "executable",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "format": "ELF",
+              "bits": 64,
+              "machine": 62
+            }
+          },
+          {
+            "id": "report_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "header"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          },
+          {
+            "id": "chain_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "report_hash"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-ioc-privacy",
+      "title": "المؤشرات وتنقيح نسخة",
+      "version": "1.0.0",
+      "description": "استخراج مؤشرات ثم تنقيح نسخة مستقلة من الأصل عند نجاح الخطوة؛ لا يعدل الملف الأصلي.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "المؤشرات وتنقيح نسخة",
+        "nodes": [
+          {
+            "id": "indicators",
+            "tool": "ioc",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "ipv4.0": "192.0.2.1"
+            }
+          },
+          {
+            "id": "redact",
+            "tool": "privacy",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [
+              "indicators"
+            ],
+            "when": {
+              "node_id": "indicators",
+              "status": "succeeded"
+            },
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-network-flows",
+      "title": "إحصاء تدفقات محفوظة",
+      "version": "1.0.0",
+      "description": "إحصاء CSVمحفوظ ثم بصمة النتيجة؛ لا اتصال بشبكة.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "إحصاء تدفقات محفوظة",
+        "nodes": [
+          {
+            "id": "flows",
+            "tool": "flows",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "flows": 2,
+              "bytes": 576
+            }
+          },
+          {
+            "id": "report_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "flows"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-identity-review",
+      "title": "مراجعة حسابات من ملف",
+      "version": "1.0.0",
+      "description": "مراجعة خصائص حسابات مقدمة ثم بصمة النتيجة؛ لا استعلام خدمة هوية.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "مراجعة حسابات من ملف",
+        "nodes": [
+          {
+            "id": "identity",
+            "tool": "identity",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "review.0.stale": true,
+              "review.0.mfa_missing": true
+            }
+          },
+          {
+            "id": "report_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "identity"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-container-review",
+      "title": "مراجعة وصف حاوية",
+      "version": "1.0.0",
+      "description": "مراجعة وصفJSONمع مرجع اصطناعي ثم بصمة التقرير؛ لا فحص حاوية حية.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "مراجعة وصف حاوية",
+        "nodes": [
+          {
+            "id": "container",
+            "tool": "container",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "count": 4
+            }
+          },
+          {
+            "id": "report_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "container"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-sbom-review",
+      "title": "جرد مكونات برنامج",
+      "version": "1.0.0",
+      "description": "قراءةSBOMمحفوظ ثم بصمة التقرير؛ لا فحص ثغرات مستقل.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "جرد مكونات برنامج",
+        "nodes": [
+          {
+            "id": "sbom",
+            "tool": "sbom",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "format": "CycloneDX",
+              "components.0.name": "sample"
+            }
+          },
+          {
+            "id": "report_hash",
+            "tool": "hashes",
+            "input": {
+              "node_id": "sbom"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-event-rules",
+      "title": "توحيد أحداث واختبار قاعدة",
+      "version": "1.0.0",
+      "description": "مدخلان مستقلان بصيغتي الأحداث واختبار القواعد؛ تحفظ توقعات المثال ولا تطبق على ملفات أخرى.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "توحيد أحداث واختبار قاعدة",
+        "nodes": [
+          {
+            "id": "events",
+            "tool": "events",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "count": 2,
+              "failed": 1
+            }
+          },
+          {
+            "id": "rules",
+            "tool": "rules",
+            "input": {
+              "slot": "rule_test"
+            },
+            "depends_on": [
+              "events"
+            ],
+            "when": null,
+            "expect": {
+              "rules.0.metrics.passed": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "was-signal-quality",
+      "title": "جودة قياسات وطيف عينات",
+      "version": "1.0.0",
+      "description": "مدخلان اصطناعيان: تسلسل قياسات وطيف قصير؛ لا استقبال أجهزة أو إشارات حية.",
+      "plan": {
+        "schema": "was.plan/1",
+        "name": "جودة قياسات وطيف عينات",
+        "nodes": [
+          {
+            "id": "sequence",
+            "tool": "telemetry",
+            "input": {
+              "slot": "source"
+            },
+            "depends_on": [],
+            "when": null,
+            "expect": {
+              "records": 3
+            }
+          },
+          {
+            "id": "spectrum",
+            "tool": "spectrum",
+            "input": {
+              "slot": "samples"
+            },
+            "depends_on": [
+              "sequence"
+            ],
+            "when": null,
+            "expect": {
+              "peak_bin": 2
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "file-triage-sample",
+      "title": "مثال اصطناعي: فرز ملف وبصمة النتائج",
+      "template_id": "was-file-triage",
+      "inputs": {
+        "source": "ELF\u0002\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000>\u0000"
+      }
+    },
+    {
+      "id": "ioc-privacy-sample",
+      "title": "مثال اصطناعي: المؤشرات وتنقيح نسخة",
+      "template_id": "was-ioc-privacy",
+      "inputs": {
+        "source": "Contact owner@example.test from 192.0.2.1; https://example.test/path"
+      }
+    },
+    {
+      "id": "network-flows-sample",
+      "title": "مثال اصطناعي: إحصاء تدفقات محفوظة",
+      "template_id": "was-network-flows",
+      "inputs": {
+        "source": "protocol,destination,bytes\nTLS,192.0.2.1,512\nDNS,192.0.2.2,64\n"
+      }
+    },
+    {
+      "id": "identity-review-sample",
+      "title": "مثال اصطناعي: مراجعة حسابات من ملف",
+      "template_id": "was-identity-review",
+      "inputs": {
+        "source": "[{\"name\": \"sample-admin\", \"admin\": true, \"active\": false, \"mfa\": false}]"
+      }
+    },
+    {
+      "id": "container-review-sample",
+      "title": "مثال اصطناعي: مراجعة وصف حاوية",
+      "template_id": "was-container-review",
+      "inputs": {
+        "source": "{\"privileged\": true, \"user\": \"root\", \"network_mode\": \"host\"}"
+      }
+    },
+    {
+      "id": "sbom-review-sample",
+      "title": "مثال اصطناعي: جرد مكونات برنامج",
+      "template_id": "was-sbom-review",
+      "inputs": {
+        "source": "{\"bomFormat\": \"CycloneDX\", \"components\": [{\"name\": \"sample\", \"version\": \"1.0\", \"licenses\": [{\"license\": {\"id\": \"MIT\"}}]}]}"
+      }
+    },
+    {
+      "id": "event-rules-sample",
+      "title": "مثال اصطناعي: توحيد أحداث واختبار قاعدة",
+      "template_id": "was-event-rules",
+      "inputs": {
+        "source": "[{\"action\": \"login\", \"outcome\": \"failure\"}, {\"action\": \"login\", \"outcome\": \"success\"}]",
+        "rule_test": "{\"events\": [{\"action\": \"login\", \"outcome\": \"failure\"}, {\"action\": \"login\", \"outcome\": \"success\"}], \"rules\": [{\"id\": \"example-login\", \"selection\": {\"action\": \"login\", \"outcome\": \"failure\"}, \"expected_event_indexes\": [0]}]}"
+      }
+    },
+    {
+      "id": "signal-quality-sample",
+      "title": "مثال اصطناعي: جودة قياسات وطيف عينات",
+      "template_id": "was-signal-quality",
+      "inputs": {
+        "source": "sequence,value\n1,20\n2,21\n4,23\n",
+        "samples": "[0,1,0,-1,0,1,0,-1]"
+      }
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, comparison, coverage, detection, engine, event_adapters, event_ingest, integrity, knowledge, learning, local_ai, maintenance, quality, requirements, sandbox, tools
+from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, detection, engine, event_adapters, event_ingest, integrity, knowledge, learning, local_ai, maintenance, plans, plan_templates, quality, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
@@ -181,6 +181,34 @@ class Handler(BaseHTTPRequestHandler):
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
+            if path == "/api/plans/templates":
+                return self.reply(plan_templates.library(self.store, query.get("project", [""])[0]))
+            if path == "/api/plans/history":
+                return self.reply(plans.history(self.store, query.get("project", [""])[0]))
+            if path == "/api/plans":
+                if not self.server.execution_lock.acquire(blocking=False):
+                    raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
+                try:
+                    result = plans.status(self.store, query.get("project", [""])[0], query.get("run", [""])[0])
+                finally:
+                    self.server.execution_lock.release()
+                return self.reply(result)
+            if path == "/api/coverage/scans/history":
+                return self.reply(coverage_scans.history(self.store, query.get("project", [""])[0]))
+            if path == "/api/coverage/scans":
+                return self.reply(coverage_scans.status(self.store, query.get("project", [""])[0], query.get("scan", [""])[0]))
+            if path == "/api/case-reports/history":
+                return self.reply(case_reports.history(self.store, query.get("project", [""])[0]))
+            if path == "/api/case-reports":
+                project_id, report_id = query.get("project", [""])[0], query.get("id", [""])[0]
+                format_name = query.get("format", ["json"])[0]
+                if format_name not in ("json", "html"):
+                    raise Problem("صيغة التقرير غير مدعومة")
+                result = case_reports.read(self.store, project_id, report_id)
+                if format_name == "html":
+                    return self.reply(case_reports.render_html(result), content_type="text/html; charset=utf-8",
+                                      headers={"Content-Disposition": f'attachment; filename="report-{report_id}.html"'})
+                return self.reply(result)
             if path == "/api/events/adapters":
                 return self.reply({"adapters": event_adapters.catalog()})
             if path == "/api/detection/library":
@@ -315,7 +343,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
@@ -339,6 +367,39 @@ class Handler(BaseHTTPRequestHandler):
         def reply_data(*args, **kwargs):
             return args, kwargs
 
+        if path == "/api/plans/start":
+            if not {"project_id", "plan"} <= set(body) or set(body) - {"project_id", "plan", "instantiation_id"}:
+                raise Problem("حدد المشروع والخطة ومرجع القالب الاختياري فقط")
+            return reply_data(plans.start(self.store, body["project_id"], body["plan"], instantiation_id=body.get("instantiation_id")))
+        if path in ("/api/plans/advance", "/api/plans/pause", "/api/plans/resume"):
+            if set(body) != {"project_id", "run_id"}:
+                raise Problem("حدد المشروع والخطة المحفوظة فقط")
+            operation = {"/api/plans/advance": plans.advance, "/api/plans/pause": plans.pause, "/api/plans/resume": plans.resume}[path]
+            return reply_data(operation(self.store, body["project_id"], body["run_id"]))
+        if path == "/api/plans/templates/save":
+            if set(body) != {"project_id", "template"}:
+                raise Problem("حدد المشروع وقالب البيانات فقط")
+            return reply_data(plan_templates.save(self.store, body["project_id"], body["template"]))
+        if path == "/api/plans/templates/instantiate":
+            if set(body) != {"project_id", "template_id", "bindings"}:
+                raise Problem("حدد المشروع والقالب وربط المداخل فقط")
+            return reply_data(plan_templates.instantiate(self.store, body["project_id"], body["template_id"], body["bindings"]))
+        if path == "/api/coverage/scans/start":
+            if set(body) != {"project_id"}:
+                raise Problem("حدد مشروع التغطية فقط")
+            return reply_data(coverage_scans.start(self.store, body["project_id"]))
+        if path == "/api/coverage/scans/advance":
+            if set(body) != {"project_id", "scan_id"}:
+                raise Problem("حدد المشروع وفحص التغطية المحفوظ فقط")
+            return reply_data(coverage_scans.advance(self.store, body["project_id"], body["scan_id"]))
+        if path == "/api/case-reports/build":
+            if set(body) != {"project_id", "title", "evidence_ids", "plan_run_ids", "coverage_scan_id"}:
+                raise Problem("حقول تقرير المشروع غير صالحة")
+            return reply_data(case_reports.build(self.store, body["project_id"], body["title"], body["evidence_ids"], body["plan_run_ids"], body["coverage_scan_id"]))
+        if path == "/api/case-reports/verify":
+            if set(body) != {"project_id", "report_id"}:
+                raise Problem("حدد المشروع والتقرير المحفوظ فقط")
+            return reply_data(case_reports.verify(self.store, body["project_id"], body["report_id"]))
         if path == "/api/events/normalize":
             if set(body) != {"project_id", "evidence_id", "adapter"}:
                 raise Problem("حدد المشروع والدليل ومحول الأحداث فقط")

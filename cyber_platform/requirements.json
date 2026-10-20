@@ -3528,10 +3528,10 @@
       "title": "محرك سير عمل عبر الأقسام",
       "group": "N",
       "status": "partial",
-      "scope": "سير عمل وقبول واستكمال يدوي يتحقق من بصمات المنجز؛ لا تفرع أو توازٍ أو استكمال تلقائي",
+      "scope": "خطط DAG محفوظة حتى20عقدة بفروع نجاح وفشل وإيقاف واستكمال يدوي وبصمات؛ لا توازٍ أو تشغيل خلفي أو إعادة تنفيذ تلقائية",
       "evidence_paths": [
-        "cyber_platform/engine.py",
-        "tests/test_workflow_progress.py"
+        "cyber_platform/plans.py",
+        "docs/Workflow-Plans.md"
       ],
       "source_ids": [
         "source.0055"
@@ -3542,9 +3542,11 @@
       "title": "ورشة إنشاء مختبرات ومنصات فرعية",
       "group": "N",
       "status": "superseded",
-      "scope": "اشتراط إنشاء مختبرات ألغي؛ توليد منصات وإضافات عامة غير منفذ",
+      "scope": "طبقة المختبرات ملغاة؛ أضيفت8قوالب بيانات لخطط التحليل بمراجعات مالك وإثبات ربط، دون مولد منصات أو إضافات كود عامة",
       "evidence_paths": [
-        "docs/Scope-Update-0.2.md"
+        "docs/Scope-Update-0.2.md",
+        "cyber_platform/plan_templates.py",
+        "docs/Plan-Templates.md"
       ],
       "source_ids": [
         "source.0056"
@@ -3568,11 +3570,11 @@
       "title": "تسجيل حالة التجربة وإعادتها ومقارنة التغييرات",
       "group": "N",
       "status": "partial",
-      "scope": "حفظ نتائج ومدخلات وبصمات ومقارنة بنيوية محدودة لنتائج موثقة؛ لا snapshots محاكاة",
+      "scope": "حفظ تقدم الخطط ومصدر القالب ونتائج ثابتة وتقارير JSON/HTML ومقارنة بنيوية؛ لا snapshots محاكاة أو تقييم جودة عام",
       "evidence_paths": [
-        "cyber_platform/engine.py",
-        "cyber_platform/comparison.py",
-        "tests/test_workflow_progress.py"
+        "cyber_platform/plans.py",
+        "cyber_platform/case_reports.py",
+        "cyber_platform/comparison.py"
       ],
       "source_ids": [
         "source.0058"
@@ -3598,10 +3600,11 @@
       "title": "خريطة تغطية دفاعية وفجوات تحقق",
       "group": "N",
       "status": "partial",
-      "scope": "أصول وتقييمات ثابتة تربط التهديد والإجراء باختبارات كشف متحققة وتظهر الفجوات والتعارض والقدم؛ لا قياس دفاعي حي أو D3FEND كامل",
+      "scope": "خريطة أصول وتقييمات وفجوات مع فحص جميع التقييمات على دفعات وإعادة قراءة الإثبات وحفظ لقطة تاريخية؛ لا حماية حية أو لقطة ذرية أو D3FEND كامل",
       "evidence_paths": [
         "cyber_platform/coverage.py",
-        "docs/Defense-Coverage.md"
+        "cyber_platform/coverage_scans.py",
+        "docs/Coverage-Scans.md"
       ],
       "source_ids": [
         "source.0060"

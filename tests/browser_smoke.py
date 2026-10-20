@@ -14,6 +14,9 @@ from cyber_platform.server import App
 from cyber_platform.store import Store
 from tests.browser_research import run_research_checks
 from tests.browser_coverage import run_coverage_checks
+from tests.browser_plans import run_plan_checks
+from tests.browser_coverage_scans import run_coverage_scan_checks
+from tests.browser_reports import run_report_checks
 
 
 def main():
@@ -255,16 +258,19 @@ def main():
                 checks.append("synthetic quality batches resume after reload, complete, export and compare persisted results")
                 run_research_checks(page, expect, checks)
                 run_coverage_checks(page, expect, checks)
+                run_plan_checks(page, expect, checks)
+                run_coverage_scan_checks(page, expect, checks)
+                run_report_checks(page, expect, checks)
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):
                     page.set_viewport_size({"width": width, "height": 844})
-                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality", "events", "detection", "coverage"):
+                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality", "events", "detection", "coverage", "plans", "reports"):
                         page.evaluate("hash => location.hash=hash", view)
                         page.wait_for_timeout(80)
                         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (width, view)
                     page.screenshot(path=str(output / f"mobile-{width}.png"), full_page=True)
-                    checks.append(f"no page overflow at {width}px across 16 pages")
+                    checks.append(f"no page overflow at {width}px across 18 pages")
                 page.get_by_role("button", name="خروج", exact=True).click()
                 expect(page.get_by_role("button", name="دخول مساحة العمل")).to_be_visible()
                 checks.append("logout revokes session")

@@ -130,13 +130,33 @@ def main():
                 assert assessed["status"] == "supported"
                 coverage = json.loads(request("/api/coverage?project=" + pid)[0])
                 assert coverage["summary"]["supported"] == 1 and coverage["edges"]
+                templates = json.loads(request("/api/plans/templates?project=" + pid)[0])
+                assert len(templates["templates"]) == 8
+                template_fixture = templates["fixtures"][0]
+                bindings = {slot:store.add_evidence(pid, "synthetic-plan-" + slot + ".txt", content.encode())["id"] for slot,content in template_fixture["inputs"].items()}
+                bound = json.loads(request("/api/plans/templates/instantiate", {"project_id":pid, "template_id":template_fixture["template_id"], "bindings":bindings})[0])
+                run = json.loads(request("/api/plans/start", {"project_id":pid, "plan":bound["plan"], "instantiation_id":bound["evidence"]["id"]})[0])
+                assert run["template_origin"]["evidence_id"] == bound["evidence"]["id"]
+                for _ in range(20):
+                    if run["status"] in ("completed", "failed"): break
+                    run = json.loads(request("/api/plans/advance", {"project_id":pid, "run_id":run["id"]})[0])
+                assert run["passed"] and run["status"] == "completed",run
+                full_scan = json.loads(request("/api/coverage/scans/start", {"project_id":pid})[0])
+                for _ in range(30):
+                    if full_scan["status"] in ("completed", "failed"): break
+                    full_scan = json.loads(request("/api/coverage/scans/advance", {"project_id":pid, "scan_id":full_scan["id"]})[0])
+                assert full_scan["complete"] and full_scan["current_validity"] == "snapshot_only",full_scan
+                project_report = json.loads(request("/api/case-reports/build", {"project_id":pid, "title":"Synthetic installed report", "evidence_ids":[original_fixture["id"]], "plan_run_ids":[run["id"]], "coverage_scan_id":full_scan["id"]})[0])
+                assert json.loads(request("/api/case-reports/verify", {"project_id":pid, "report_id":project_report["evidence"]["id"]})[0])["passed"]
+                html_report = request("/api/case-reports?project=" + pid + "&id=" + project_report["evidence"]["id"] + "&format=html")[0]
+                assert b"<script" not in html_report.lower() and b"Content-Security-Policy" in html_report
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

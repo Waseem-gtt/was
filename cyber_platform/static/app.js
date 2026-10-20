@@ -29,6 +29,8 @@ const nav = [
   ["events", "⇥", "توحيد الأحداث"],
   ["detection", "⌕", "مكتبة الكشف"],
   ["coverage", "◉", "التغطية الدفاعية"],
+  ["plans", "⤴", "خطط التحليل"],
+  ["reports", "▤", "تقارير المشروع"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -417,7 +419,7 @@ function render() {
       { class: "side-bottom" },
       el("small", {}, el("span", { class: "status-dot" }), "تشغيل محلي"),
       el("p", { class: "muted" }, "المحللات بلا اتصال خارجي"),
-      el("small", {}, "نسخة البناء 0.10.0"),
+      el("small", {}, "نسخة البناء 0.11.0"),
     ),
   );
   const select = el(
@@ -497,6 +499,8 @@ function render() {
     events: eventAdaptersPage,
     detection: detectionLibraryPage,
     coverage: defenseCoveragePage,
+    plans: workflowPlansPage,
+    reports: caseReportsPage,
   };
   content.append(
     views[state.view]?.() || dashboard(),

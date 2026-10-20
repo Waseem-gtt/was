@@ -33,3 +33,28 @@ class ResearchPersistenceTests(StoreCase):
             self.assertTrue(restored.verify_audit()['valid'])
         finally:
             restored.close()
+
+    def test_restore_preserves_template_origin_plan_scan_and_project_report(self):
+        from cyber_platform import plans,plan_templates,coverage_scans,case_reports
+        library=plan_templates.library(self.store,self.pid);fixture=library['fixtures'][0]
+        bindings={slot:self.evidence(data.encode())['id'] for slot,data in fixture['inputs'].items()}
+        bound=plan_templates.instantiate(self.store,self.pid,fixture['template_id'],bindings)
+        run=plans.start(self.store,self.pid,bound['plan'],instantiation_id=bound['evidence']['id'])
+        for _ in range(20):
+            if run['status']=='completed':break
+            run=plans.advance(self.store,self.pid,run['id'])
+        self.assertTrue(run['passed'])
+        scan=coverage_scans.start(self.store,self.pid)
+        for _ in range(10):
+            if scan['status']=='completed':break
+            scan=coverage_scans.advance(self.store,self.pid,scan['id'])
+        report=case_reports.build(self.store,self.pid,'Restorable report',list(bindings.values()),[run['id']],scan['id'])
+        password='Temporary-workflow-backup-123';payload=backup.export(self.store,password);destination=Path(self.temp.name)/'restored-plans'
+        backup.restore(payload,password,destination);restored=Store(destination)
+        try:
+            reloaded=plans.status(restored,self.pid,run['id']);self.assertTrue(reloaded['passed']);self.assertEqual(reloaded['template_origin'],run['template_origin'])
+            self.assertEqual(coverage_scans.status(restored,self.pid,scan['id'])['status'],'completed')
+            self.assertEqual(case_reports.read(restored,self.pid,report['evidence']['id']),report['report'])
+            self.assertTrue(case_reports.verify(restored,self.pid,report['evidence']['id'])['passed'])
+            self.assertTrue(restored.verify_audit()['valid'])
+        finally:restored.close()

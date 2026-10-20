@@ -1,0 +1,126 @@
+{
+  "version": "0.11.0",
+  "unit_tests": {
+    "CPython3.11.17": 311,
+    "CPython3.12.14": 311,
+    "CPython3.13.5": 311
+  },
+  "new_unit_tests": 70,
+  "new_test_breakdown": {
+    "durable_branching_plans": 18,
+    "templates_and_instantiation": 14,
+    "full_coverage_scans": 17,
+    "project_reports": 13,
+    "http_boundaries_and_integration": 7,
+    "encrypted_restore_new_features": 1
+  },
+  "browser": {
+    "groups": 30,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 18
+  },
+  "plans": {
+    "max_nodes": 20,
+    "max_nodes_per_batch": 2,
+    "between_nodes_budget_seconds": 3,
+    "worker_wall_seconds": 10,
+    "worker_cpu_seconds": 3,
+    "worker_memory_limit_bytes": 402653184,
+    "explicit_failure_branching": true,
+    "pause_and_resume_between_batches": true,
+    "in_flight_interruption_reexecution": "refused",
+    "source_and_result_provenance": true,
+    "atomic_output_checkpoint_audit": true,
+    "parallel_execution": false,
+    "automatic_background_execution": false,
+    "skipped_nodes_count_as_success": false,
+    "history_summaries": "recorded_only"
+  },
+  "templates": {
+    "builtins": 8,
+    "all_builtin_fixtures_executed": true,
+    "max_owner_template_ids": 30,
+    "max_revisions_per_id": 10,
+    "data_only": true,
+    "immutable_instantiation_evidence": true,
+    "edited_plan_keeps_false_template_attribution": false,
+    "lab_hierarchy_restored": false
+  },
+  "full_coverage_scans": {
+    "max_assessments": 200,
+    "distinct_replays_per_batch": 3,
+    "proof_file_bytes_per_batch": 67108864,
+    "final_proof_rehash_phase": true,
+    "four_distinct_reports_browser_exercised": true,
+    "current_validity": "snapshot_only",
+    "atomic_filesystem_snapshot": false,
+    "live_protection_claim": false
+  },
+  "project_reports": {
+    "formats": [
+      "JSON",
+      "HTML"
+    ],
+    "maximum_selected_evidence": 50,
+    "maximum_plan_runs": 5,
+    "max_report_bytes": 1048576,
+    "aggregate_direct_and_plan_proof_budget_bytes": 33554432,
+    "raw_source_contents_exported": false,
+    "script_free_html": true,
+    "reference_verification": true,
+    "independent_forensic_certification": false
+  },
+  "delivery_automation": {
+    "reviewed_commit_required": true,
+    "source_and_package_bytes_verified": true,
+    "recursive_historical_bundle_exclusion": [
+      "releases/"
+    ],
+    "automatic_publishing": false,
+    "publisher_signing": false
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.11.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "branching_plans": true,
+    "immutable_template_origin": true,
+    "full_coverage_scan": true,
+    "project_reports_json_html": true,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "encrypted_backup_restore_new_features": "passed",
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "runtime_agent_team": "remains_removed",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_api_network_policy",
+  "requirements_advanced_but_still_partial": [
+    "N01",
+    "N04",
+    "N06"
+  ],
+  "cancelled_lab_generation": "remains_cancelled; data-plan templates implemented separately",
+  "full_project_complete": false
+}
