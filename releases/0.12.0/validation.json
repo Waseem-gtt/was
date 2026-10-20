@@ -1,0 +1,100 @@
+{
+  "version": "0.12.0",
+  "unit_tests": {
+    "CPython3.11.17": 355,
+    "CPython3.12.14": 355,
+    "CPython3.13.5": 355
+  },
+  "new_unit_tests": 44,
+  "new_test_breakdown": {
+    "curriculum": 15,
+    "plugin_registry": 19,
+    "http_and_encrypted_restore": 6,
+    "independent_adversarial_review": 4
+  },
+  "browser": {
+    "groups": 34,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 20
+  },
+  "curriculum": {
+    "paths": 5,
+    "existing_lessons": 20,
+    "new_lessons": 0,
+    "ordered_prerequisites": true,
+    "immutable_assessments": true,
+    "audit_creation_sha_binding": true,
+    "exact_index_membership": true,
+    "stale_engine_and_path_handling": true,
+    "max_attempts_project": 200,
+    "max_attempts_lesson": 20,
+    "automatic_reset_or_eviction": false,
+    "max_assessment_bytes": 32768,
+    "worker_wall_seconds": 3,
+    "worker_cpu_seconds": 3,
+    "worker_memory_bytes": 402653184,
+    "certification": false
+  },
+  "plugin_registry": {
+    "metadata_only": true,
+    "max_plugin_ids": 20,
+    "max_revisions_per_id": 20,
+    "max_manifest_bytes": 16384,
+    "proof_read_budget_bytes": 8388608,
+    "immutable_source_and_decisions": true,
+    "exact_dependency_versions": true,
+    "cycle_and_transitive_blocking": true,
+    "compatibility_and_permission_checks": true,
+    "source_download": false,
+    "code_execution": false,
+    "publisher_signature_validation": false
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.12.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "branching_plans": true,
+    "immutable_template_origin": true,
+    "full_coverage_scan": true,
+    "project_reports_json_html": true,
+    "curriculum_progress": true,
+    "plugin_metadata_governance": true,
+    "plugin_code_execution": false,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "encrypted_backup_restore_new_features": "passed",
+  "all_local_javascript_syntax": "passed; CI expanded to every asset",
+  "bash_syntax": "passed",
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "runtime_agent_team": "remains_removed",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_api_network_policy",
+  "requirements_advanced_but_still_partial": [
+    "E03",
+    "F01"
+  ],
+  "cancelled_labs": "remain_cancelled",
+  "full_project_complete": false
+}
