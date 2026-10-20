@@ -23,7 +23,11 @@ jobs:
       - run: python -m pip install --require-hashes -r requirements.lock
       - run: python scripts/build_requirements.py --check
       - run: python -m unittest discover -v
-      - run: node --check cyber_platform/static/app.js
+      - name: Check every local JavaScript asset
+        run: |
+          for asset in cyber_platform/static/*.js; do
+            node --check "$asset"
+          done
       - run: bash -n scripts/install.sh scripts/start.sh scripts/desktop.sh scripts/release.sh
       - name: Build distributable
         run: python -m pip wheel --no-deps --wheel-dir dist .

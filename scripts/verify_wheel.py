@@ -150,13 +150,27 @@ def main():
                 assert json.loads(request("/api/case-reports/verify", {"project_id":pid, "report_id":project_report["evidence"]["id"]})[0])["passed"]
                 html_report = request("/api/case-reports?project=" + pid + "&id=" + project_report["evidence"]["id"] + "&format=html")[0]
                 assert b"<script" not in html_report.lower() and b"Content-Security-Policy" in html_report
+                curriculum = json.loads(request("/api/curriculum")[0])
+                assert len(curriculum["paths"]) == 5 and len(curriculum["lessons"]) == 20
+                learning_path = curriculum["paths"][0]
+                lesson = next(l for l in curriculum["lessons"] if l["id"] == learning_path["lesson_ids"][0])
+                assessed = json.loads(request("/api/curriculum/attempt", {"project_id":pid, "path_id":learning_path["id"], "lesson_id":lesson["id"], "answer_index":lesson["choices"].index(lesson["defense"])})[0])
+                assert assessed["result"]["correct"] and assessed["progress"]["counts"]["passed"] == 1
+                plugin_manifest = {"id":"wheel.fixture", "version":"1.0.0", "license":"MIT", "source":"https://example.test/wheel-fixture", "permissions":["selected_evidence.read"]}
+                plugin_source = store.add_evidence(pid, "synthetic-plugin.json", json.dumps(plugin_manifest).encode())
+                registered = json.loads(request("/api/plugins/register", {"project_id":pid, "evidence_id":plugin_source["id"]})[0])
+                assert registered["item"]["state"] == "pending"
+                approved = json.loads(request("/api/plugins/transition", {"project_id":pid, "plugin_id":"wheel.fixture", "action":"approve", "reason":"Synthetic wheel review fixture"})[0])
+                assert approved["item"]["state"] == "approved"
+                registry = json.loads(request("/api/plugins?project=" + pid)[0])
+                assert len(registry["items"]) == 1 and len(registry["items"][0]["history"]) == 2
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

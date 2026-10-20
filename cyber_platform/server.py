@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, detection, engine, event_adapters, event_ingest, integrity, knowledge, learning, local_ai, maintenance, plans, plan_templates, quality, requirements, sandbox, tools
+from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, engine, event_adapters, event_ingest, integrity, knowledge, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
@@ -179,6 +179,19 @@ class Handler(BaseHTTPRequestHandler):
                                    "resources": self.store.resources(), "audit": self.store.verify_audit(),
                                    "capabilities": {"offline_analysis": True, "ai": "requires_local_model", "workshop": "requires_linux_namespaces",
                                                     "vm_image": "not_built", "live_hardware": "not_configured"}})
+            if path == "/api/curriculum":
+                return self.reply(curriculum.catalog())
+            if path in ("/api/curriculum/progress", "/api/curriculum/history", "/api/plugins"):
+                if not self.server.execution_lock.acquire(blocking=False):
+                    raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
+                try:
+                    operation = {"/api/curriculum/progress": curriculum.progress,
+                                 "/api/curriculum/history": curriculum.history,
+                                 "/api/plugins": plugin_registry.view}[path]
+                    result = operation(self.store, query.get("project", [""])[0])
+                finally:
+                    self.server.execution_lock.release()
+                return self.reply(result)
             if path == "/api/project":
                 return self.reply(self.store.project_data(query.get("id", [""])[0]))
             if path == "/api/plans/templates":
@@ -343,7 +356,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify", "/api/curriculum/attempt", "/api/plugins/register", "/api/plugins/transition"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
@@ -366,6 +379,19 @@ class Handler(BaseHTTPRequestHandler):
         """Compute a response while owning the slot; publish after releasing it."""
         def reply_data(*args, **kwargs):
             return args, kwargs
+
+        if path == "/api/curriculum/attempt":
+            if set(body) != {"project_id", "path_id", "lesson_id", "answer_index"}:
+                raise Problem("حدد المشروع والمسار والدرس والإجابة فقط")
+            return reply_data(curriculum.attempt(self.store, body["project_id"], body["path_id"], body["lesson_id"], body["answer_index"]))
+        if path == "/api/plugins/register":
+            if set(body) != {"project_id", "evidence_id"}:
+                raise Problem("حدد المشروع وملف البيان فقط")
+            return reply_data(plugin_registry.register(self.store, body["project_id"], body["evidence_id"]))
+        if path == "/api/plugins/transition":
+            if set(body) != {"project_id", "plugin_id", "action", "reason"}:
+                raise Problem("حدد المشروع والإضافة والقرار وسببه فقط")
+            return reply_data(plugin_registry.transition(self.store, body["project_id"], body["plugin_id"], body["action"], body["reason"]))
 
         if path == "/api/plans/start":
             if not {"project_id", "plan"} <= set(body) or set(body) - {"project_id", "plan", "instantiation_id"}:

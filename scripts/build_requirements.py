@@ -12,7 +12,7 @@ OUTPUT = ROOT / "cyber_platform/requirements.json"
 
 # Status is a reviewed statement about this checkout, not a source-document claim.
 REVIEWS = {
-    "F01": ("partial", "تحقق بيان إضافة فقط؛ لا تثبيت أو تفعيل كود إضافات", "cyber_platform/tools.py", "tests/test_platform.py"),
+    "F01": ("partial", "سجل بيانات إضافات بمصادر وتراخيص وصلاحيات وتوافق واعتماديات ومراجعات وقرارات اعتماد وتعطيل وسحب؛ لا تثبيت أو تنفيذ كود أو توقيع ناشر", "cyber_platform/plugin_registry.py", "tests/test_plugin_registry.py", "docs/Plugin-Registry.md"),
     "F02": ("partial", "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف", "cyber_platform/store.py", "cyber_platform/worker.py", "tests/test_security.py"),
     "F03": ("partial", "محولات Windows JSON وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ ليس OCSF كاملًا أو مستشعرًا حيًا", "cyber_platform/event_adapters.py", "cyber_platform/event_ingest.py", "docs/Event-Adapters.md"),
     "F04": ("partial", "مكتبة8قواعد واختبارات مرجعية ومراجعات مالك ثابتة وتقارير TP/FP/FN/TN والتحقق من المصدر؛ لا Sigma كامل أو مكتبة ناشر موقعة أو مراقبة حية", "cyber_platform/detection.py", "cyber_platform/detection_packs.json", "docs/Detection-Library.md"),
@@ -20,7 +20,7 @@ REVIEWS = {
     "F06": ("partial", "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة", "cyber_platform/store.py", "tests/test_platform.py"),
     "E01": ("blocked", "الورشة ترفض عند غياب namespaces؛ لا تنفيذ معزول ناجح على هذا المضيف", "cyber_platform/sandbox.py", "docs/Validation.md"),
     "E02": ("partial", "22 قسمًا و109 منصات بهويات وصفحات؛ ليست جميع تكاملات التخصصات مكتملة", "cyber_platform/catalog.json", "tests/browser_smoke.py"),
-    "E03": ("partial", "شجرة منصات وخريطة وجدول أدلة و20 درسًا؛ لا كل مسارات التعلم", "cyber_platform/static/app.js", "tests/browser_smoke.py"),
+    "E03": ("partial", "شجرة وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات", "cyber_platform/curriculum.py", "tests/test_curriculum.py", "docs/Curriculum.md"),
     "E04": ("partial", "جلب CISA وجدولة وبحث ولقطة؛ لا تركيب أدوات أو تجديد كل التقنيات", "cyber_platform/knowledge.py", "tests/test_platform.py"),
     "E05": ("partial", "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود", "cyber_platform/maintenance.py", "docs/Maintenance.md"),
     "N01": ("partial", "خطط DAG محفوظة حتى20عقدة بفروع نجاح وفشل وإيقاف واستكمال يدوي وبصمات؛ لا توازٍ أو تشغيل خلفي أو إعادة تنفيذ تلقائية", "cyber_platform/plans.py", "docs/Workflow-Plans.md"),

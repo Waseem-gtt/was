@@ -3303,10 +3303,11 @@
       "title": "مدير الإضافات",
       "group": "F",
       "status": "partial",
-      "scope": "تحقق بيان إضافة فقط؛ لا تثبيت أو تفعيل كود إضافات",
+      "scope": "سجل بيانات إضافات بمصادر وتراخيص وصلاحيات وتوافق واعتماديات ومراجعات وقرارات اعتماد وتعطيل وسحب؛ لا تثبيت أو تنفيذ كود أو توقيع ناشر",
       "evidence_paths": [
-        "cyber_platform/tools.py",
-        "tests/test_platform.py"
+        "cyber_platform/plugin_registry.py",
+        "tests/test_plugin_registry.py",
+        "docs/Plugin-Registry.md"
       ],
       "source_ids": [
         "source.0027"
@@ -3486,10 +3487,11 @@
       "title": "خرائط تنظيم وتعليم وأدلة مفهومة",
       "group": "E",
       "status": "partial",
-      "scope": "شجرة منصات وخريطة وجدول أدلة و20 درسًا؛ لا كل مسارات التعلم",
+      "scope": "شجرة وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات",
       "evidence_paths": [
-        "cyber_platform/static/app.js",
-        "tests/browser_smoke.py"
+        "cyber_platform/curriculum.py",
+        "tests/test_curriculum.py",
+        "docs/Curriculum.md"
       ],
       "source_ids": [
         "source.0048"

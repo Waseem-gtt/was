@@ -1,8 +1,8 @@
 """Owner-only educational material and deterministic exercises on synthetic data."""
 import hashlib
 from pathlib import Path
-from . import tools
-from .store import Problem, encode
+from . import tools, worker
+from .store import Problem
 
 # Each topic keeps its own risk model, defensive response and source. Sources are
 # reference links, not continuously fetched feeds or claims of certification.
@@ -86,19 +86,33 @@ def lessons():
     return result
 
 
-def attempt(store, project_id, lesson_id, answer):
-    store.project(project_id)
+def fixture(lesson_id):
+    """Return only the registered lesson and its fixed synthetic bytes."""
     lesson = next((l for l in lessons() if l["id"] == lesson_id), None)
     if lesson is None:
         raise Problem("الدرس غير موجود", 404)
-    if type(answer) is not int or not 0 <= answer < len(lesson["choices"]):
-        raise Problem("اختر إجابة من الخيارات المسجلة")
     tool = next(t for t in tools.describe() if t["id"] == lesson["tool_id"])
     data = tool["sample"].encode() if tool["sample"] is not None else (
         b"\x01\x02AB" if tool["id"] == "tlv" else b"\x00\x01\x00\x02\x00\x00A")
+    return lesson, tool, data
+
+
+def exercise(lesson_id, answer):
+    """Choose fixed server fixtures; never accept an exercise body or target."""
+    lesson, tool, data = fixture(lesson_id)
+    if type(answer) is not int or not 0 <= answer < len(lesson["choices"]):
+        raise Problem("اختر إجابة من الخيارات المسجلة")
+    root = Path(__file__).parent
+    identities = {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+                  for name in ("learning.py", "tools.py", "worker.py", "event_adapters.py")}
     # Exercise inputs and analyzer are server-selected. Uploaded commands/targets
     # cannot be substituted for the synthetic input.
-    result = tools.analyze(tool["id"], data)
+    try:
+        result = worker.analyze(tool["id"], data, timeout=3)
+    except (ValueError, OSError) as exc:
+        raise Problem("تعذر إكمال التمرين ضمن حدود العامل", 409) from exc
+    if identities != {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in identities}:
+        raise Problem("تغير محلل التمرين أثناء التنفيذ؛ لم تحفظ نتيجة", 409)
     correct = lesson["choices"][answer] == lesson["defense"]
     output = {"lesson_id": lesson_id, "answer_index": answer, "correct": correct,
               "explanation": lesson["concept"] + " " + lesson["defense"], "tool": tool["id"],
@@ -106,7 +120,15 @@ def attempt(store, project_id, lesson_id, answer):
               "input_sha256": hashlib.sha256(data).hexdigest(),
               "analyzer_sha256": hashlib.sha256(Path(tools.__file__).read_bytes()).hexdigest(),
               "analysis": result, "source": lesson["source"], "assessment": lesson["assessment"]}
-    record = store.add_evidence(project_id, lesson_id + "-attempt.json", encode(output).encode(), "learning")
-    with store.lock, store.db:
-        store.audit("learning.attempt", {"project": project_id, "lesson": lesson_id, "correct": correct, "evidence": record["id"]})
-    return {"result": output, "evidence": record}
+    return output
+
+
+def attempt(store, project_id, lesson_id, answer):
+    from .detection import _persist
+    from .quality import _guard
+    with store.lock:
+        store.project(project_id)
+        _guard(store)
+        output = exercise(lesson_id, answer)
+        record = _persist(store, project_id, output, "learning")
+        return {"result": output, "evidence": record}

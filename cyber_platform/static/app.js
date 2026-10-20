@@ -31,6 +31,8 @@ const nav = [
   ["coverage", "◉", "التغطية الدفاعية"],
   ["plans", "⤴", "خطط التحليل"],
   ["reports", "▤", "تقارير المشروع"],
+  ["curriculum", "◈", "مسارات التعلم"],
+  ["plugins", "◇", "إدارة الإضافات"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -501,6 +503,8 @@ function render() {
     coverage: defenseCoveragePage,
     plans: workflowPlansPage,
     reports: caseReportsPage,
+    curriculum: curriculumPage,
+    plugins: pluginsPage,
   };
   content.append(
     views[state.view]?.() || dashboard(),
