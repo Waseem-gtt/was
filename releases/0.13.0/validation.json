@@ -1,0 +1,176 @@
+{
+  "version": "0.13.0",
+  "unit_tests": {
+    "CPython3.11.17": 463,
+    "CPython3.12.14": 463,
+    "CPython3.13.5": 463
+  },
+  "new_unit_tests": 108,
+  "new_test_breakdown": {
+    "classic_pcap": 24,
+    "x509_certificates": 21,
+    "sbom_normalization_and_diff": 30,
+    "windows_xml_and_evidence": 17,
+    "http_plans_restore_and_worker_provenance": 8,
+    "independent_adversarial_review": 8
+  },
+  "browser": {
+    "groups": 41,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 21
+  },
+  "analyzers": {
+    "total": 25,
+    "new": [
+      "pcap",
+      "certificate",
+      "supply-chain",
+      "supply-chain-diff"
+    ],
+    "actual_spawned_workers": true,
+    "source_and_result_evidence_hashes": true,
+    "durable_dag_integration": true,
+    "maintenance_semantic_samples": 25,
+    "provenance_implementation_files_included": true,
+    "linear_worker_result_engine_rechecked_before_publish": true
+  },
+  "pcap": {
+    "formats": "classic PCAP four byte-order/time-resolution magics",
+    "links": [
+      "Ethernet with up to2 VLAN tags",
+      "raw IP101"
+    ],
+    "protocols": [
+      "IPv4",
+      "IPv6 bounded extensions",
+      "TCP",
+      "UDP",
+      "ICMP",
+      "ICMPv6"
+    ],
+    "max_bytes": 4194304,
+    "max_packets": 5000,
+    "max_flows": 1000,
+    "fragment_payload_never_read_as_ports": true,
+    "incomplete_capture_refused": true,
+    "payload_exported": false,
+    "checksums_verified": false,
+    "pcapng": false,
+    "live_capture": false
+  },
+  "certificates": {
+    "formats": [
+      "PEM",
+      "DER",
+      "strict JSON PEM envelope"
+    ],
+    "max_bytes": 262144,
+    "max_certificates": 10,
+    "signature_and_key_metadata": true,
+    "provided_direct_issuer_signature_checks": true,
+    "implicit_validation_clock": false,
+    "trust_assessment": false,
+    "full_pkix_or_hostname_or_ocsp_crl": false,
+    "network": false
+  },
+  "supply_chain": {
+    "formats": [
+      "CycloneDX1.5",
+      "CycloneDX1.6",
+      "SPDX2.3"
+    ],
+    "documented_subsets_only": true,
+    "max_components": 1000,
+    "max_dependency_edges": 5000,
+    "max_input_bytes": 4194304,
+    "dependency_cycles_and_hash_conflicts": true,
+    "vulnerability_ratings": "preserved source claims; no live audit",
+    "normalized_comparison_complete": true,
+    "raw_source_equality_claim": false,
+    "embedded_comparison_documents": "canonical_json hashes; full bundle hash retained",
+    "installation_or_download": false
+  },
+  "windows_xml": {
+    "event_adapters_total": 4,
+    "forms": [
+      "Event",
+      "Events"
+    ],
+    "max_input_bytes": 1048576,
+    "max_events": 1000,
+    "max_event_bytes": 8192,
+    "max_depth": 8,
+    "timestamp_fraction_digits": 7,
+    "dtd_entities_processing_instructions_external_resources": "refused",
+    "event_id_outcome_guessed": false,
+    "evtx_or_live_collection": false
+  },
+  "quality_center": {
+    "cases": 64,
+    "new_cases": 16,
+    "case_limit": 80,
+    "all_tools_covered": true,
+    "known_expected_fields_and_exact_rejections": true,
+    "worker_cpu_seconds": 3,
+    "worker_memory_bytes": 402653184,
+    "worker_wall_seconds": 3,
+    "batch_cases": 3,
+    "batch_deadline_checked_between_cases_seconds": 3,
+    "memory_usage_measured": false
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.13.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "branching_plans": true,
+    "immutable_template_origin": true,
+    "full_coverage_scan": true,
+    "project_reports_json_html": true,
+    "curriculum_progress": true,
+    "plugin_metadata_governance": true,
+    "plugin_code_execution": false,
+    "pcap_metadata": true,
+    "x509_certificates": true,
+    "sbom_dependencies": true,
+    "sbom_comparison": true,
+    "windows_xml": true,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "encrypted_backup_restore_new_features": "passed",
+  "javascript_and_bash_syntax": "passed",
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "requirements_advanced_but_still_partial": [
+    "E02",
+    "F03",
+    "N04",
+    "N05",
+    "Q01"
+  ],
+  "runtime_agent_team": "remains_removed",
+  "cancelled_labs": "remain_cancelled",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_api_network_policy",
+  "full_project_complete": false
+}
