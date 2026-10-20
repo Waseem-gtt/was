@@ -868,6 +868,265 @@
           }
         ]
       }
+    },
+    {
+      "id": "pcap-classic-udp",
+      "tool": "pcap",
+      "title": "PCAP Ethernet IPv4UDP metadata",
+      "input_base64": "1MOyoQIABAAAAAAAAAAAAP//AAABAAAAAPFTZUDiAQAqAAAAKgAAAAIAAAAAAgIAAAAAAQgARQAAHAABAABAEQAAwAACAcYzZALPCAA1AAgAAA==",
+      "expected": {
+        "schema": "was.pcap-analysis/1",
+        "packet_count": 1,
+        "protocols": {
+          "UDP": 1
+        },
+        "payload_exported": false,
+        "live_capture": false
+      }
+    },
+    {
+      "id": "pcap-big-nanoseconds",
+      "tool": "pcap",
+      "title": "PCAP big endian nanosecond capture",
+      "input_base64": "obI8TQACAAQAAAAAAAAAAAAA//8AAAABZVPxAAdbzRUAAAAqAAAAKgIAAAAAAgIAAAAAAQgARQAAHAABAABAEQAAwAACAcYzZALPCAA1AAgAAA==",
+      "expected": {
+        "packet_count": 1,
+        "byte_order": "big",
+        "timestamp_resolution": "nanoseconds",
+        "time_range": {
+          "first": [
+            1700000000,
+            123456789
+          ],
+          "last": [
+            1700000000,
+            123456789
+          ]
+        }
+      }
+    },
+    {
+      "id": "pcap-truncated",
+      "tool": "pcap",
+      "title": "PCAP truncated packet refusal",
+      "input_base64": "1MOyoQIABAAAAAAAAAAAAP//AAABAAAAAPFTZUDiAQAqAAAAKgAAAAIAAAAAAgIAAAAAAQgARQAAHAABAABAEQAAwAACAcYzZALPCAA1AAgA",
+      "reject": "ValueError",
+      "error_message": "Invalid PCAP timestamp, record length or truncated packet"
+    },
+    {
+      "id": "certificate-synthetic-valid",
+      "tool": "certificate",
+      "title": "شهادة اصطناعية: توقيع ذاتي وزمن صريح",
+      "input_utf8": "{\"certificates_pem\": \"-----BEGIN CERTIFICATE-----\\nMIIBazCCARGgAwIBAgICMskwCgYIKoZIzj0EAwIwITEfMB0GA1UEAwwWc3ludGhl\\ndGljLmV4YW1wbGUudGVzdDAeFw0yNTAxMDEwMDAwMDBaFw0zMDAxMDEwMDAwMDBa\\nMCExHzAdBgNVBAMMFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwWTATBgcqhkjOPQIB\\nBggqhkjOPQMBBwNCAAT2M+hfRJ1weYCHnJg+rwxCNwg/j+cIXpUTeZGUuedrk1fu\\n5S4nO282UoqRMZ0mJJo7kMIcTJZf8/M+vIcNJPcnozkwNzASBgNVHRMBAf8ECDAG\\nAQH/AgEAMCEGA1UdEQQaMBiCFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwCgYIKoZI\\nzj0EAwIDSAAwRQIhAKswBOvOaeyiNEq44FrAVZGXVoFFoFMjVgDfLqNyiEKrAiBD\\nNaqAfrNQ9TQmz8+b5Lk+7Roypi2Jn51EcPSjQQ6NkQ==\\n-----END CERTIFICATE-----\\n\", \"validation_time\": \"2026-10-20T00:00:00Z\"}",
+      "expected": {
+        "schema": "was.certificate-analysis/1",
+        "certificate_count": 1,
+        "trust": "not_evaluated",
+        "network": false,
+        "certificates": [
+          {
+            "self_signature": "valid",
+            "time_status": "within_validity_period",
+            "key": {
+              "type": "EC"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "certificate-no-implicit-clock",
+      "tool": "certificate",
+      "title": "فحص شهادة دون افتراض زمن أو ثقة",
+      "input_utf8": "-----BEGIN CERTIFICATE-----\nMIIBazCCARGgAwIBAgICMskwCgYIKoZIzj0EAwIwITEfMB0GA1UEAwwWc3ludGhl\ndGljLmV4YW1wbGUudGVzdDAeFw0yNTAxMDEwMDAwMDBaFw0zMDAxMDEwMDAwMDBa\nMCExHzAdBgNVBAMMFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAAT2M+hfRJ1weYCHnJg+rwxCNwg/j+cIXpUTeZGUuedrk1fu\n5S4nO282UoqRMZ0mJJo7kMIcTJZf8/M+vIcNJPcnozkwNzASBgNVHRMBAf8ECDAG\nAQH/AgEAMCEGA1UdEQQaMBiCFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwCgYIKoZI\nzj0EAwIDSAAwRQIhAKswBOvOaeyiNEq44FrAVZGXVoFFoFMjVgDfLqNyiEKrAiBD\nNaqAfrNQ9TQmz8+b5Lk+7Roypi2Jn51EcPSjQQ6NkQ==\n-----END CERTIFICATE-----\n",
+      "expected": {
+        "certificate_count": 1,
+        "validation_time": null,
+        "trust": "not_evaluated",
+        "certificates": [
+          {
+            "self_signature": "valid",
+            "time_status": "not_evaluated"
+          }
+        ]
+      }
+    },
+    {
+      "id": "certificate-expired-explicit",
+      "tool": "certificate",
+      "title": "شهادة منتهية وفق زمن تقييم محدد",
+      "input_utf8": "{\"certificates_pem\": \"-----BEGIN CERTIFICATE-----\\nMIIBazCCARGgAwIBAgICMskwCgYIKoZIzj0EAwIwITEfMB0GA1UEAwwWc3ludGhl\\ndGljLmV4YW1wbGUudGVzdDAeFw0yNTAxMDEwMDAwMDBaFw0zMDAxMDEwMDAwMDBa\\nMCExHzAdBgNVBAMMFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwWTATBgcqhkjOPQIB\\nBggqhkjOPQMBBwNCAAT2M+hfRJ1weYCHnJg+rwxCNwg/j+cIXpUTeZGUuedrk1fu\\n5S4nO282UoqRMZ0mJJo7kMIcTJZf8/M+vIcNJPcnozkwNzASBgNVHRMBAf8ECDAG\\nAQH/AgEAMCEGA1UdEQQaMBiCFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwCgYIKoZI\\nzj0EAwIDSAAwRQIhAKswBOvOaeyiNEq44FrAVZGXVoFFoFMjVgDfLqNyiEKrAiBD\\nNaqAfrNQ9TQmz8+b5Lk+7Roypi2Jn51EcPSjQQ6NkQ==\\n-----END CERTIFICATE-----\\n\", \"validation_time\": \"2031-01-01T00:00:00Z\"}",
+      "expected": {
+        "certificate_count": 1,
+        "certificates": [
+          {
+            "time_status": "expired",
+            "self_signature": "valid"
+          }
+        ]
+      }
+    },
+    {
+      "id": "certificate-reject-private-key",
+      "tool": "certificate",
+      "title": "رفض مفتاح أو بيانات إضافية بعد الشهادة",
+      "input_utf8": "-----BEGIN CERTIFICATE-----\nMIIBazCCARGgAwIBAgICMskwCgYIKoZIzj0EAwIwITEfMB0GA1UEAwwWc3ludGhl\ndGljLmV4YW1wbGUudGVzdDAeFw0yNTAxMDEwMDAwMDBaFw0zMDAxMDEwMDAwMDBa\nMCExHzAdBgNVBAMMFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAAT2M+hfRJ1weYCHnJg+rwxCNwg/j+cIXpUTeZGUuedrk1fu\n5S4nO282UoqRMZ0mJJo7kMIcTJZf8/M+vIcNJPcnozkwNzASBgNVHRMBAf8ECDAG\nAQH/AgEAMCEGA1UdEQQaMBiCFnN5bnRoZXRpYy5leGFtcGxlLnRlc3QwCgYIKoZI\nzj0EAwIDSAAwRQIhAKswBOvOaeyiNEq44FrAVZGXVoFFoFMjVgDfLqNyiEKrAiBD\nNaqAfrNQ9TQmz8+b5Lk+7Roypi2Jn51EcPSjQQ6NkQ==\n-----END CERTIFICATE-----\n-----BEGIN PRIVATE KEY-----\nsynthetic-only\n-----END PRIVATE KEY-----",
+      "reject": "ValueError",
+      "error_message": "Trailing data or private keys are not certificate input"
+    },
+    {
+      "id": "supply-cdx-reference",
+      "tool": "supply-chain",
+      "title": "جرد CycloneDX واعتمادية اصطناعية",
+      "input_utf8": "{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1}",
+      "expected": {
+        "schema": "was.supply-chain/1",
+        "format": "CycloneDX-1.6",
+        "component_count": 2,
+        "dependencies": [
+          {
+            "source": "app",
+            "target": "library"
+          }
+        ],
+        "summary": {
+          "missing_versions": 0,
+          "missing_licenses": 0,
+          "missing_hashes": 0,
+          "declared_vulnerabilities": 0
+        },
+        "issues": [],
+        "network": false
+      }
+    },
+    {
+      "id": "supply-spdx-reference",
+      "tool": "supply-chain",
+      "title": "جرد SPDX وبصمة مكون",
+      "input_utf8": "{\"packages\":[{\"SPDXID\":\"SPDXRef-one\",\"checksums\":[{\"algorithm\":\"SHA256\",\"checksumValue\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"}],\"licenseDeclared\":\"MIT\",\"name\":\"synthetic\",\"versionInfo\":\"1.0\"}],\"relationships\":[],\"spdxVersion\":\"SPDX-2.3\"}",
+      "expected": {
+        "schema": "was.supply-chain/1",
+        "format": "SPDX-2.3",
+        "component_count": 1,
+        "components": [
+          {
+            "id": "SPDXRef-one",
+            "hashes": {
+              "SHA-256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            "licenses": [
+              "MIT"
+            ]
+          }
+        ],
+        "dependencies": [],
+        "issues": []
+      }
+    },
+    {
+      "id": "supply-cycle-reference",
+      "tool": "supply-chain",
+      "title": "كشف دورة اعتماديات دون إخفاء المكونات",
+      "input_utf8": "{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"},{\"dependsOn\":[\"app\"],\"ref\":\"library\"}],\"specVersion\":\"1.6\",\"version\":1}",
+      "expected": {
+        "component_count": 2,
+        "graph": {
+          "cycles": [
+            "app",
+            "library"
+          ]
+        },
+        "issues": [
+          {
+            "component_id": "app",
+            "code": "dependency_cycle"
+          },
+          {
+            "component_id": "library",
+            "code": "dependency_cycle"
+          }
+        ]
+      }
+    },
+    {
+      "id": "supply-unknown-reference-rejected",
+      "tool": "supply-chain",
+      "title": "رفض اعتمادية غير موجودة",
+      "input_utf8": "{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"missing\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1}",
+      "reject": "ValueError",
+      "error_message": "Unknown dependency reference; external document dependencies are unsupported"
+    },
+    {
+      "id": "supply-diff-changed-reference",
+      "tool": "supply-chain-diff",
+      "title": "مقارنة تحديث إصدار مكون محفوظ",
+      "input_utf8": "{\"left\":{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1},\"right\":{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.1.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1}}",
+      "expected": {
+        "schema": "was.supply-chain-diff/1",
+        "complete": true,
+        "normalized_inventory_equal": false,
+        "changed_components": [
+          {
+            "id": "library",
+            "fields": [
+              "version"
+            ]
+          }
+        ],
+        "added_dependencies": [],
+        "removed_dependencies": [],
+        "embedded_document_encoding": "canonical_json"
+      }
+    },
+    {
+      "id": "supply-diff-equal-reference",
+      "tool": "supply-chain-diff",
+      "title": "مقارنة جردين اصطناعيين متساويين",
+      "input_utf8": "{\"left\":{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1},\"right\":{\"bomFormat\":\"CycloneDX\",\"components\":[{\"bom-ref\":\"app\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"licenses\":[{\"license\":{\"id\":\"MIT\"}}],\"name\":\"synthetic-app\",\"purl\":\"pkg:generic/synthetic-app@1.0.0\",\"version\":\"1.0.0\"},{\"bom-ref\":\"library\",\"hashes\":[{\"alg\":\"SHA-256\",\"content\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}],\"licenses\":[{\"license\":{\"id\":\"Apache-2.0\"}}],\"name\":\"synthetic-library\",\"version\":\"2.0.0\"}],\"dependencies\":[{\"dependsOn\":[\"library\"],\"ref\":\"app\"}],\"specVersion\":\"1.6\",\"version\":1}}",
+      "expected": {
+        "schema": "was.supply-chain-diff/1",
+        "complete": true,
+        "normalized_inventory_equal": true,
+        "changed_components": [],
+        "embedded_document_encoding": "canonical_json"
+      }
+    },
+    {
+      "id": "events-windows-xml-reference",
+      "tool": "events",
+      "title": "عينة مرجعية: تصديرWindows XML",
+      "input_base64": "eyJhZGFwdGVyIjogIndpbmRvd3MteG1sIiwgImNvbnRlbnQiOiAiPEV2ZW50IHhtbG5zPVwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW4vMjAwNC8wOC9ldmVudHMvZXZlbnRcIj48U3lzdGVtPjxQcm92aWRlciBOYW1lPVwiU3ludGhldGljXCIvPjxFdmVudElEPjQ2MjU8L0V2ZW50SUQ+PFRpbWVDcmVhdGVkIFN5c3RlbVRpbWU9XCIyMDI2LTAxLTAxVDAwOjAwOjAwLjEyMzQ1NjdaXCIvPjxDb21wdXRlcj5kZW1vLWhvc3Q8L0NvbXB1dGVyPjxTZWN1cml0eSBVc2VySUQ9XCJTLTEtMC0wXCIvPjwvU3lzdGVtPjxFdmVudERhdGE+PERhdGEgTmFtZT1cIlRhcmdldFVzZXJOYW1lXCI+ZGVtbzwvRGF0YT48L0V2ZW50RGF0YT48L0V2ZW50PiJ9",
+      "expected": {
+        "schema": "was.event/1",
+        "adapter": "windows-xml",
+        "count": 1,
+        "failed": 0,
+        "events": [
+          {
+            "event_id": 4625,
+            "actor": "demo",
+            "host": "demo-host",
+            "outcome": "unknown",
+            "time": "2026-01-01T00:00:00.1234567Z"
+          }
+        ]
+      }
+    },
+    {
+      "id": "events-windows-xml-entities-rejected",
+      "tool": "events",
+      "title": "رفضDTDsوالكياناتXML",
+      "input_base64": "eyJhZGFwdGVyIjogIndpbmRvd3MteG1sIiwgImNvbnRlbnQiOiAiPCFET0NUWVBFIEV2ZW50IFs8IUVOVElUWSB4IFNZU1RFTSBcImZpbGU6Ly8vZXRjL3Bhc3N3ZFwiPl0+PEV2ZW50IHhtbG5zPVwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW4vMjAwNC8wOC9ldmVudHMvZXZlbnRcIj48U3lzdGVtPjxQcm92aWRlciBOYW1lPVwiU3ludGhldGljXCIvPjxFdmVudElEPjQ2MjU8L0V2ZW50SUQ+PFRpbWVDcmVhdGVkIFN5c3RlbVRpbWU9XCIyMDI2LTAxLTAxVDAwOjAwOjAwLjEyMzQ1NjdaXCIvPjxDb21wdXRlcj5kZW1vLWhvc3Q8L0NvbXB1dGVyPjxTZWN1cml0eSBVc2VySUQ9XCJTLTEtMC0wXCIvPjwvU3lzdGVtPjxFdmVudERhdGE+PERhdGEgTmFtZT1cIlRhcmdldFVzZXJOYW1lXCI+ZGVtbzwvRGF0YT48L0V2ZW50RGF0YT48L0V2ZW50PiJ9",
+      "reject": "ValueError",
+      "error_message": "Windows XML declarations, entities and processing instructions are forbidden"
+    },
+    {
+      "id": "events-windows-xml-namespace-rejected",
+      "tool": "events",
+      "title": "رفضنطاقXMLغيرالموثق",
+      "input_base64": "eyJhZGFwdGVyIjogIndpbmRvd3MteG1sIiwgImNvbnRlbnQiOiAiPEV2ZW50IHhtbG5zPVwiaHR0cHM6Ly9leGFtcGxlLnRlc3QvZm9yZWlnblwiPjxTeXN0ZW0+PFByb3ZpZGVyIE5hbWU9XCJTeW50aGV0aWNcIi8+PEV2ZW50SUQ+NDYyNTwvRXZlbnRJRD48VGltZUNyZWF0ZWQgU3lzdGVtVGltZT1cIjIwMjYtMDEtMDFUMDA6MDA6MDAuMTIzNDU2N1pcIi8+PENvbXB1dGVyPmRlbW8taG9zdDwvQ29tcHV0ZXI+PFNlY3VyaXR5IFVzZXJJRD1cIlMtMS0wLTBcIi8+PC9TeXN0ZW0+PEV2ZW50RGF0YT48RGF0YSBOYW1lPVwiVGFyZ2V0VXNlck5hbWVcIj5kZW1vPC9EYXRhPjwvRXZlbnREYXRhPjwvRXZlbnQ+In0=",
+      "reject": "ValueError",
+      "error_message": "Expected Windows XML Event or Events root"
     }
   ]
 }

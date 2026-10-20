@@ -3333,10 +3333,11 @@
       "title": "لغة مشتركة للأحداث الأمنية",
       "group": "F",
       "status": "partial",
-      "scope": "محولات Windows JSON وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ ليس OCSF كاملًا أو مستشعرًا حيًا",
+      "scope": "أربعة محولات Windows JSON/XML وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ XML محدود دون DTD أو موارد خارجية، وليس OCSF كاملًا أو EVTX أو مستشعرًا حيًا",
       "evidence_paths": [
         "cyber_platform/event_adapters.py",
         "cyber_platform/event_ingest.py",
+        "tests/test_windows_xml.py",
         "docs/Event-Adapters.md"
       ],
       "source_ids": [
@@ -3393,9 +3394,11 @@
       "title": "أمن الإضافات وسلسلة التوريد",
       "group": "Q",
       "status": "partial",
-      "scope": "جرد SBOM وبيان إضافة؛ لا مصدرية بناء أو سلسلة تحديث موقعة",
+      "scope": "توحيد SPDX2.3 وCycloneDX1.5/1.6 واعتمادياتهما ومقارنة الجرد والبصمات والتراخيص وتصريحات الثغرات، وسجل بيانات إضافات؛ لا مصدرية بناء أو تدقيق ثغرات حي أو توقيع ناشر إضافات",
       "evidence_paths": [
-        "cyber_platform/tools.py"
+        "cyber_platform/supply_chain.py",
+        "tests/test_supply_chain.py",
+        "docs/Technical-Analysis.md"
       ],
       "source_ids": [
         "source.0037"
@@ -3473,9 +3476,10 @@
       "title": "هوية ومساحة عمل لكل قسم ومنصة فرعية",
       "group": "E",
       "status": "partial",
-      "scope": "22 قسمًا و109 منصات بهويات وصفحات؛ ليست جميع تكاملات التخصصات مكتملة",
+      "scope": "22 قسمًا و109 منصات بهويات وصفحات و25 أداة ملفات، منها PCAP وX.509 وجرد اعتماديات SBOM ومقارنته؛ ليست جميع تكاملات التخصصات مكتملة",
       "evidence_paths": [
         "cyber_platform/catalog.json",
+        "docs/Technical-Analysis.md",
         "tests/browser_smoke.py"
       ],
       "source_ids": [
@@ -3572,11 +3576,12 @@
       "title": "تسجيل حالة التجربة وإعادتها ومقارنة التغييرات",
       "group": "N",
       "status": "partial",
-      "scope": "حفظ تقدم الخطط ومصدر القالب ونتائج ثابتة وتقارير JSON/HTML ومقارنة بنيوية؛ لا snapshots محاكاة أو تقييم جودة عام",
+      "scope": "حفظ تقدم الخطط ومصدر القالب ونتائج ثابتة وتقارير JSON/HTML ومقارنة بنيوية وقوائم مكونات موحدة كاملة؛ لا مساواة كل بايتات المصدر أو snapshots محاكاة أو تقييم جودة عام",
       "evidence_paths": [
         "cyber_platform/plans.py",
         "cyber_platform/case_reports.py",
-        "cyber_platform/comparison.py"
+        "cyber_platform/comparison.py",
+        "cyber_platform/supply_chain.py"
       ],
       "source_ids": [
         "source.0058"

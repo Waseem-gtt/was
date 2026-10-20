@@ -7,6 +7,7 @@ import json
 import math
 import re
 from datetime import datetime
+from xml.parsers import expat
 
 MAX_BYTES = 1024 * 1024
 MAX_RECORDS = 1000
@@ -47,7 +48,7 @@ def _time(value):
     _string(value, "timestamp")
     if value == "unknown":
         return value
-    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})", value):
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,7})?(?:Z|[+-]\d{2}:\d{2})", value):
         raise ValueError("Timestamp requires RFC3339 date, time and explicit offset")
     offset = value[-6:]
     if offset[0] in "+-" and (int(offset[1:3]) > 23 or int(offset[4:]) > 59):
@@ -97,6 +98,205 @@ def _windows(record):
     result["event_id"] = event_id
     return result
 
+
+
+XML_NAMESPACE = "http://schemas.microsoft.com/win/2004/08/events/event"
+MAX_XML_DEPTH = 8
+MAX_XML_ELEMENTS = MAX_RECORDS * 128
+
+
+def _xml_uint(value, name, maximum):
+    if not isinstance(value, str) or not re.fullmatch(r"0|[1-9][0-9]{0,19}", value) or int(value) > maximum:
+        raise ValueError("Invalid Windows XML " + name)
+    return int(value)
+
+
+def _xml_leaf(node, attributes=(), required=(), empty=False):
+    if node["children"] or set(node["attrs"]) - set(attributes) or not set(required) <= set(node["attrs"]):
+        raise ValueError("Unsupported Windows XML " + node["tag"] + " shape")
+    return _string("".join(node["text"]), node["tag"], empty=empty)
+
+
+def _xml_event(node):
+    if node["attrs"] or "".join(node["text"]).strip():
+        raise ValueError("Unsupported Windows XML Event shape")
+    children = {}
+    for child in node["children"]:
+        if child["tag"] not in {"System", "EventData"} or child["tag"] in children:
+            raise ValueError("Duplicate or unsupported Windows XML Event field")
+        children[child["tag"]] = child
+    if "System" not in children:
+        raise ValueError("Windows XML Event requires System")
+    system_node = children["System"]
+    if system_node["attrs"] or "".join(system_node["text"]).strip():
+        raise ValueError("Unsupported Windows XML System shape")
+    system = {}
+    numeric = {"Version": 255, "Level": 255, "Task": 65535, "Opcode": 255, "EventRecordID": 2**64 - 1}
+    for field in system_node["children"]:
+        tag = field["tag"]
+        if tag in system:
+            raise ValueError("Duplicate Windows XML System field")
+        if tag == "EventID":
+            value = _xml_leaf(field, ("Qualifiers",))
+            system[tag] = _xml_uint(value, tag, 65535)
+            if "Qualifiers" in field["attrs"]:
+                system["EventIDQualifiers"] = _xml_uint(field["attrs"]["Qualifiers"], "Qualifiers", 65535)
+        elif tag == "TimeCreated":
+            if _xml_leaf(field, ("SystemTime",), ("SystemTime",), empty=True).strip():
+                raise ValueError("Windows XML TimeCreated cannot contain text")
+            timestamp = field["attrs"]["SystemTime"]
+            if timestamp == "unknown":
+                raise ValueError("Windows XML TimeCreated needs an explicit timestamp")
+            system[tag] = {"SystemTime": _time(timestamp)}
+        elif tag == "Provider":
+            if _xml_leaf(field, ("Name", "Guid", "EventSourceName"), ("Name",), empty=True).strip():
+                raise ValueError("Windows XML Provider cannot contain text")
+            system[tag] = {key: _string(value, "Provider " + key) for key, value in field["attrs"].items()}
+        elif tag in {"Security", "Execution", "Correlation"}:
+            allowed = {"Security": ("UserID",), "Execution": ("ProcessID", "ThreadID"),
+                       "Correlation": ("ActivityID", "RelatedActivityID")}[tag]
+            if _xml_leaf(field, allowed, empty=True).strip():
+                raise ValueError("Windows XML attribute-only field cannot contain text")
+            system[tag] = {key: (_xml_uint(value, key, 2**32 - 1) if tag == "Execution" else _string(value, key))
+                           for key, value in field["attrs"].items()}
+        elif tag in numeric:
+            system[tag] = _xml_uint(_xml_leaf(field), tag, numeric[tag])
+        elif tag == "Keywords":
+            value = _xml_leaf(field)
+            if not re.fullmatch(r"0x[0-9a-fA-F]{1,16}", value):
+                raise ValueError("Invalid Windows XML Keywords")
+            system[tag] = value
+        elif tag in {"Computer", "Channel"}:
+            system[tag] = _xml_leaf(field)
+        else:
+            raise ValueError("Unsupported Windows XML System field")
+    if not {"EventID", "TimeCreated"} <= set(system):
+        raise ValueError("Windows XML requires EventID and TimeCreated")
+    data = {}
+    if "EventData" in children:
+        data_node = children["EventData"]
+        if data_node["attrs"] or "".join(data_node["text"]).strip():
+            raise ValueError("Unsupported Windows XML EventData shape")
+        for field in data_node["children"]:
+            if field["tag"] != "Data":
+                raise ValueError("Only named Data fields are supported in EventData")
+            value = _xml_leaf(field, ("Name",), ("Name",), empty=True)
+            name = _string(field["attrs"]["Name"], "Data Name")
+            if name in data:
+                raise ValueError("Duplicate Windows XML Data Name")
+            data[name] = value
+    original = {"System": system, "EventData": data}
+    core_system = {key: system[key] for key in ("EventID", "TimeCreated", "Computer", "Channel") if key in system}
+    if "Provider" in system:
+        core_system["Provider"] = system["Provider"]["Name"]
+    core_data = {**data}
+    if core_data.get("TargetUserName") == "":
+        core_data["TargetUserName"] = "unknown"
+    result = _windows({"System": core_system, "EventData": core_data})
+    if "TargetUserName" not in data:
+        result["actor"] = system.get("Security", {}).get("UserID", "unknown")
+    result["original"] = original
+    return result
+
+
+def _xml_records(content):
+    """Parse a bounded Windows subset without DTD, entities or external I/O.
+
+    Expat callbacks reject declarations before expansion and enforce depth,
+    element and per-event byte limits while parsing, not after building a tree.
+    Only the current event is retained; the complete batch still fails closed.
+    """
+    raw = content.encode("utf-8")
+    parser = expat.ParserCreate(namespace_separator="}")
+    parser.SetParamEntityParsing(expat.XML_PARAM_ENTITY_PARSING_NEVER)
+    stack, records = [], []
+    count, root_name, record_start = 0, None, None
+
+    def forbidden(*_):
+        raise ValueError("Windows XML declarations, entities and processing instructions are forbidden")
+
+    def check_event_size(extra=0):
+        if record_start is not None and parser.CurrentByteIndex - record_start + extra > MAX_RECORD_BYTES:
+            raise ValueError("Windows XML Event exceeds 8192 bytes")
+
+    def start(name, attrs):
+        nonlocal count, root_name, record_start
+        count += 1
+        if count > MAX_XML_ELEMENTS or len(stack) >= MAX_XML_DEPTH:
+            raise ValueError("Windows XML structure exceeds element or depth limit")
+        namespace, _, tag = name.rpartition("}")
+        if not stack:
+            if name not in {"Events", XML_NAMESPACE + "}Events", XML_NAMESPACE + "}Event"}:
+                raise ValueError("Expected Windows XML Event or Events root")
+            root_name = tag
+        elif namespace != XML_NAMESPACE:
+            raise ValueError("Unsupported Windows XML namespace")
+        if stack:
+            allowed_children = {
+                "Events": {"Event"}, "Event": {"System", "EventData"},
+                "System": {"Provider", "EventID", "Version", "Level", "Task", "Opcode", "Keywords",
+                           "TimeCreated", "EventRecordID", "Correlation", "Execution", "Channel", "Computer", "Security"},
+                "EventData": {"Data"},
+            }
+            if tag not in allowed_children.get(stack[-1]["tag"], set()):
+                raise ValueError("Unsupported Windows XML nested element")
+        if tag == "Event":
+            if record_start is not None or (stack and (len(stack) != 1 or root_name != "Events")):
+                raise ValueError("Invalid Windows XML Event nesting")
+            if len(records) >= MAX_RECORDS:
+                raise ValueError("Expected 1..1000 records")
+            record_start = parser.CurrentByteIndex
+        if any(len(key.encode()) + len(value.encode()) > MAX_RECORD_BYTES for key, value in attrs.items()):
+            raise ValueError("Windows XML attribute exceeds record limit")
+        check_event_size()
+        stack.append({"tag": tag, "attrs": attrs, "text": [], "children": []})
+
+    def text(value):
+        check_event_size(len(value.encode("utf-8")))
+        if stack:
+            stack[-1]["text"].append(value)
+        elif value.strip():
+            raise ValueError("Text outside Windows XML root")
+
+    def end(_):
+        nonlocal record_start
+        node = stack.pop()
+        check_event_size()
+        if node["tag"] == "Event":
+            end_pos = parser.CurrentByteIndex
+            if raw[end_pos:end_pos + 2] == b"</":
+                end_pos = raw.find(b">", end_pos) + 1
+            if end_pos - record_start > MAX_RECORD_BYTES:
+                raise ValueError("Windows XML Event exceeds 8192 bytes")
+            records.append(_xml_event(node))
+            record_start = None
+        elif node["tag"] == "Events":
+            if node["attrs"] or "".join(node["text"]).strip() or node["children"]:
+                raise ValueError("Unsupported Windows XML Events wrapper")
+        elif stack:
+            if len(stack[-1]["children"]) >= 128:
+                raise ValueError("Windows XML child count exceeds limit")
+            stack[-1]["children"].append(node)
+        else:
+            raise ValueError("Unsupported Windows XML root")
+
+    def declaration(version, encoding, _):
+        if version != "1.0" or (encoding is not None and encoding.lower() not in {"utf-8", "utf8"}):
+            raise ValueError("Windows XML requires XML1.0 UTF-8")
+
+    parser.StartElementHandler = start
+    parser.EndElementHandler = end
+    parser.CharacterDataHandler = text
+    parser.StartDoctypeDeclHandler = forbidden
+    parser.EntityDeclHandler = forbidden
+    parser.ExternalEntityRefHandler = forbidden
+    parser.ProcessingInstructionHandler = forbidden
+    parser.XmlDeclHandler = declaration
+    try:
+        parser.Parse(raw, True)
+    except expat.ExpatError as exc:
+        raise ValueError("Malformed Windows XML") from exc
+    return records
 
 def _structured(value):
     """Scan RFC5424 structured data, returning its end; no backtracking parser."""
@@ -197,12 +397,14 @@ def normalize(adapter, content):
     if lines[-1] == "":
         lines.pop()
     lines = [line[:-1] if line.endswith("\r") else line for line in lines]
-    if adapter != "windows-json" and any(len(line.encode("utf-8")) > MAX_RECORD_BYTES for line in lines):
+    if adapter not in {"windows-json", "windows-xml"} and any(len(line.encode("utf-8")) > MAX_RECORD_BYTES for line in lines):
         raise ValueError("Input line exceeds 8192 bytes")
     if adapter == "windows-json":
         records, convert = strict_json(content), _windows
         if not isinstance(records, list):
             raise ValueError("Windows JSON must be an array")
+    elif adapter == "windows-xml":
+        records, convert = _xml_records(content), lambda record: record
     elif adapter == "syslog-rfc5424":
         records, convert = lines, _syslog
     elif adapter == "flows-csv":
@@ -242,6 +444,8 @@ def catalog():
     return [
         {"id": "windows-json", "title": "Windows JSON", "description": "سجلات JSON مصدرة ضمن الشكل الموثق؛ دون XML أو اتصال Windows.",
          "example_content": '[{"time":"2026-01-01T00:00:00Z","event_id":4625,"actor":"demo","outcome":"failure"}]'},
+        {"id": "windows-xml", "title": "Windows Event XML", "description": "Event أو Events بصيغةWindowsالموثقة؛UTF-8فقط دونEVTXأو جمع حي أو كياناتXML.",
+         "example_content": '<Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"><System><Provider Name="Synthetic"/><EventID>4625</EventID><TimeCreated SystemTime="2026-01-01T00:00:00.1234567Z"/><Computer>demo-host</Computer><Security UserID="S-1-0-0"/></System><EventData><Data Name="TargetUserName">demo</Data></EventData></Event>'},
         {"id": "syslog-rfc5424", "title": "Syslog RFC5424", "description": "ملف نصي؛ سجل RFC5424 إصدار 1 في كل سطر، دون مستمع شبكة.",
          "example_content": '<34>1 2026-01-01T00:00:00Z host app 123 ID47 [example@32473 key="value"] example message'},
         {"id": "flows-csv", "title": "Network flows CSV", "description": "تدفقات مصدرة بعناوين IP وعدد بايتات؛ دون التقاط شبكة.",

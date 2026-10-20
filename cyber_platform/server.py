@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")

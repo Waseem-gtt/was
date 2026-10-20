@@ -5,7 +5,7 @@ import math
 import re
 import time
 from pathlib import Path
-from . import __version__, detection
+from . import __version__, detection, tools
 from .integrity import _directories
 from .quality import _guard
 from .store import Problem, encode, uid
@@ -22,7 +22,7 @@ def _digest(value):
 
 def _fingerprint():
     root = Path(__file__).parent
-    return _digest({'version': __version__, 'files': {n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ('case_reports.py','plans.py','coverage_scans.py','coverage.py','detection.py','event_ingest.py','event_adapters.py','tools.py','worker.py')}})
+    return _digest({'version': __version__, 'files': {n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ('case_reports.py','plans.py','coverage_scans.py','coverage.py','detection.py','event_ingest.py','event_adapters.py','tools.py','worker.py') + tools.ANALYZER_FILES}})
 
 
 def _ids(values, maximum):

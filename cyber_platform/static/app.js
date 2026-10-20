@@ -33,6 +33,7 @@ const nav = [
   ["reports", "▤", "تقارير المشروع"],
   ["curriculum", "◈", "مسارات التعلم"],
   ["plugins", "◇", "إدارة الإضافات"],
+  ["technical", "⌘", "التحليل التقني"],
 ];
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
@@ -505,6 +506,7 @@ function render() {
     reports: caseReportsPage,
     curriculum: curriculumPage,
     plugins: pluginsPage,
+    technical: technicalAnalysisPage,
   };
   content.append(
     views[state.view]?.() || dashboard(),

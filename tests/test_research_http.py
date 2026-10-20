@@ -45,7 +45,7 @@ class ResearchHTTPTests(core.StoreCase):
 
     def test_real_event_library_detection_and_coverage_flow(self):
         self.login()
-        adapters=json.loads(self.request('/api/events/adapters')[2])['adapters'];self.assertEqual(len(adapters),3)
+        adapters=json.loads(self.request('/api/events/adapters')[2])['adapters'];self.assertEqual(len(adapters),4)
         sample=next(a for a in adapters if a['id']=='windows-json')
         source=self.evidence(sample['example_content'].encode())
         normalized=self.post('events/normalize',{'project_id':self.pid,'evidence_id':source['id'],'adapter':sample['id']})

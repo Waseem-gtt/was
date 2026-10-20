@@ -104,6 +104,17 @@ def main():
                 evidence = store.add_evidence(pid, "synthetic.txt", b"192.0.2.55")
                 job = json.loads(request("/api/run", {"project_id": pid, "steps": [{"tool": "ioc", "evidence_id": evidence["id"], "expect": {"ipv4.0": "192.0.2.55"}}]})[0])
                 assert job["status"] == "succeeded", job
+                technical_tools = {"pcap":"was.pcap-analysis/1", "certificate":"was.certificate-analysis/1",
+                                   "supply-chain":"was.supply-chain/1", "supply-chain-diff":"was.supply-chain-diff/1"}
+                from cyber_platform import tools
+                for tool in tools.describe():
+                    if tool['id'] not in technical_tools:
+                        continue
+                    synthetic = store.add_evidence(pid, 'synthetic-' + tool['id'] + '.json', tool['sample'].encode())
+                    analyzed = json.loads(request('/api/run', {'project_id':pid, 'steps':[{'tool':tool['id'], 'evidence_id':synthetic['id']}]})[0])
+                    assert analyzed['status'] == 'succeeded', analyzed
+                    assert analyzed['results'][0]['output']['result']['schema'] == technical_tools[tool['id']]
+                    assert analyzed['results'][0]['output']['input_sha256'] == synthetic['sha256']
                 report = json.loads(request("/api/maintenance", {"operation": "repair", "section_id": "01"})[0])
                 assert report["passed"] and report["repair_transaction"]["verification"], report
                 scan = json.loads(request("/api/integrity/start", {"project_id": pid})[0])
@@ -116,11 +127,17 @@ def main():
                 compared = json.loads(request("/api/quality/compare", {"left_id": quality_run["id"], "right_id": quality_run["id"]})[0])
                 assert not compared["regressions"] and not compared["improvements"]
                 adapters = json.loads(request("/api/events/adapters")[0])["adapters"]
-                assert len(adapters) == 3
+                assert len(adapters) == 4
                 sample = next(a for a in adapters if a["id"] == "windows-json")
                 original_events = store.add_evidence(pid, "synthetic-windows.json", sample["example_content"].encode())
                 normalized = json.loads(request("/api/events/normalize", {"project_id":pid, "evidence_id":original_events["id"], "adapter":sample["id"]})[0])
                 assert normalized["report"]["input_sha256"] == original_events["sha256"]
+                xml_sample = next(a for a in adapters if a['id'] == 'windows-xml')
+                xml_original = store.add_evidence(pid, 'synthetic-windows.xml', xml_sample['example_content'].encode())
+                xml_report = json.loads(request('/api/events/normalize', {'project_id':pid, 'evidence_id':xml_original['id'], 'adapter':'windows-xml'})[0])
+                assert xml_report['report']['input_sha256'] == xml_original['sha256']
+                assert xml_report['report']['result']['events'][0]['outcome'] == 'unknown'
+                assert '.1234567' in xml_report['report']['result']['events'][0]['time']
                 library = json.loads(request("/api/detection/library?project=" + pid)[0])
                 original_fixture = store.add_evidence(pid, "synthetic-detection.json", json.dumps(library["fixtures"][0]["input"]).encode())
                 tested = json.loads(request("/api/detection/test", {"project_id":pid, "evidence_id":original_fixture["id"], "rule_ids":[r["id"] for r in library["rules"]]})[0])
@@ -170,7 +187,7 @@ def main():
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

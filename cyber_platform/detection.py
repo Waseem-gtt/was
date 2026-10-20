@@ -229,7 +229,7 @@ def _input_value(store, project_id, evidence_id, raw):
 def _engine():
     root = Path(__file__).parent
     return _digest({name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-                    for name in ("detection.py", "tools.py", "worker.py", "event_adapters.py", "event_ingest.py")})
+                    for name in ("detection.py", "tools.py", "worker.py", "event_adapters.py", "event_ingest.py") + tools.ANALYZER_FILES})
 
 
 def _execute(events, expected, snapshots):

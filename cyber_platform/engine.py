@@ -24,7 +24,7 @@ def accepts(result, expected):
 def fingerprint():
     root = Path(__file__).parent
     return hashlib.sha256(b"".join((root / name).read_bytes() for name in
-                                 ("engine.py", "tools.py", "worker.py", "event_adapters.py"))).hexdigest()
+                                 ("engine.py", "tools.py", "worker.py", "event_adapters.py") + tools.ANALYZER_FILES)).hexdigest()
 
 
 def resume_prefix(store, project_id, job_id, steps, current_fingerprint):
@@ -103,6 +103,8 @@ def run(store, project_id, steps, name="تحليل محلي", resume_id=None):
         try:
             data = store.read_evidence(project_id, eid)
             result = worker.analyze(step["tool"], data)
+            if fingerprint() != engine_hash:
+                raise Problem("تغير محرك التحليل أثناء التنفيذ؛ لم تحفظ نتيجة", 409)
             checks = accepts(result, step.get("expect", {}))
             accepted = all(c["passed"] for c in checks)
             output = {"tool": step["tool"], "engine_version": __version__, "engine_sha256": engine_hash, "input_evidence": eid,

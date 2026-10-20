@@ -4,7 +4,7 @@ import hashlib
 import re
 from pathlib import Path
 
-from . import __version__, learning
+from . import __version__, learning, tools
 from .detection import _json, _persist
 from .quality import _guard
 from .store import Problem, encode
@@ -43,7 +43,7 @@ def _engine():
     root = Path(__file__).parent
     return _digest({"version": __version__, "files": {
         name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-        for name in ("curriculum.py", "learning.py", "tools.py", "worker.py", "event_adapters.py")}})
+        for name in ("curriculum.py", "learning.py", "tools.py", "worker.py", "event_adapters.py") + tools.ANALYZER_FILES}})
 
 
 def catalog():

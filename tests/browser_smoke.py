@@ -19,6 +19,7 @@ from tests.browser_coverage_scans import run_coverage_scan_checks
 from tests.browser_reports import run_report_checks
 from tests.browser_curriculum import run_curriculum_checks
 from tests.browser_plugins import run_plugins_checks
+from tests.browser_technical import run_technical_checks
 
 
 def main():
@@ -265,16 +266,17 @@ def main():
                 run_report_checks(page, expect, checks)
                 run_curriculum_checks(page, expect, checks)
                 run_plugins_checks(page, expect, checks)
+                run_technical_checks(page, expect, checks)
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):
                     page.set_viewport_size({"width": width, "height": 844})
-                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality", "events", "detection", "coverage", "plans", "reports", "curriculum", "plugins"):
+                    for view in ("dashboard", "sections", "evidence", "tools", "workflows", "map", "assistant", "workshop", "knowledge", "requirements", "settings", "maintenance", "quality", "events", "detection", "coverage", "plans", "reports", "curriculum", "plugins", "technical"):
                         page.evaluate("hash => location.hash=hash", view)
                         page.wait_for_timeout(80)
                         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (width, view)
                     page.screenshot(path=str(output / f"mobile-{width}.png"), full_page=True)
-                    checks.append(f"no page overflow at {width}px across 20 pages")
+                    checks.append(f"no page overflow at {width}px across 21 pages")
                 page.get_by_role("button", name="خروج", exact=True).click()
                 expect(page.get_by_role("button", name="دخول مساحة العمل")).to_be_visible()
                 checks.append("logout revokes session")

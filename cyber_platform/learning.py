@@ -104,7 +104,7 @@ def exercise(lesson_id, answer):
         raise Problem("اختر إجابة من الخيارات المسجلة")
     root = Path(__file__).parent
     identities = {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-                  for name in ("learning.py", "tools.py", "worker.py", "event_adapters.py")}
+                  for name in ("learning.py", "tools.py", "worker.py", "event_adapters.py") + tools.ANALYZER_FILES}
     # Exercise inputs and analyzer are server-selected. Uploaded commands/targets
     # cannot be substituted for the synthetic input.
     try:

@@ -464,7 +464,8 @@
           "قواعد مراقبة وانحرافات"
         ],
         "tool_ids": [
-          "flows"
+          "flows",
+          "pcap"
         ],
         "references": [
           {
@@ -803,7 +804,9 @@
           "مصادر الحزم وتحقق سلامة"
         ],
         "tool_ids": [
-          "sbom"
+          "sbom",
+          "supply-chain",
+          "supply-chain-diff"
         ],
         "references": [
           {
@@ -934,7 +937,8 @@
           "PKI وسلسلة ثقة"
         ],
         "tool_ids": [
-          "crypto"
+          "crypto",
+          "certificate"
         ],
         "references": [
           {
@@ -1802,7 +1806,8 @@
           "مراجعة البروتوكول والوجهة والزمن مع خط أساس"
         ],
         "tool_ids": [
-          "flows"
+          "flows",
+          "pcap"
         ],
         "lesson_ids": [],
         "related_section_id": "06",
@@ -1871,7 +1876,9 @@
           "توثيق المكون والإصدار والترخيص ومراجعة التنبيهات"
         ],
         "tool_ids": [
-          "sbom"
+          "sbom",
+          "supply-chain",
+          "supply-chain-diff"
         ],
         "lesson_ids": [],
         "related_section_id": "09",
@@ -1917,7 +1924,8 @@
           "توثيق الخوارزمية ثم اختبار الإعداد والتوافق بأداة مناسبة"
         ],
         "tool_ids": [
-          "crypto"
+          "crypto",
+          "certificate"
         ],
         "lesson_ids": [],
         "related_section_id": "11",
@@ -2281,7 +2289,8 @@
           "مراجعة البروتوكول والوجهة والزمن مع خط أساس"
         ],
         "tool_ids": [
-          "flows"
+          "flows",
+          "pcap"
         ],
         "lesson_ids": [
           "lesson.06"
@@ -2356,7 +2365,9 @@
           "توثيق المكون والإصدار والترخيص ومراجعة التنبيهات"
         ],
         "tool_ids": [
-          "sbom"
+          "sbom",
+          "supply-chain",
+          "supply-chain-diff"
         ],
         "lesson_ids": [
           "lesson.09"
@@ -2406,7 +2417,8 @@
           "توثيق الخوارزمية ثم اختبار الإعداد والتوافق بأداة مناسبة"
         ],
         "tool_ids": [
-          "crypto"
+          "crypto",
+          "certificate"
         ],
         "lesson_ids": [
           "lesson.11"

@@ -99,7 +99,7 @@ sys.exit(1)
         with patch('cyber_platform.maintenance.worker.analyze', return_value={}):
             result = maintenance.check(self.store)
         tool_checks = [check for check in result['checks'] if check['id'].startswith('tool:')]
-        self.assertEqual(len(tool_checks), 21)
+        self.assertEqual(len(tool_checks), 25)
         self.assertTrue(all(check['status'] == 'failed' for check in tool_checks))
         self.assertFalse(result['passed'])
 

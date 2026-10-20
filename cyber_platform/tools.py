@@ -1,5 +1,6 @@
 """Bounded, deterministic offline analyzers. No shell, network or sample execution."""
 import collections
+import base64
 import csv
 import hashlib
 import io
@@ -9,7 +10,11 @@ import math
 import re
 import struct
 from datetime import datetime
-from . import event_adapters
+from . import certificates, event_adapters, pcap, supply_chain
+
+# Every persisted engine fingerprint must include these implementation files,
+# rather than only this registry, when deciding whether old results can be reused.
+ANALYZER_FILES = ("pcap.py", "certificates.py", "supply_chain.py")
 
 
 def text(data):
@@ -323,13 +328,19 @@ SPECS = [
     ("manifest", "تحقق بيان إضافة", manifest, "JSON بيان إضافة", {"id": "plugin.example", "version": "1.0", "license": "MIT", "source": "https://example.test", "permissions": ["selected_evidence.read"]}),
     ("rules", "اختبار قواعد كشف دفاعية", detection_rules, "JSON: events,rules مع selection ومعايير متوقعة", {"events": [{"action": "login", "outcome": "failure"}, {"action": "login", "outcome": "success"}], "rules": [{"id": "failed-login", "version": "1", "license": "CC0-1.0", "source": "owner-authored synthetic example", "selection": {"action": "login", "outcome": "failure"}, "expected_event_indexes": [0]}]}),
 ]
+SPECS.extend([
+    ("pcap", "تحليل تسجيل PCAP", pcap.analyze, "classic PCAP أو JSON: pcap_base64", {"pcap_base64": base64.b64encode(pcap.sample()).decode()}),
+    ("certificate", "فحص شهادات X.509", certificates.analyze, "شهادة PEM أو DER أو JSON: certificates_pem,validation_time اختياري", certificates.sample()),
+    ("supply-chain", "تحليل مكونات واعتماديات البرمجيات", supply_chain.analyze, "CycloneDX1.5/1.6 أو SPDX2.3 JSON", supply_chain.sample()),
+    ("supply-chain-diff", "مقارنة قوائم مكونات البرمجيات", supply_chain.analyze_diff, "JSON: left,right وثيقتا SBOM كاملتان", supply_chain.diff_sample()),
+])
 REGISTRY = {s[0]: s[2] for s in SPECS}
 
 
 def describe():
-    return [{"id": s[0], "name": s[1], "section": f"{i + 1:02}", "input": s[3], "state": "available",
+    return [{"id": s[0], "name": s[1], "section": {"pcap":"06", "certificate":"11", "supply-chain":"09", "supply-chain-diff":"09"}.get(s[0], f"{i + 1:02}"), "input": s[3], "state": "available",
              "sample": s[4] if isinstance(s[4], str) else json.dumps(s[4], ensure_ascii=False) if s[4] is not None else None,
-             "max_bytes": 4 * 1024 * 1024, "network": False} for i, s in enumerate(SPECS)]
+             "max_bytes": 256 * 1024 if s[0] == "certificate" else 4 * 1024 * 1024, "network": False} for i, s in enumerate(SPECS)]
 
 
 def analyze(tool, data):

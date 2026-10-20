@@ -124,7 +124,7 @@ def validate(plan, allow_slots=False):
 def fingerprint():
     root=Path(__file__).parent
     return _digest({'version':__version__,'files':{n:hashlib.sha256((root/n).read_bytes()).hexdigest()
-                    for n in ('__init__.py','plans.py','engine.py','tools.py','worker.py','event_adapters.py','plan_templates.py','detection.py')}})
+                    for n in ('__init__.py','plans.py','engine.py','tools.py','worker.py','event_adapters.py','plan_templates.py','detection.py') + tools.ANALYZER_FILES}})
 
 
 def _key(pid,run_id):

@@ -63,6 +63,14 @@ def task(store, body):
 
 # Reviewed outcomes for fixed synthetic samples, independent of analyzer execution.
 _TOOL_EXPECTATIONS = {
+    "supply-chain-diff": {"schema":"was.supply-chain-diff/1", "complete":True, "normalized_inventory_equal":False,
+                          "added_components":[], "removed_components":[], "changed_components":[{"id":"library", "fields":["version"]}]},
+    "pcap": {"schema":"was.pcap-analysis/1", "packet_count":1, "protocols":{"UDP":1}, "payload_exported":False, "live_capture":False,
+             "flows":[{"source":"192.0.2.1", "destination":"198.51.100.2", "source_port":53000, "destination_port":53, "protocol":"UDP", "packets":1}]},
+    "certificate": {"schema":"was.certificate-analysis/1", "certificate_count":1, "trust":"not_evaluated", "network":False,
+                    "certificates":[{"time_status":"within_validity_period", "self_signature":"valid", "key":{"type":"EC", "bits":256}}]},
+    "supply-chain": {"schema":"was.supply-chain/1", "format":"CycloneDX-1.6", "component_count":2, "network":False,
+                     "dependencies":[{"source":"app", "target":"library"}], "issues":[], "summary":{"missing_versions":0, "missing_licenses":0, "missing_hashes":0}},
     "ioc": {"ipv4": ["192.0.2.1"], "urls": ["https://example.test/path"], "sha256": [], "source_bytes": 50},
     "http": {"missing_headers": ["content-security-policy", "referrer-policy"], "status": 200},
     "events": {"schema": "was.event/1", "count": 1, "failed": 1,

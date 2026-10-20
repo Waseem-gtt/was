@@ -53,7 +53,7 @@ class QualityHTTPTests(core.StoreCase):
     def test_fixed_suite_progress_history_and_no_owner_evidence_reads(self):
         self.login()
         cases = json.loads(self.request('/api/quality/catalog')[2])['cases']
-        self.assertEqual(len({case['tool'] for case in cases}), 21)
+        self.assertEqual(len({case['tool'] for case in cases}), 25)
         with patch.object(self.store, 'read_evidence', side_effect=AssertionError('owner evidence accessed')):
             code, _, raw = self.request('/api/quality/start', {})
             self.assertEqual(code, 200)

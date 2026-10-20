@@ -1,7 +1,7 @@
 """Preserve event inputs and normalized derivatives with verifiable provenance."""
 import hashlib
 from pathlib import Path
-from . import __version__, event_adapters, worker
+from . import __version__, event_adapters, tools, worker
 from .integrity import _directories
 from .store import Problem, encode
 
@@ -10,7 +10,7 @@ def fingerprint():
     root = Path(__file__).parent
     return hashlib.sha256(encode({"version": __version__, "files": {
         name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-        for name in ("event_ingest.py", "event_adapters.py", "tools.py", "worker.py")}}).encode()).hexdigest()
+        for name in ("event_ingest.py", "event_adapters.py", "tools.py", "worker.py") + tools.ANALYZER_FILES}}).encode()).hexdigest()
 
 
 def _input(store, project_id, evidence_id, adapter):
