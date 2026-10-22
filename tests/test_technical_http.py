@@ -9,7 +9,11 @@ from cyber_platform.server import App
 from cyber_platform.store import Store
 
 TECHNICAL = {'pcap':'was.pcap-analysis/1', 'certificate':'was.certificate-analysis/1',
-             'supply-chain':'was.supply-chain/1', 'supply-chain-diff':'was.supply-chain-diff/1'}
+             'supply-chain':'was.supply-chain/1', 'supply-chain-diff':'was.supply-chain-diff/1',
+             'har':'was.har-analysis/1','har-diff':'was.har-diff/1','email':'was.email-analysis/1',
+             'kubernetes':'was.kubernetes-review/1','kubernetes-diff':'was.kubernetes-diff/1','systemd':'was.systemd-review/1',
+             'sarif':'was.sarif-analysis/1','sarif-diff':'was.sarif-diff/1','archive':'was.archive-review/1',
+             'ssh-keys':'was.ssh-key-review/1','dns':'was.dns-analysis/1'}
 
 
 class TechnicalHTTPTests(core.StoreCase):
@@ -49,12 +53,12 @@ class TechnicalHTTPTests(core.StoreCase):
         self.assertEqual(self.request('/api/bootstrap')[0], 401)
         self.login()
         catalog = json.loads(self.request('/api/bootstrap')[2])['tools']
-        self.assertEqual(len(catalog), 25)
+        self.assertEqual(len(catalog), 36)
         selected = [t for t in catalog if t['id'] in TECHNICAL]
-        self.assertEqual(len(selected), 4)
-        self.assertTrue(all(t['network'] is False and t['section'] in {'06','09','11'} for t in selected))
+        self.assertEqual(len(selected), 15)
+        self.assertTrue(all(t['network'] is False and t['section'] in {'02','04','06','07','08','09','11'} for t in selected))
 
-    def test_all_four_tools_preserve_original_and_derived_provenance_over_http(self):
+    def test_all_technical_tools_preserve_original_and_derived_provenance_over_http(self):
         self.login()
         for tool, schema in TECHNICAL.items():
             with self.subTest(tool=tool):
@@ -84,7 +88,7 @@ class TechnicalHTTPTests(core.StoreCase):
                 self.assertNotIn('output', job['results'][0])
                 self.assertEqual(self.store.read_evidence(self.pid, source['id']), b'not an accepted format')
 
-    def test_bounded_dag_runs_all_four_technical_tools_with_saved_results(self):
+    def test_bounded_dag_runs_all_technical_tools_with_saved_results(self):
         self.login()
         nodes = [{'id':'step' + str(i), 'tool':tool, 'input':{'evidence_id':self.source(tool)['id']}}
                  for i, tool in enumerate(TECHNICAL)]
@@ -121,7 +125,7 @@ class TechnicalHTTPTests(core.StoreCase):
         self.assertEqual(self.request('/api/run', {**body, 'project_id':other})[0], 404)
         self.assertEqual(self.store.project_data(other)['jobs'], [])
 
-    def test_encrypted_restore_keeps_four_technical_results_and_xml_derivative(self):
+    def test_encrypted_restore_keeps_technical_results_and_xml_derivative(self):
         self.login()
         results = []
         for tool in TECHNICAL:

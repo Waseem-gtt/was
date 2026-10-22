@@ -10,11 +10,11 @@ import math
 import re
 import struct
 from datetime import datetime
-from . import certificates, event_adapters, pcap, supply_chain
+from . import archive_review, certificates, dns_message, email_review, event_adapters, har, kubernetes_review, pcap, sarif, ssh_keys, supply_chain, systemd_review
 
 # Every persisted engine fingerprint must include these implementation files,
 # rather than only this registry, when deciding whether old results can be reused.
-ANALYZER_FILES = ("pcap.py", "certificates.py", "supply_chain.py")
+ANALYZER_FILES = ("pcap.py", "certificates.py", "supply_chain.py", "har.py", "email_review.py", "kubernetes_review.py", "systemd_review.py", "sarif.py", "dns_message.py", "archive_review.py", "ssh_keys.py")
 
 
 def text(data):
@@ -333,12 +333,23 @@ SPECS.extend([
     ("certificate", "فحص شهادات X.509", certificates.analyze, "شهادة PEM أو DER أو JSON: certificates_pem,validation_time اختياري", certificates.sample()),
     ("supply-chain", "تحليل مكونات واعتماديات البرمجيات", supply_chain.analyze, "CycloneDX1.5/1.6 أو SPDX2.3 JSON", supply_chain.sample()),
     ("supply-chain-diff", "مقارنة قوائم مكونات البرمجيات", supply_chain.analyze_diff, "JSON: left,right وثيقتا SBOM كاملتان", supply_chain.diff_sample()),
+    ("har", "تحليل جلسة ويب HAR", har.analyze, "HAR1.2 JSON دون تصدير المحتوى أو الأسرار", har.sample()),
+    ("har-diff", "مقارنة بيانات جلسات الويب", har.analyze_diff, "JSON:left,right مستندا HAR كاملان", har.diff_sample()),
+    ("email", "تحليل بيانات رسالة بريد", email_review.analyze, "EML: بنية MIME ومؤشرات مصدر دون تصدير الأجسام", email_review.sample()),
+    ("kubernetes", "مراجعة إعدادات Kubernetes", kubernetes_review.analyze, "موارد Kubernetes JSON؛ مراجعة ثابتة دون تطبيق", kubernetes_review.sample()),
+    ("kubernetes-diff", "مقارنة مراجعات Kubernetes", kubernetes_review.analyze_diff, "JSON:left,right إعدادات Kubernetes دون تطبيق", kubernetes_review.diff_sample()),
+    ("systemd", "مراجعة إعداد خدمة systemd", systemd_review.analyze, "ملف service نصي؛ مراجعة ثابتة دون تشغيل", systemd_review.sample()),
+    ("sarif", "استيراد نتائج فحص الكود SARIF", sarif.analyze, "SARIF2.1.0 JSON ضمن الحقول الموثقة", sarif.sample()),
+    ("sarif-diff", "مقارنة نتائج فحص الكود", sarif.analyze_diff, "JSON:left,right مستندا SARIF كاملان", sarif.diff_sample()),
+    ("archive", "فحص بنية ZIP وTAR", archive_review.analyze, "ZIP أو TAR محدد أو JSON:archive_base64 دون استخراج", archive_review.sample()),
+    ("ssh-keys", "مراجعة مفاتيح SSH العامة", ssh_keys.analyze, "OpenSSH public keys أو authorized_keys دون تنفيذ", ssh_keys.sample()),
+    ("dns", "تحليل رسالة DNS مسجلة", dns_message.analyze, "رسالة DNS ثنائية أو JSON:dns_base64 دون استعلام شبكة", dns_message.sample()),
 ])
 REGISTRY = {s[0]: s[2] for s in SPECS}
 
 
 def describe():
-    return [{"id": s[0], "name": s[1], "section": {"pcap":"06", "certificate":"11", "supply-chain":"09", "supply-chain-diff":"09"}.get(s[0], f"{i + 1:02}"), "input": s[3], "state": "available",
+    return [{"id": s[0], "name": s[1], "section": {"har":"02", "har-diff":"02", "email":"04", "kubernetes":"08", "kubernetes-diff":"08", "systemd":"07", "sarif":"09", "sarif-diff":"09", "archive":"04", "ssh-keys":"07", "dns":"06", "pcap":"06", "certificate":"11", "supply-chain":"09", "supply-chain-diff":"09"}.get(s[0], f"{i + 1:02}"), "input": s[3], "state": "available",
              "sample": s[4] if isinstance(s[4], str) else json.dumps(s[4], ensure_ascii=False) if s[4] is not None else None,
              "max_bytes": 256 * 1024 if s[0] == "certificate" else 4 * 1024 * 1024, "network": False} for i, s in enumerate(SPECS)]
 

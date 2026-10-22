@@ -1127,6 +1127,525 @@
       "input_base64": "eyJhZGFwdGVyIjogIndpbmRvd3MteG1sIiwgImNvbnRlbnQiOiAiPEV2ZW50IHhtbG5zPVwiaHR0cHM6Ly9leGFtcGxlLnRlc3QvZm9yZWlnblwiPjxTeXN0ZW0+PFByb3ZpZGVyIE5hbWU9XCJTeW50aGV0aWNcIi8+PEV2ZW50SUQ+NDYyNTwvRXZlbnRJRD48VGltZUNyZWF0ZWQgU3lzdGVtVGltZT1cIjIwMjYtMDEtMDFUMDA6MDA6MDAuMTIzNDU2N1pcIi8+PENvbXB1dGVyPmRlbW8taG9zdDwvQ29tcHV0ZXI+PFNlY3VyaXR5IFVzZXJJRD1cIlMtMS0wLTBcIi8+PC9TeXN0ZW0+PEV2ZW50RGF0YT48RGF0YSBOYW1lPVwiVGFyZ2V0VXNlck5hbWVcIj5kZW1vPC9EYXRhPjwvRXZlbnREYXRhPjwvRXZlbnQ+In0=",
       "reject": "ValueError",
       "error_message": "Expected Windows XML Event or Events root"
+    },
+    {
+      "id": "har-reference",
+      "tool": "har",
+      "title": "جلسة ويب اصطناعية دون تصدير المحتوى",
+      "input_utf8": "{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":200},\"time\":12}],\"version\":\"1.2\"}}",
+      "expected": {
+        "schema": "was.har-analysis/1",
+        "entry_count": 1,
+        "origins": [
+          {
+            "origin": "https://example.test",
+            "entries": 1
+          }
+        ],
+        "content_exported": false,
+        "network": false,
+        "findings": [
+          {
+            "entry": 0,
+            "code": "missing_csp"
+          }
+        ]
+      }
+    },
+    {
+      "id": "har-http-credentials",
+      "tool": "har",
+      "title": "وجود اعتماد علىHTTPدون تصديره",
+      "input_utf8": "{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[{\"name\":\"Authorization\",\"value\":\"Bearer SYNTHETIC_ONLY\"}],\"method\":\"GET\",\"url\":\"http://example.test/private\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":200},\"time\":12}],\"version\":\"1.2\"}}",
+      "expected": {
+        "entry_count": 1,
+        "summary": {
+          "insecure_entries": 1
+        },
+        "content_exported": false
+      }
+    },
+    {
+      "id": "har-no-response",
+      "tool": "har",
+      "title": "غياب استجابة لا يختلق تنبيه رؤوس",
+      "input_utf8": "{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[],\"httpVersion\":\"HTTP/2\",\"status\":0},\"time\":12}],\"version\":\"1.2\"}}",
+      "expected": {
+        "entries": [
+          {
+            "status": 0,
+            "response_recorded": false
+          }
+        ],
+        "findings": []
+      }
+    },
+    {
+      "id": "har-invalid-version",
+      "tool": "har",
+      "title": "رفض بنيةHARغير المدعومة",
+      "input_utf8": "{}",
+      "reject": "ValueError",
+      "error_message": "Expected HAR 1.2 with bounded entries"
+    },
+    {
+      "id": "har-diff-changed",
+      "tool": "har-diff",
+      "title": "مقارنة تغيير حالة استجابة كاملة",
+      "input_utf8": "{\"left\":{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":200},\"time\":12}],\"version\":\"1.2\"}},\"right\":{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":503},\"time\":12}],\"version\":\"1.2\"}}}",
+      "expected": {
+        "schema": "was.har-diff/1",
+        "complete": true,
+        "normalized_metadata_equal": false,
+        "changed_entries": [
+          {
+            "index": 0,
+            "fields": [
+              "status"
+            ]
+          }
+        ],
+        "added_entry_indexes": [],
+        "removed_entry_indexes": [],
+        "embedded_document_encoding": "canonical_json"
+      }
+    },
+    {
+      "id": "har-diff-equal",
+      "tool": "har-diff",
+      "title": "مقارنة بيانات جلسة موحدة متطابقة",
+      "input_utf8": "{\"left\":{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":200},\"time\":12}],\"version\":\"1.2\"}},\"right\":{\"log\":{\"entries\":[{\"request\":{\"cookies\":[],\"headers\":[],\"method\":\"GET\",\"url\":\"https://example.test/\"},\"response\":{\"cookies\":[],\"headers\":[{\"name\":\"X-Content-Type-Options\",\"value\":\"nosniff\"},{\"name\":\"Strict-Transport-Security\",\"value\":\"max-age=31536000\"}],\"httpVersion\":\"HTTP/2\",\"status\":200},\"time\":12}],\"version\":\"1.2\"}}}",
+      "expected": {
+        "complete": true,
+        "normalized_metadata_equal": true,
+        "changed_entries": []
+      }
+    },
+    {
+      "id": "email-mime-reference",
+      "tool": "email",
+      "title": "بنيةEMLومرفق اصطناعي دون المحتوى",
+      "input_utf8": "From: Synthetic <sender@example.test>\r\nTo: recipient@example.net\r\nReply-To: reply@example.test\r\nAuthentication-Results: synthetic.example.test; spf=pass; dkim=pass; dmarc=pass\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"synthetic-boundary\"\r\n\r\n--synthetic-boundary\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nSynthetic private body.\r\n--synthetic-boundary\r\nContent-Type: text/plain\r\nContent-Disposition: attachment; filename=\"example.txt\"\r\nContent-Transfer-Encoding: base64\r\n\r\nU3ludGhldGljIGF0dGFjaG1lbnQ=\r\n--synthetic-boundary--\r\n",
+      "expected": {
+        "schema": "was.email-analysis/1",
+        "part_count": 3,
+        "attachment_count": 1,
+        "domains": {
+          "from": [
+            "example.test"
+          ],
+          "to": [
+            "example.net"
+          ],
+          "reply_to": [
+            "example.test"
+          ]
+        },
+        "attachments": [
+          {
+            "extension": "txt",
+            "decoded_bytes": 20,
+            "sha256": "12b6374d77ce5915ee2b5c07effacd8ee0d02a240e16bdc79bda1e43dc538f2a"
+          }
+        ],
+        "content_exported": false,
+        "network": false,
+        "extracted": false
+      }
+    },
+    {
+      "id": "email-auth-source-claim",
+      "tool": "email",
+      "title": "تصريح فشل مصادقة مصدر غير متحقق",
+      "input_utf8": "From: source@example.test\r\nAuthentication-Results: synthetic.example.test; dkim=fail\r\n\r\nPRIVATE_SYNTHETIC_BODY",
+      "expected": {
+        "part_count": 1,
+        "auth_claims": [
+          {
+            "mechanism": "dkim",
+            "result": "fail",
+            "verification": "source_claim_only"
+          }
+        ],
+        "auth_verification": "source_claims_only",
+        "findings": [
+          {
+            "code": "reported_auth_failure"
+          }
+        ],
+        "content_exported": false
+      }
+    },
+    {
+      "id": "email-invalid-base64",
+      "tool": "email",
+      "title": "رفض مرفقbase64غير صالح دون نتيجة جزئية",
+      "input_utf8": "From: Synthetic <sender@example.test>\r\nTo: recipient@example.net\r\nReply-To: reply@example.test\r\nAuthentication-Results: synthetic.example.test; spf=pass; dkim=pass; dmarc=pass\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"synthetic-boundary\"\r\n\r\n--synthetic-boundary\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nSynthetic private body.\r\n--synthetic-boundary\r\nContent-Type: text/plain\r\nContent-Disposition: attachment; filename=\"example.txt\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%%%invalid%%%\r\n--synthetic-boundary--\r\n",
+      "reject": "ValueError",
+      "error_message": "Invalid EML base64 attachment"
+    },
+    {
+      "id": "kubernetes-workload-reference",
+      "tool": "kubernetes",
+      "title": "مراجعة حاوية وخدمة اصطناعيتين",
+      "input_utf8": "{\"apiVersion\":\"v1\",\"items\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"synthetic-web\",\"namespace\":\"demo\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"web\"}},\"spec\":{\"containers\":[{\"image\":\"example.test/web:latest\",\"name\":\"web\",\"securityContext\":{\"privileged\":true}}],\"hostNetwork\":true}}}},{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"synthetic-service\",\"namespace\":\"demo\"},\"spec\":{\"ports\":[{\"port\":443,\"targetPort\":8443}],\"selector\":{\"app\":\"web\"},\"type\":\"LoadBalancer\"}}],\"kind\":\"List\"}",
+      "expected": {
+        "schema": "was.kubernetes-review/1",
+        "resource_count": 2,
+        "container_count": 1,
+        "network": false,
+        "applied": false,
+        "summary": {
+          "findings": 12,
+          "high": 2,
+          "medium": 10
+        }
+      }
+    },
+    {
+      "id": "kubernetes-unknown-not-reviewed",
+      "tool": "kubernetes",
+      "title": "المورد غير المدعوم لا يحصل على حكم أمان",
+      "input_utf8": "{\"apiVersion\":\"v1\",\"data\":{\"key\":\"SYNTHETIC_PRIVATE_NOT_EXPORTED\"},\"kind\":\"Secret\",\"metadata\":{\"name\":\"synthetic-secret\"}}",
+      "expected": {
+        "resource_count": 1,
+        "container_count": 0,
+        "summary": {
+          "not_reviewed_resources": 1
+        },
+        "resources": [
+          {
+            "review_status": "not_reviewed",
+            "configuration_sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "kubernetes-malformed-workload-refused",
+      "tool": "kubernetes",
+      "title": "رفض حاوية مفقودة بعد مراجعة البنية",
+      "input_utf8": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"name\":\"bad\"},\"spec\":{}}",
+      "reject": "ValueError",
+      "error_message": "A Pod requires containers"
+    },
+    {
+      "id": "kubernetes-diff-change-reference",
+      "tool": "kubernetes-diff",
+      "title": "كشف اختلاف الحقول المفحوصة والنتائج",
+      "input_utf8": "{\"left\":{\"apiVersion\":\"v1\",\"items\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"synthetic-web\",\"namespace\":\"demo\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"web\"}},\"spec\":{\"containers\":[{\"image\":\"example.test/web:latest\",\"name\":\"web\",\"securityContext\":{\"privileged\":true}}],\"hostNetwork\":true}}}},{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"synthetic-service\",\"namespace\":\"demo\"},\"spec\":{\"ports\":[{\"port\":443,\"targetPort\":8443}],\"selector\":{\"app\":\"web\"},\"type\":\"LoadBalancer\"}}],\"kind\":\"List\"},\"right\":{\"apiVersion\":\"v1\",\"items\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"synthetic-web\",\"namespace\":\"demo\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"web\"}},\"spec\":{\"containers\":[{\"image\":\"example.test/web:latest\",\"name\":\"web\",\"securityContext\":{\"privileged\":false}}],\"hostNetwork\":true}}}},{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"synthetic-service\",\"namespace\":\"demo\"},\"spec\":{\"ports\":[{\"port\":443,\"targetPort\":8443}],\"selector\":{\"app\":\"web\"},\"type\":\"LoadBalancer\"}}],\"kind\":\"List\"}}",
+      "expected": {
+        "schema": "was.kubernetes-diff/1",
+        "complete": true,
+        "normalized_review_equal": false,
+        "changed_resources": [
+          {
+            "id": "apps/v1/Deployment/demo/synthetic-web",
+            "fields": [
+              "configuration_sha256"
+            ]
+          }
+        ],
+        "embedded_document_encoding": "canonical_json"
+      }
+    },
+    {
+      "id": "kubernetes-diff-equal-reference",
+      "tool": "kubernetes-diff",
+      "title": "مساواة المراجعات دون مساواة كل البيانات الخام",
+      "input_utf8": "{\"left\":{\"apiVersion\":\"v1\",\"items\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"synthetic-web\",\"namespace\":\"demo\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"web\"}},\"spec\":{\"containers\":[{\"image\":\"example.test/web:latest\",\"name\":\"web\",\"securityContext\":{\"privileged\":true}}],\"hostNetwork\":true}}}},{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"synthetic-service\",\"namespace\":\"demo\"},\"spec\":{\"ports\":[{\"port\":443,\"targetPort\":8443}],\"selector\":{\"app\":\"web\"},\"type\":\"LoadBalancer\"}}],\"kind\":\"List\"},\"right\":{\"apiVersion\":\"v1\",\"items\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"synthetic-web\",\"namespace\":\"demo\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"web\"}},\"spec\":{\"containers\":[{\"image\":\"example.test/web:latest\",\"name\":\"web\",\"securityContext\":{\"privileged\":true}}],\"hostNetwork\":true}}}},{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"synthetic-service\",\"namespace\":\"demo\"},\"spec\":{\"ports\":[{\"port\":443,\"targetPort\":8443}],\"selector\":{\"app\":\"web\"},\"type\":\"LoadBalancer\"}}],\"kind\":\"List\"}}",
+      "expected": {
+        "complete": true,
+        "normalized_review_equal": true,
+        "added_resources": [],
+        "removed_resources": [],
+        "changed_resources": []
+      }
+    },
+    {
+      "id": "kubernetes-invalid-binding-refused",
+      "tool": "kubernetes",
+      "title": "رفض مرجع Role في ClusterRoleBinding",
+      "input_utf8": "{\"apiVersion\":\"rbac.authorization.k8s.io/v1\",\"kind\":\"ClusterRoleBinding\",\"metadata\":{\"name\":\"bad\"},\"roleRef\":{\"apiGroup\":\"rbac.authorization.k8s.io\",\"kind\":\"Role\",\"name\":\"bad\"}}",
+      "reject": "ValueError",
+      "error_message": "Invalid RBAC role reference"
+    },
+    {
+      "id": "systemd-unit-reference",
+      "tool": "systemd",
+      "title": "فجوات تقوية خدمة اصطناعية",
+      "input_utf8": "[Unit]\nDescription=Synthetic service\n[Service]\nExecStart=/usr/bin/true\nUser=root\nNoNewPrivileges=no\nPrivateTmp=no\n[Install]\nWantedBy=default.target\n",
+      "expected": {
+        "schema": "was.systemd-review/1",
+        "network": false,
+        "applied": false,
+        "exec_start_present": true,
+        "summary": {
+          "findings": 15,
+          "high": 1,
+          "medium": 14
+        }
+      }
+    },
+    {
+      "id": "systemd-hardened-subset",
+      "tool": "systemd",
+      "title": "إعداد يجتاز خط الأساس الموثق فقط",
+      "input_utf8": "[Service]\nExecStart=/usr/bin/true\nUser=service\nLockPersonality=yes\nMemoryDenyWriteExecute=yes\nNoNewPrivileges=yes\nPrivateDevices=yes\nProtectControlGroups=yes\nProtectKernelLogs=yes\nProtectKernelModules=yes\nProtectKernelTunables=yes\nRestrictSUIDSGID=yes\nPrivateTmp=disconnected\nProtectSystem=strict\nProtectHome=read-only\nRestrictNamespaces=yes\nCapabilityBoundingSet=\nAmbientCapabilities=\n",
+      "expected": {
+        "findings": [],
+        "summary": {
+          "findings": 0
+        },
+        "exec_start_present": true,
+        "network": false,
+        "applied": false
+      }
+    },
+    {
+      "id": "systemd-bad-boolean-refused",
+      "tool": "systemd",
+      "title": "رفض قيمة منطقية غير صالحة دون تشغيل",
+      "input_utf8": "[Service]\nNoNewPrivileges=perhaps\n",
+      "reject": "ValueError",
+      "error_message": "Invalid systemd boolean value"
+    },
+    {
+      "id": "sarif-reference",
+      "tool": "sarif",
+      "title": "نتيجةSARIFاصطناعية موحدة",
+      "input_utf8": "{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}",
+      "expected": {
+        "schema": "was.sarif-analysis/1",
+        "finding_count": 1,
+        "summary": {
+          "warning": 1,
+          "error": 0,
+          "note": 0,
+          "none": 0
+        },
+        "network": false,
+        "snippets_exported": false
+      }
+    },
+    {
+      "id": "sarif-duplicate-multiplicity",
+      "tool": "sarif",
+      "title": "حفظ تكرار نتائجSARIF",
+      "input_utf8": "{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"},{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}",
+      "expected": {
+        "finding_count": 2,
+        "summary": {
+          "warning": 2
+        }
+      }
+    },
+    {
+      "id": "sarif-plain-message-refusal",
+      "tool": "sarif",
+      "title": "رفض رسالة لا تحتوي نصًا",
+      "input_utf8": "{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"id\":\"missing\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}",
+      "reject": "ValueError",
+      "error_message": "SARIF plain message text is required"
+    },
+    {
+      "id": "sarif-uri-base-refusal",
+      "tool": "sarif",
+      "title": "رفض قاعدة موقع غير مدعومة",
+      "input_utf8": "{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\",\"uriBaseId\":\"ROOT\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}",
+      "reject": "ValueError",
+      "error_message": "SARIF URI base references are unsupported"
+    },
+    {
+      "id": "sarif-diff-severity",
+      "tool": "sarif-diff",
+      "title": "كشف تغير الشدة دون ادعاء إصلاح",
+      "input_utf8": "{\"left\":{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"},\"right\":{\"runs\":[{\"results\":[{\"level\":\"error\",\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}}",
+      "expected": {
+        "schema": "was.sarif-diff/1",
+        "complete": true,
+        "counts": {
+          "added": 0,
+          "resolved": 0,
+          "unchanged": 0,
+          "severity_changed": 1
+        },
+        "normalized_findings_equal": false,
+        "embedded_document_encoding": "canonical_json"
+      }
+    },
+    {
+      "id": "sarif-diff-equal",
+      "tool": "sarif-diff",
+      "title": "مقارنة بياناتنتائج متساوية",
+      "input_utf8": "{\"left\":{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"},\"right\":{\"runs\":[{\"results\":[{\"locations\":[{\"physicalLocation\":{\"artifactLocation\":{\"uri\":\"src/example.py\"},\"region\":{\"startLine\":12}}}],\"message\":{\"text\":\"Synthetic missing validation\"},\"ruleId\":\"SYN001\"}],\"tool\":{\"driver\":{\"name\":\"synthetic-scanner\",\"rules\":[{\"defaultConfiguration\":{\"level\":\"warning\"},\"id\":\"SYN001\"}],\"version\":\"1.0.0\"}}}],\"version\":\"2.1.0\"}}",
+      "expected": {
+        "complete": true,
+        "counts": {
+          "added": 0,
+          "resolved": 0,
+          "unchanged": 1,
+          "severity_changed": 0
+        },
+        "normalized_findings_equal": true
+      }
+    },
+    {
+      "id": "dns-compressed-a",
+      "tool": "dns",
+      "title": "رسالةDNSواسم مضغوط",
+      "input_utf8": "{\"dns_base64\":\"BNKBgAABAAEAAAAAB2V4YW1wbGUEdGVzdAAAAQABwAwAAQABAAABLAAEwAACAQ==\"}",
+      "expected": {
+        "schema": "was.dns-analysis/1",
+        "question_count": 1,
+        "record_count": 1,
+        "records": [
+          {
+            "name": "example.test",
+            "type": "A",
+            "data": {
+              "address": "192.0.2.1"
+            }
+          }
+        ],
+        "network": false,
+        "dnssec_verified": false
+      }
+    },
+    {
+      "id": "dns-txt-metadata",
+      "tool": "dns",
+      "title": "حدودتصديرTXTدون محتواه",
+      "input_base64": "ABSBgAABAAEAAAAAB2V4YW1wbGUEdGVzdAAAEAABwAwAEAABAAAAHgAWFVNZTlRIRVRJQ19UWFRfUFJJVkFURQ==",
+      "expected": {
+        "record_count": 1,
+        "records": [
+          {
+            "type": "TXT",
+            "data": {
+              "string_count": 1,
+              "lengths": [
+                21
+              ]
+            }
+          }
+        ],
+        "network": false
+      }
+    },
+    {
+      "id": "dns-short-input-refusal",
+      "tool": "dns",
+      "title": "رفضرسالةDNSمبتورة",
+      "input_base64": "YmFk",
+      "reject": "ValueError",
+      "error_message": "DNS message must contain 12 to 65535 bytes"
+    },
+    {
+      "id": "archive-classic-zip",
+      "tool": "archive",
+      "title": "أرشيف ZIPاصطناعي دون استخراج",
+      "input_utf8": "{\"archive_base64\": \"UEsDBBQAAAAAAAAAAAArMzuMIQAAACEAAAAJAAAAaGVsbG8udHh0U3ludGhldGljIGFyY2hpdmUgbWV0YWRhdGEgc2FtcGxlUEsBAhQDFAAAAAAAAAAAACszO4whAAAAIQAAAAkAAAAAAAAAAAAAAKSBAAAAAGhlbGxvLnR4dFBLBQYAAAAAAQABADcAAABIAAAAAAA=\"}",
+      "expected": {
+        "schema": "was.archive-review/1",
+        "format": "ZIP",
+        "member_count": 1,
+        "summary": {
+          "declared_expanded_bytes": 33,
+          "findings": 0
+        },
+        "extracted": false,
+        "crc_verified": false
+      }
+    },
+    {
+      "id": "archive-tar-unsafe-link",
+      "tool": "archive",
+      "title": "رابط TARمتجاوز يحتاج مراجعة",
+      "input_base64": "YS50eHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMDAwMAAwMDAwMDAwADAwMDAwMDAwMDAwADAwMDAwMDAwMDAwADAxMDc0MQAgMi4uLy4uL291dHNpZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhcgAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "expected": {
+        "format": "TAR",
+        "member_count": 1,
+        "members": [
+          {
+            "type": "symlink",
+            "link_target": "../../outside"
+          }
+        ],
+        "summary": {
+          "links": 1,
+          "findings": 2
+        }
+      }
+    },
+    {
+      "id": "archive-zip-overlay-refused",
+      "tool": "archive",
+      "title": "رفض بيانات لاحقة لأرشيف ZIP",
+      "input_base64": "UEsDBBQAAAAAAAAAAAArMzuMIQAAACEAAAAJAAAAaGVsbG8udHh0U3ludGhldGljIGFyY2hpdmUgbWV0YWRhdGEgc2FtcGxlUEsBAhQDFAAAAAAAAAAAACszO4whAAAAIQAAAAkAAAAAAAAAAAAAAKSBAAAAAGhlbGxvLnR4dFBLBQYAAAAAAQABADcAAABIAAAAAABleHRyYQ==",
+      "reject": "ValueError",
+      "error_message": "ZIP requires one final classic directory record"
+    },
+    {
+      "id": "archive-compressed-tar-refused",
+      "tool": "archive",
+      "title": "رفض TARالمضغوط غير المدعوم",
+      "input_base64": "H4tzeW50aGV0aWM=",
+      "reject": "ValueError",
+      "error_message": "Compressed TAR is unsupported"
+    },
+    {
+      "id": "ssh-public-reference",
+      "tool": "ssh-keys",
+      "title": "مفتاح SSHعام اصطناعي مقيد",
+      "input_utf8": "restrict ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g synthetic public key\n",
+      "expected": {
+        "schema": "was.ssh-key-review/1",
+        "key_count": 1,
+        "keys": [
+          {
+            "type": "Ed25519",
+            "bits": 256,
+            "option_names": [
+              "restrict"
+            ]
+          }
+        ],
+        "findings": [],
+        "authenticated": false,
+        "network": false
+      }
+    },
+    {
+      "id": "ssh-option-redaction-reference",
+      "tool": "ssh-keys",
+      "title": "مراجعة خيار أمر دون تصدير قيمته",
+      "input_utf8": "command=\"echo SYNTHETIC_SECRET\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g",
+      "expected": {
+        "key_count": 1,
+        "keys": [
+          {
+            "type": "Ed25519",
+            "option_names": [
+              "command"
+            ]
+          }
+        ],
+        "findings": [
+          {
+            "code": "option_command"
+          }
+        ],
+        "authenticated": false
+      }
+    },
+    {
+      "id": "ssh-invalid-blob-refused",
+      "tool": "ssh-keys",
+      "title": "رفض مفتاح SSHغير صالح",
+      "input_utf8": "ssh-ed25519 !!!",
+      "reject": "ValueError",
+      "error_message": "Invalid or unsupported SSH public key blob"
     }
   ]
 }

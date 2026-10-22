@@ -13,7 +13,7 @@ from .store import Problem, encode, uid
 from .integrity import _directories
 
 PREFIX = "quality.run."
-LIMITS = {"cases": 80, "runs": 20, "batch_cases": 3, "batch_seconds": 3,
+LIMITS = {"cases": 128, "runs": 20, "batch_cases": 3, "batch_seconds": 3,
           "worker_seconds": 3, "worker_cpu_seconds": 3, "worker_memory_bytes": 384 * 1024 * 1024, "input_bytes": 65536}
 NOTICE = "اختبارات انحدار اصطناعية ثابتة؛ لا تستخدم أدلة المالك ولا تقيس تغطية كل تخصص أو تثبت أمان النظام. مهلة الدفعة تفحص بين الحالات؛ لكل عامل مهلة مستقلة. النتائج تتحقق من حقول مختارة وقوائم كاملة؛ الذاكرة حد مفروض وليست قياسًا للاستهلاك."
 _LOCK = threading.Lock()

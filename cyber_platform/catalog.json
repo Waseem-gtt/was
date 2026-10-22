@@ -88,7 +88,9 @@
           "المدخلات والبروتوكولات والتخزين"
         ],
         "tool_ids": [
-          "http"
+          "http",
+          "har",
+          "har-diff"
         ],
         "references": [
           {
@@ -314,7 +316,9 @@
           "اختبارات مرجعية للتحليل"
         ],
         "tool_ids": [
-          "hashes"
+          "hashes",
+          "archive",
+          "email"
         ],
         "references": [
           {
@@ -465,7 +469,8 @@
         ],
         "tool_ids": [
           "flows",
-          "pcap"
+          "pcap",
+          "dns"
         ],
         "references": [
           {
@@ -502,7 +507,9 @@
           "استرداد وتغيير وسائل التحقق"
         ],
         "tool_ids": [
-          "identity"
+          "identity",
+          "ssh-keys",
+          "systemd"
         ],
         "references": [
           {
@@ -710,7 +717,9 @@
           "أسرار وإعدادات شبكات وتخزين"
         ],
         "tool_ids": [
-          "container"
+          "container",
+          "kubernetes",
+          "kubernetes-diff"
         ],
         "references": [
           {
@@ -806,7 +815,9 @@
         "tool_ids": [
           "sbom",
           "supply-chain",
-          "supply-chain-diff"
+          "supply-chain-diff",
+          "sarif",
+          "sarif-diff"
         ],
         "references": [
           {
@@ -1713,7 +1724,9 @@
           "توثيق الملاحظة وإعادة التحقق ضمن نطاق مصرح"
         ],
         "tool_ids": [
-          "http"
+          "http",
+          "har",
+          "har-diff"
         ],
         "lesson_ids": [],
         "related_section_id": "02",
@@ -1760,7 +1773,9 @@
           "حفظ الأصل والتحقق من SHA256 قبل استخدام النسخة"
         ],
         "tool_ids": [
-          "hashes"
+          "hashes",
+          "archive",
+          "email"
         ],
         "lesson_ids": [],
         "related_section_id": "04",
@@ -1807,7 +1822,8 @@
         ],
         "tool_ids": [
           "flows",
-          "pcap"
+          "pcap",
+          "dns"
         ],
         "lesson_ids": [],
         "related_section_id": "06",
@@ -1830,7 +1846,9 @@
           "تقليل الامتياز وتفعيل MFA ومراجعة دورة الحساب"
         ],
         "tool_ids": [
-          "identity"
+          "identity",
+          "ssh-keys",
+          "systemd"
         ],
         "lesson_ids": [],
         "related_section_id": "07",
@@ -1853,7 +1871,9 @@
           "تقليل الصلاحيات والتحقق من سياسة التنفيذ فعليًا"
         ],
         "tool_ids": [
-          "container"
+          "container",
+          "kubernetes",
+          "kubernetes-diff"
         ],
         "lesson_ids": [],
         "related_section_id": "08",
@@ -1878,7 +1898,9 @@
         "tool_ids": [
           "sbom",
           "supply-chain",
-          "supply-chain-diff"
+          "supply-chain-diff",
+          "sarif",
+          "sarif-diff"
         ],
         "lesson_ids": [],
         "related_section_id": "09",
@@ -2189,7 +2211,9 @@
           "توثيق الملاحظة وإعادة التحقق ضمن نطاق مصرح"
         ],
         "tool_ids": [
-          "http"
+          "http",
+          "har",
+          "har-diff"
         ],
         "lesson_ids": [
           "lesson.02"
@@ -2239,7 +2263,9 @@
           "حفظ الأصل والتحقق من SHA256 قبل استخدام النسخة"
         ],
         "tool_ids": [
-          "hashes"
+          "hashes",
+          "archive",
+          "email"
         ],
         "lesson_ids": [
           "lesson.04"
@@ -2290,7 +2316,8 @@
         ],
         "tool_ids": [
           "flows",
-          "pcap"
+          "pcap",
+          "dns"
         ],
         "lesson_ids": [
           "lesson.06"
@@ -2315,7 +2342,9 @@
           "تقليل الامتياز وتفعيل MFA ومراجعة دورة الحساب"
         ],
         "tool_ids": [
-          "identity"
+          "identity",
+          "ssh-keys",
+          "systemd"
         ],
         "lesson_ids": [
           "lesson.07"
@@ -2340,7 +2369,9 @@
           "تقليل الصلاحيات والتحقق من سياسة التنفيذ فعليًا"
         ],
         "tool_ids": [
-          "container"
+          "container",
+          "kubernetes",
+          "kubernetes-diff"
         ],
         "lesson_ids": [
           "lesson.08"
@@ -2367,7 +2398,9 @@
         "tool_ids": [
           "sbom",
           "supply-chain",
-          "supply-chain-diff"
+          "supply-chain-diff",
+          "sarif",
+          "sarif-diff"
         ],
         "lesson_ids": [
           "lesson.09"
