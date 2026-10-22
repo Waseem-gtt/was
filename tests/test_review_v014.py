@@ -224,3 +224,28 @@ class IndependentBatchReviewTests(unittest.TestCase):
         self.assertTrue(report['exec_start_present'])
         self.assertTrue(report['environment_present'])
         self.assertFalse(report['applied'])
+
+    def test_systemd_combined_continuation_budget_includes_final_piece(self):
+        value = ('[Service]\nEnvironment=TOKEN=' + 'a'*4000 + '\\\n' + 'b'*4200 + '\n').encode()
+        self.assertTrue(all(len(line)<8192 for line in value.splitlines()))
+        with self.assertRaises(ValueError):
+            systemd_review.analyze(value)
+
+    def test_kubernetes_zero_quantity_is_reported_as_missing_effective_ceiling(self):
+        value = kubernetes_review.sample()
+        value['items'][0]['spec']['template']['spec']['containers'][0]['resources'] = {'limits':{'cpu':'0m','memory':'0Gi'}}
+        report = kubernetes_review.analyze(self.data(value))
+        codes = {row['code'] for row in report['findings']}
+        self.assertIn('zero_cpu_limit', codes)
+        self.assertIn('zero_memory_limit', codes)
+
+    def test_dns_valid_earlier_compression_pointer_can_be_referenced_again(self):
+        message = bytearray(base64.b64decode(dns_message.sample()['dns_base64']))
+        question_bytes = b'\x07example\x04test\x00' + struct.pack('!HH',1,1)
+        earlier_name = 12 + len(question_bytes)
+        struct.pack_into('!H', message, 6, 2)
+        message += struct.pack('!H', 0xc000 | earlier_name) + struct.pack('!HHIH',1,1,300,4) + bytes((192,0,2,2))
+        report = dns_message.analyze(bytes(message))
+        self.assertEqual(report['record_count'], 2)
+        self.assertEqual([row['name'] for row in report['records']], ['example.test','example.test'])
+        self.assertEqual(report['records'][1]['data']['address'], '192.0.2.2')

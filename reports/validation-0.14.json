@@ -1,0 +1,156 @@
+{
+  "version": "0.14.0",
+  "date": "2026-10-22",
+  "unit_tests": {
+    "CPython3.11.17": 714,
+    "CPython3.12.14": 714,
+    "CPython3.13.5": 714
+  },
+  "new_unit_tests": 251,
+  "new_test_breakdown": {
+    "har_and_comparison": 33,
+    "email": 23,
+    "kubernetes_and_comparison": 32,
+    "systemd": 23,
+    "sarif_and_comparison": 30,
+    "dns": 27,
+    "archive": 35,
+    "ssh_keys": 27,
+    "independent_review": 21
+  },
+  "browser": {
+    "groups": 54,
+    "javascript_errors": 0,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "pages": 21,
+    "populated_technical_reports_checked": 15,
+    "delayed_response_selection_guard": true
+  },
+  "new_functions": [
+    "har",
+    "har-diff",
+    "email",
+    "kubernetes",
+    "kubernetes-diff",
+    "systemd",
+    "sarif",
+    "sarif-diff",
+    "archive",
+    "ssh-keys",
+    "dns"
+  ],
+  "total_file_tools": 36,
+  "actual_spawned_worker_and_http_integration": true,
+  "durable_plans_all_15_technical_tools": "passed",
+  "encrypted_restore_all_15_technical_results": "passed",
+  "quality": {
+    "cases": 98,
+    "new_cases": 34,
+    "case_limit": 128,
+    "all_tools_covered": true,
+    "batch_cases": 3,
+    "batch_between_case_budget_seconds": 3,
+    "worker_wall_seconds": 3,
+    "worker_cpu_seconds": 3,
+    "worker_memory_limit_bytes": 402653184,
+    "memory_usage_measured": false
+  },
+  "privacy": {
+    "har_url_paths_queries_headers_cookies_bodies": "not_exported",
+    "email_bodies_localparts_filenames": "not_exported; fixed extension and filename hash retained",
+    "ssh_option_values_comments": "not_exported",
+    "systemd_commands_environment_values": "not_exported",
+    "raw_original_evidence": "retained privately; not uploaded to Git"
+  },
+  "comparison": {
+    "complete_documented_normalized_scope": true,
+    "multiplicity_and_source_identity_retained": true,
+    "raw_source_equality_claim": false,
+    "embedded_document_hash_encoding": "canonical_json; full input bundle hash retained",
+    "sarif_absent_finding_is_verified_fix": false
+  },
+  "scope_limits": {
+    "har": "HAR1.2 documented metadata subset; no live target checks",
+    "kubernetes": "rendered JSON subset and static baseline; unknown kinds not_reviewed; no cluster connection or apply",
+    "sarif": "SARIF2.1.0 documented results subset; no scanner execution",
+    "archive": "classic ZIP and bounded TAR subset; no ZIP64/PAX/compressed TAR; no extraction, decompression or CRC verification",
+    "email": "documented MIME subset; authentication source claims only",
+    "ssh": "public OpenSSH/authorized_keys subset; no authentication or private keys",
+    "systemd": "documented static service settings; no service execution or apply",
+    "dns": "recorded wire message subset; no network queries or DNSSEC verification"
+  },
+  "compatibility_fix": {
+    "python311_invalid_email_header": "IndexError/MessageError normalized to constant ValueError",
+    "affected_har_email_tests_per_python_after_fix": 56,
+    "all_three_full_suites_after_fix": "passed"
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0,
+    "new_runtime_dependencies": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.14.0",
+    "installed_package": true,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "branching_plans": true,
+    "immutable_template_origin": true,
+    "full_coverage_scan": true,
+    "project_reports_json_html": true,
+    "curriculum_progress": true,
+    "plugin_metadata_governance": true,
+    "plugin_code_execution": false,
+    "pcap_metadata": true,
+    "x509_certificates": true,
+    "sbom_dependencies": true,
+    "sbom_comparison": true,
+    "windows_xml": true,
+    "new_014_tools": [
+      "har",
+      "har-diff",
+      "email",
+      "kubernetes",
+      "kubernetes-diff",
+      "systemd",
+      "sarif",
+      "sarif-diff",
+      "archive",
+      "ssh-keys",
+      "dns"
+    ],
+    "all_technical_tools": 15,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "source_bytes": 173726,
+  "source_exact_check": "passed",
+  "requirements_in_original_source_order": 61,
+  "sections": 22,
+  "platforms": 109,
+  "runtime_agent_team": "remains_removed",
+  "cancelled_labs": "remain_cancelled",
+  "delivery_publisher_signature": false,
+  "github_actions": "not_observed_in_this_session",
+  "environment_config_draft": {
+    "install_script_saved": true,
+    "start_skill_saved": true,
+    "requires_user_publish": true,
+    "fresh_environment_restoration_verified": false
+  },
+  "full_project_complete": false
+}

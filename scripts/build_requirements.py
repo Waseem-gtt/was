@@ -19,22 +19,160 @@ REVIEWS = {
     "F05": ("partial", "ترقية لينكس متحققة مع بيان Ed25519اختياري وثقة مثبتة وتسلسل مانع للتراجع وانتهاء صلاحية؛ لا TUFأو تحديث آلي أو مفتاح ناشر مهيأ افتراضيًا", "scripts/release.sh", "cyber_platform/signed_release.py", "cyber_platform/release_admin.py", "docs/Signed-Releases.md"),
     "F06": ("partial", "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة", "cyber_platform/store.py", "tests/test_platform.py"),
     "E01": ("blocked", "الورشة ترفض عند غياب namespaces؛ لا تنفيذ معزول ناجح على هذا المضيف", "cyber_platform/sandbox.py", "docs/Validation.md"),
-    "E02": ("partial", "22 قسمًا و109 منصات بهويات وصفحات و25 أداة ملفات، منها PCAP وX.509 وجرد اعتماديات SBOM ومقارنته؛ ليست جميع تكاملات التخصصات مكتملة", "cyber_platform/catalog.json", "docs/Technical-Analysis.md", "tests/browser_smoke.py"),
+    "E02": ("partial", "22قسمًا و109منصات و36أداة فعلية، منها11وظيفة HARوبريد وKubernetesوsystemdوSARIFوأرشيفات وSSHوDNS؛ ليست جميع تقنيات التخصصات وتكاملاتها مكتملة", "cyber_platform/catalog.json", "docs/Technical-Analysis-0.14.md", "tests/browser_smoke.py"),
     "E03": ("partial", "شجرة وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات", "cyber_platform/curriculum.py", "tests/test_curriculum.py", "docs/Curriculum.md"),
     "E04": ("partial", "جلب CISA وجدولة وبحث ولقطة؛ لا تركيب أدوات أو تجديد كل التقنيات", "cyber_platform/knowledge.py", "tests/test_platform.py"),
     "E05": ("partial", "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود", "cyber_platform/maintenance.py", "docs/Maintenance.md"),
     "N01": ("partial", "خطط DAG محفوظة حتى20عقدة بفروع نجاح وفشل وإيقاف واستكمال يدوي وبصمات؛ لا توازٍ أو تشغيل خلفي أو إعادة تنفيذ تلقائية", "cyber_platform/plans.py", "docs/Workflow-Plans.md"),
     "N02": ("superseded", "طبقة المختبرات ملغاة؛ أضيفت8قوالب بيانات لخطط التحليل بمراجعات مالك وإثبات ربط، دون مولد منصات أو إضافات كود عامة", "docs/Scope-Update-0.2.md", "cyber_platform/plan_templates.py", "docs/Plan-Templates.md"),
     "N03": ("superseded", "ألغى المالك فريق الوكلاء داخل المنتج؛ مساعدو تطوير المشروع خارج التطبيق ولا يمثلون قدرة تشغيل داخله", "docs/Scope-Update-0.7.md"),
-    "N04": ("partial", "حفظ تقدم الخطط ومصدر القالب ونتائج ثابتة وتقارير JSON/HTML ومقارنة بنيوية وقوائم مكونات موحدة كاملة؛ لا مساواة كل بايتات المصدر أو snapshots محاكاة أو تقييم جودة عام", "cyber_platform/plans.py", "cyber_platform/case_reports.py", "cyber_platform/comparison.py", "cyber_platform/supply_chain.py"),
+    "N04": ("partial", "حفظ خطط ونتائج وتقارير ومقارنات كاملة للجرد وHARوKubernetesوSARIFبحقولها الموثقة وتكرارها؛ لا مساواة المحتوى المحجوب أو كل بايتات المصدر أو حالة محاكاة أو جودة عامة", "cyber_platform/plans.py", "cyber_platform/supply_chain.py", "cyber_platform/har.py", "cyber_platform/kubernetes_review.py", "cyber_platform/sarif.py"),
     "N05": ("partial", "مركز جودة بحالات اصطناعية ثابتة وتقدم محفوظ وزمن جداري ومقارنة تراجع؛ لا تقييم شامل لكل التخصصات أو قياس ذاكرة فعلي", "cyber_platform/quality.py", "cyber_platform/quality_cases.json", "docs/Quality-Center.md"),
     "N06": ("partial", "خريطة أصول وتقييمات وفجوات مع فحص جميع التقييمات على دفعات وإعادة قراءة الإثبات وحفظ لقطة تاريخية؛ لا حماية حية أو لقطة ذرية أو D3FEND كامل", "cyber_platform/coverage.py", "cyber_platform/coverage_scans.py", "docs/Coverage-Scans.md"),
-    "Q01": ("partial", "توحيد SPDX2.3 وCycloneDX1.5/1.6 واعتمادياتهما ومقارنة الجرد والبصمات والتراخيص وتصريحات الثغرات، وسجل بيانات إضافات؛ لا مصدرية بناء أو تدقيق ثغرات حي أو توقيع ناشر إضافات", "cyber_platform/supply_chain.py", "tests/test_supply_chain.py", "docs/Technical-Analysis.md"),
-    "Q02": ("partial", "مراجعة إعدادات حاويات من ملف؛ لا إثبات سياسة Kubernetes أو عزل سحابة حية", "cyber_platform/tools.py"),
+    "Q01": ("partial", "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل بيانات إضافات؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية أو توقيع ناشر إضافات", "cyber_platform/supply_chain.py", "cyber_platform/sarif.py", "tests/test_sarif.py", "docs/Technical-Analysis-0.14.md"),
+    "Q02": ("partial", "مراجعة JSONللحاويات وموارد Kubernetesووراثة سياق الأمان وRBACومقارنة الحقول المفحوصة؛ لا تطبيق أو اتصال بعنقود أو إثبات عزل حي أو CISكامل", "cyber_platform/kubernetes_review.py", "tests/test_kubernetes_review.py", "docs/Technical-Analysis-0.14.md"),
     "Q03": ("partial", "رؤوس ELF/PE وجرد Firmware؛ لا تصحيح ديناميكي أو إقلاع وثقة وتحديث كامل", "cyber_platform/tools.py"),
     "Q04": ("partial", "محللات قياسات وCAN وتوأم مبسط؛ لا أنظمة طيران ومركبات إنتاجية", "cyber_platform/tools.py"),
     "Q05": ("partial", "نسخ مشفرة وتنقيح نسخة وحدود وصول؛ لا تشفير القرص أو دورة احتفاظ ومحو كاملة", "cyber_platform/backup.py", "docs/Security.md"),
 }
+
+
+# Reviewed implementation and remaining scope for source-order base requirements.
+BASE_REVIEWS = {1: ('partial',
+     'هيكل22قسمًا و109منصات و36أداة مشتركة بهويات ثابتة؛ المختبرات ملغاة، وليست كل تطبيقات وتكاملات كل منصة منفذة',
+     'cyber_platform/catalog.json',
+     'cyber_platform/tools.py',
+     'docs/Scope-Update-0.2.md'),
+ 3: ('partial',
+     'محرك DAGوعمال مشتركون بمدخلات ونتائج وبصمات وحدود موارد؛ محركات مستقلة مكتملة لكل تخصص غير منفذة',
+     'cyber_platform/plans.py',
+     'cyber_platform/worker.py',
+     'docs/Workflow-Plans.md'),
+ 4: ('partial',
+     'محللات ملفات وأدلة وقواعد كشف وتقييمات اصطناعية وتعليم؛ لا كل البحث والتحقيق المتقدم أو التجارب الحية أو تطوير '
+     'أدوات تلقائيًا',
+     'cyber_platform/tools.py',
+     'cyber_platform/detection.py',
+     'cyber_platform/learning.py',
+     'docs/Technical-Analysis-0.14.md'),
+ 7: ('partial',
+     'كود خاص وإعدادات محلية وأدلة ونسخ مشفرة وتصدير وترقية يدوية؛ لا إدارة شاملة لكل خدمة أو ضمان لتراخيص مكونات '
+     'يضيفها المالك',
+     'cyber_platform/store.py',
+     'cyber_platform/backup.py',
+     'scripts/release.sh',
+     'docs/Security.md'),
+ 9: ('partial',
+     'موصل محادثة loopbackواختيار أدلة صريح دون سلطة تنفيذ؛ لا ذاكرة دائمة عامة أو استقلالية تشغيل أو ضمان طاعة ودقة',
+     'cyber_platform/local_ai.py',
+     'docs/Security.md'),
+ 10: ('partial',
+      'لا نموذجAIمتحقق أو بيئة تنفيذAIمعزولة؛ المختبرات ملغاة، والموصل الفردي الاختياري لا يشغل كودًا أو أدوات',
+      'cyber_platform/local_ai.py',
+      'docs/Scope-Update-0.2.md',
+      'docs/Implementation-Status.md'),
+ 11: ('partial',
+      'APIوتصدير واستعادة وترقية ورجوع كود وسجل بيانات إضافات؛ لا تحميل إضافات تنفيذية أو تثبيت وتحديث كل الأدوات '
+      'تلقائيًا',
+      'docs/API.md',
+      'cyber_platform/backup.py',
+      'cyber_platform/plugin_registry.py',
+      'docs/Signed-Releases.md'),
+ 12: ('partial',
+      '20تمرين فهم ثابتًا وخمسة مسارات ومحرر ورشة يرفض غياب العزل؛ لا تشغيل معزول متحقق أو منهج برمجة لكل تخصص أو عودة '
+      'للمختبرات',
+      'cyber_platform/curriculum.py',
+      'cyber_platform/sandbox.py',
+      'docs/Curriculum.md',
+      'docs/Scope-Update-0.2.md'),
+ 13: ('partial',
+      'هوية وصفحات ومعرفات ثابتة لـ22قسمًا و109منصات بأدوات وخدمات مشتركة؛ لا خدمة مستقلة أو إعدادات كاملة لكل تخصص',
+      'cyber_platform/catalog.json',
+      'cyber_platform/static/app.js',
+      'docs/Implementation-Status.md'),
+ 14: ('partial',
+      'شجرة أقسام وخريطة أدلة بعقد وعلاقات وتفاصيل وجدول ومسارات تعلم؛ لا خرائط إتقان كل تقنية، وروابط المختبرات ملغاة',
+      'cyber_platform/static/app.js',
+      'cyber_platform/curriculum.py',
+      'docs/Curriculum.md',
+      'docs/Scope-Update-0.2.md'),
+ 15: ('partial',
+      'جدولة اختيارية لمصدر CISAواحتفاظ بلقطة عند الفشل؛ لا تجديد تلقائي لجميع الأدوات والمنصات، والمختبرات ملغاة',
+      'cyber_platform/knowledge.py',
+      'docs/Implementation-Status.md',
+      'docs/Scope-Update-0.2.md'),
+ 16: ('partial',
+      'فحص صيانة وإصلاح صلاحيات محدود ونسخ واستعادة وترقية يدوية وطلبات متابعة؛ لا متابعة شهرية شاملة أو إصلاح وترحيل '
+      'كل الأدوات تلقائيًا',
+      'cyber_platform/maintenance.py',
+      'cyber_platform/backup.py',
+      'docs/Maintenance.md'),
+ 17: ('partial',
+      'وصول loopbackوحساب مالك وCSRFوأدلة خاصة ودون telemetryومحللات موثوقة محدودة الموارد؛ لا عزل أسماء ملفات وشبكة '
+      'لكل عامل أو تشفير حي للقرص أو ضمان أمام مدير مخترق',
+      'cyber_platform/server.py',
+      'cyber_platform/worker.py',
+      'docs/Security.md'),
+ 18: ('partial',
+      'تصدير وتقارير ونسخ مشفرة واستعادة مرحلية وترقية ورجوع كود؛ لا محو وترحيل عام لكل مكون أو عكس تلقائي لتغير '
+      'البيانات',
+      'cyber_platform/backup.py',
+      'cyber_platform/case_reports.py',
+      'scripts/release.sh',
+      'docs/Implementation-Status.md')}
+
+SECTION_REVIEWS = {'01': ('استخراج IOCوسياق مصادر وCISA؛ لا جمع وتحليل كل مصادر الاستخبارات أو رسم حملات حي',
+        'cyber_platform/tools.py',
+        'cyber_platform/knowledge.py'),
+ '02': ('رؤوس HTTPوتحليل HARومقارنة بياناته الآمنة؛ لا فحص أهداف أو إثبات ثغرات تطبيقات حي',
+        'cyber_platform/har.py',
+        'tests/test_har.py'),
+ '03': ('محولات أحداث وقواعد مرجعية وتغطية ثابتة؛ لا مستشعرات أو استجابة حية أو Sigmaكامل',
+        'cyber_platform/event_adapters.py',
+        'cyber_platform/detection.py',
+        'cyber_platform/coverage_scans.py'),
+ '04': ('بصمات وأدلة وتقارير وبنية ZIP/TARوEML؛ لا استخراج أو تحليل قرص وذاكرة كامل أو اعتماد قضائي',
+        'cyber_platform/archive_review.py',
+        'cyber_platform/email_review.py',
+        'cyber_platform/store.py'),
+ '05': ('رؤوس ELF/PEوسلاسل ساكنة؛ لا تصحيح ديناميكي أو تشغيل عينات أو تكامل Ghidraفعلي', 'cyber_platform/tools.py'),
+ '06': ('تدفقات CSVوتسجيل PCAPورسائل DNSموثقة؛ لا التقاط أو استعلام أو إعادة تجميع أو فك تشفير حي',
+        'cyber_platform/pcap.py',
+        'cyber_platform/dns_message.py'),
+ '07': ('حسابات JSONومفاتيح SSHالعامة وتوجيهات systemd؛ لا مصادقة SSHأو تشغيل خدمة أو SSO/FreeIPA/SPIFFE',
+        'cyber_platform/ssh_keys.py',
+        'cyber_platform/systemd_review.py',
+        'cyber_platform/tools.py'),
+ '08': ('وصف حاوية وKubernetes JSONومقارنة حقول الأمان المفحوصة؛ لا تطبيق أو إثبات عنقود أو سياسة عزل حية',
+        'cyber_platform/kubernetes_review.py',
+        'tests/test_kubernetes_review.py'),
+ '09': ('SPDX/CycloneDXواعتماديات ومقارنة وSARIFومقارنته؛ لا تشغيل فاحص أو مصدرية بناء أو ضمان إصلاح',
+        'cyber_platform/supply_chain.py',
+        'cyber_platform/sarif.py'),
+ '10': ('محلل TLVمحدود يرفض البتر وأمثلة تعليمية؛ لا fuzzingللنواة أو استغلال أو محاكاة نظام كاملة',
+        'cyber_platform/tools.py',
+        'cyber_platform/learning.py'),
+ '11': ('جرد خوارزميات وفحص X.509وتوقيعات مباشرة بوقت صريح؛ لا PKIXكامل أو OCSPأو ML-KEM/ML-DSA',
+        'cyber_platform/certificates.py',
+        'cyber_platform/tools.py'),
+ '12': ('entropyوتواقيع Firmwareساكنة؛ لا تفليش أو تصحيح عتاد أو تحقق إقلاع موثوق كامل', 'cyber_platform/tools.py'),
+ '13': ('نموذج حراري حسابي مبسط؛ لا اتصال OT/IoTأو ضمان سلامة مصنع أو محاكاة مادية كاملة', 'cyber_platform/tools.py'),
+ '14': ('DFTلعينات قصيرة؛ لا أجهزة استقبال أو بث أو تحليل إشارات شامل', 'cyber_platform/tools.py'),
+ '15': ('جودة تسلسل قياسات مسجلة؛ لا طيران أو اتصال MAVLinkحي أو تحكم بمسيّرات', 'cyber_platform/tools.py'),
+ '16': ('قراءة CANكلاسيكي من تسجيل؛ لا إرسال إطارات أو تكامل مركبات وروبوتات فعلي', 'cyber_platform/tools.py'),
+ '17': ('رؤوس CCSDSمن ملف؛ لا اتصال فضائي أو تحليل كل حمولة أو محاكاة قمر', 'cyber_platform/tools.py'),
+ '18': ('تدقيق وجود مقتطفات وموصل محلي اختياري؛ لا نموذج مثبت متحقق أو ضمان دقة أو فريق وكلاء داخل البرنامج',
+        'cyber_platform/local_ai.py',
+        'cyber_platform/tools.py',
+        'docs/Scope-Update-0.7.md'),
+ '19': ('تنقيح نسخ ونسخ مشفرة وحدود وصول وتدقيق؛ لا تشفير القرص أو دورة محو واحتفاظ عامة',
+        'cyber_platform/backup.py',
+        'cyber_platform/tools.py',
+        'docs/Security.md'),
+ '20': ('صيانة محدودة وجودة وترقية يدوية وسجل بيانات إضافات؛ لا إصلاح عام أو تحميل كود إضافات أو صيانة مضمونة لعقود',
+        'cyber_platform/maintenance.py',
+        'cyber_platform/quality.py',
+        'cyber_platform/plugin_registry.py')}
 
 
 def build(check=False):
@@ -90,6 +228,9 @@ def build(check=False):
     for i, block in enumerate(basics, 1):
         text = block["text"].strip()[2:]
         status, scope = "partial", "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة"
+        review = BASE_REVIEWS.get(i)
+        if review:
+            status, scope = review[:2]
         if text.startswith("المختبرات تحتوي"):
             status, scope = "superseded", "ألغي الهيكل بتوجيه المالك؛ لا تعاد المختبرات إلى التطبيق"
         elif text.startswith("الهدف جهاز"):
@@ -101,15 +242,15 @@ def build(check=False):
         elif text.startswith("كان منع البناء"):
             status, scope = "reference", "تاريخ تفويض؛ توجيهات المالك الأحدث هي المرجع، ولا نشر عام أو شراء"
         records.append({"id": f"BASE.{i:02}", "title": text.split("؛")[0], "group": "BASE", "status": status,
-                        "scope": scope, "evidence_paths": ["docs/Implementation-Status.md", "docs/Scope-Update-0.2.md"], "source_ids": [block["id"]]})
+                        "scope": scope, "evidence_paths": list(review[2:]) if review else ["docs/Implementation-Status.md", "docs/Scope-Update-0.2.md"], "source_ids": [block["id"]]})
 
     catalog = json.loads((ROOT / "cyber_platform/catalog.json").read_text())
     for section in catalog[:20]:
         title = f"### {section['id']}. "
         ids = [b["id"] for b in blocks if b["text"].startswith(title)]
         records.append({"id": "SECTION." + section["id"], "title": section["name"], "group": "SECTION", "status": "partial",
-                        "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
-                        "evidence_paths": ["cyber_platform/catalog.json", "cyber_platform/tools.py"], "source_ids": ids})
+                        "scope": SECTION_REVIEWS[section["id"]][0],
+                        "evidence_paths": ["cyber_platform/catalog.json", *SECTION_REVIEWS[section["id"]][1:]], "source_ids": ids})
     urls = sorted(set(url.rstrip(".,;،؛") for url in re.findall(r"https?://[^\s<>\)\]\|]+", source)))
     filenames = sorted(set(re.findall(r"\b[A-Za-z][A-Za-z0-9_./-]*\.(?:md|zip|ova|png)\b", source, re.I)))
     actual = {p.name for p in (ROOT / "docs").rglob("*.md")}

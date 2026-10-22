@@ -196,7 +196,10 @@ def analyze(data):
                 subject=_obj(subject);skind=subject.get('kind')
                 if skind not in ('User','Group','ServiceAccount'): _bad('Invalid RBAC subject')
                 if subject.get('apiGroup','' if skind=='ServiceAccount' else 'rbac.authorization.k8s.io')!=('' if skind=='ServiceAccount' else 'rbac.authorization.k8s.io'): _bad('Invalid RBAC subject API group')
-                sname=_name(subject.get('name'));safe={'kind':skind,'name':sname}
+                sname=subject.get('name')
+                if skind=='ServiceAccount':sname=_name(sname)
+                elif not isinstance(sname,str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,252}',sname): _bad('Invalid RBAC subject name')
+                safe={'kind':skind,'name':sname}
                 if skind=='ServiceAccount':safe['namespace']=_name(subject.get('namespace') or namespace)
                 elif subject.get('namespace') is not None:_bad('Unexpected namespace on RBAC subject')
                 config['subjects'].append(safe)

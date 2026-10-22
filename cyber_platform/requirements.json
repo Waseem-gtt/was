@@ -3394,11 +3394,12 @@
       "title": "أمن الإضافات وسلسلة التوريد",
       "group": "Q",
       "status": "partial",
-      "scope": "توحيد SPDX2.3 وCycloneDX1.5/1.6 واعتمادياتهما ومقارنة الجرد والبصمات والتراخيص وتصريحات الثغرات، وسجل بيانات إضافات؛ لا مصدرية بناء أو تدقيق ثغرات حي أو توقيع ناشر إضافات",
+      "scope": "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل بيانات إضافات؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية أو توقيع ناشر إضافات",
       "evidence_paths": [
         "cyber_platform/supply_chain.py",
-        "tests/test_supply_chain.py",
-        "docs/Technical-Analysis.md"
+        "cyber_platform/sarif.py",
+        "tests/test_sarif.py",
+        "docs/Technical-Analysis-0.14.md"
       ],
       "source_ids": [
         "source.0037"
@@ -3409,9 +3410,11 @@
       "title": "عزل السحابة والحاويات",
       "group": "Q",
       "status": "partial",
-      "scope": "مراجعة إعدادات حاويات من ملف؛ لا إثبات سياسة Kubernetes أو عزل سحابة حية",
+      "scope": "مراجعة JSONللحاويات وموارد Kubernetesووراثة سياق الأمان وRBACومقارنة الحقول المفحوصة؛ لا تطبيق أو اتصال بعنقود أو إثبات عزل حي أو CISكامل",
       "evidence_paths": [
-        "cyber_platform/tools.py"
+        "cyber_platform/kubernetes_review.py",
+        "tests/test_kubernetes_review.py",
+        "docs/Technical-Analysis-0.14.md"
       ],
       "source_ids": [
         "source.0038"
@@ -3476,10 +3479,10 @@
       "title": "هوية ومساحة عمل لكل قسم ومنصة فرعية",
       "group": "E",
       "status": "partial",
-      "scope": "22 قسمًا و109 منصات بهويات وصفحات و25 أداة ملفات، منها PCAP وX.509 وجرد اعتماديات SBOM ومقارنته؛ ليست جميع تكاملات التخصصات مكتملة",
+      "scope": "22قسمًا و109منصات و36أداة فعلية، منها11وظيفة HARوبريد وKubernetesوsystemdوSARIFوأرشيفات وSSHوDNS؛ ليست جميع تقنيات التخصصات وتكاملاتها مكتملة",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "docs/Technical-Analysis.md",
+        "docs/Technical-Analysis-0.14.md",
         "tests/browser_smoke.py"
       ],
       "source_ids": [
@@ -3576,12 +3579,13 @@
       "title": "تسجيل حالة التجربة وإعادتها ومقارنة التغييرات",
       "group": "N",
       "status": "partial",
-      "scope": "حفظ تقدم الخطط ومصدر القالب ونتائج ثابتة وتقارير JSON/HTML ومقارنة بنيوية وقوائم مكونات موحدة كاملة؛ لا مساواة كل بايتات المصدر أو snapshots محاكاة أو تقييم جودة عام",
+      "scope": "حفظ خطط ونتائج وتقارير ومقارنات كاملة للجرد وHARوKubernetesوSARIFبحقولها الموثقة وتكرارها؛ لا مساواة المحتوى المحجوب أو كل بايتات المصدر أو حالة محاكاة أو جودة عامة",
       "evidence_paths": [
         "cyber_platform/plans.py",
-        "cyber_platform/case_reports.py",
-        "cyber_platform/comparison.py",
-        "cyber_platform/supply_chain.py"
+        "cyber_platform/supply_chain.py",
+        "cyber_platform/har.py",
+        "cyber_platform/kubernetes_review.py",
+        "cyber_platform/sarif.py"
       ],
       "source_ids": [
         "source.0058"
@@ -3622,9 +3626,10 @@
       "title": "منصة أم واحدة، تحتوي أقسامًا رئيسية، وتحت كل قسم منصات فرعية وتطبيقات ومختبرات ومحركات وأدوات.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "هيكل22قسمًا و109منصات و36أداة مشتركة بهويات ثابتة؛ المختبرات ملغاة، وليست كل تطبيقات وتكاملات كل منصة منفذة",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py",
         "docs/Scope-Update-0.2.md"
       ],
       "source_ids": [
@@ -3650,10 +3655,11 @@
       "title": "لكل قسم محرك تنسيق وظيفي، وتحته محركات تخصصية مركبة تستدعي محركات مهام أصغر. لكل محرك مدخلات ومخرجات وأدوات وصلاحيات وميزانية موارد وطريقة تحقق",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "محرك DAGوعمال مشتركون بمدخلات ونتائج وبصمات وحدود موارد؛ محركات مستقلة مكتملة لكل تخصص غير منفذة",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/plans.py",
+        "cyber_platform/worker.py",
+        "docs/Workflow-Plans.md"
       ],
       "source_ids": [
         "source.0005"
@@ -3664,10 +3670,12 @@
       "title": "الاستخدام يشمل البحث والتحليل والتحقيق وتطوير الأدوات واختبار الدفاعات، إضافة إلى التعليم.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "محللات ملفات وأدلة وقواعد كشف وتقييمات اصطناعية وتعليم؛ لا كل البحث والتحقيق المتقدم أو التجارب الحية أو تطوير أدوات تلقائيًا",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/tools.py",
+        "cyber_platform/detection.py",
+        "cyber_platform/learning.py",
+        "docs/Technical-Analysis-0.14.md"
       ],
       "source_ids": [
         "source.0006"
@@ -3706,10 +3714,12 @@
       "title": "إدارة المالك للكود والبيانات والإعدادات والخدمات المحلية، ضمن تراخيص المكونات.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "كود خاص وإعدادات محلية وأدلة ونسخ مشفرة وتصدير وترقية يدوية؛ لا إدارة شاملة لكل خدمة أو ضمان لتراخيص مكونات يضيفها المالك",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/store.py",
+        "cyber_platform/backup.py",
+        "scripts/release.sh",
+        "docs/Security.md"
       ],
       "source_ids": [
         "source.0009"
@@ -3734,10 +3744,10 @@
       "title": "تحكم المالك في تعليمات المساعد وذاكرته ومعرفته وأدواته ووصوله واستقلاليته وإيقافه. لا ضمان للطاعة المطلقة أو الدقة الكاملة",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "موصل محادثة loopbackواختيار أدلة صريح دون سلطة تنفيذ؛ لا ذاكرة دائمة عامة أو استقلالية تشغيل أو ضمان طاعة ودقة",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/local_ai.py",
+        "docs/Security.md"
       ],
       "source_ids": [
         "source.0011"
@@ -3748,10 +3758,11 @@
       "title": "مختبر AI معزول",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "لا نموذجAIمتحقق أو بيئة تنفيذAIمعزولة؛ المختبرات ملغاة، والموصل الفردي الاختياري لا يشغل كودًا أو أدوات",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/local_ai.py",
+        "docs/Scope-Update-0.2.md",
+        "docs/Implementation-Status.md"
       ],
       "source_ids": [
         "source.0012"
@@ -3762,10 +3773,12 @@
       "title": "تصميم طويل الأمد: إضافات، استبدال النماذج، واجهات تكامل موثقة، تصدير بيانات، تحديث أدوات ومعرفة وبرنامج، استعادة إصدارات. الاستمرار يتطلب صيانة.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "APIوتصدير واستعادة وترقية ورجوع كود وسجل بيانات إضافات؛ لا تحميل إضافات تنفيذية أو تثبيت وتحديث كل الأدوات تلقائيًا",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "docs/API.md",
+        "cyber_platform/backup.py",
+        "cyber_platform/plugin_registry.py",
+        "docs/Signed-Releases.md"
       ],
       "source_ids": [
         "source.0013"
@@ -3776,9 +3789,11 @@
       "title": "تعلم برمجة عملي داخل الأقسام: مفهوم ومثال ومحرر وتمرين وتشغيل بنتيجة قابلة للتحقق، مرتبط بمختبر التخصص وبالمساعد المحلي المشترك.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "20تمرين فهم ثابتًا وخمسة مسارات ومحرر ورشة يرفض غياب العزل؛ لا تشغيل معزول متحقق أو منهج برمجة لكل تخصص أو عودة للمختبرات",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
+        "cyber_platform/curriculum.py",
+        "cyber_platform/sandbox.py",
+        "docs/Curriculum.md",
         "docs/Scope-Update-0.2.md"
       ],
       "source_ids": [
@@ -3790,10 +3805,11 @@
       "title": "لكل قسم هوية عرض ومساحة عمل خاصة تشمل عنوانًا ووصفًا وأيقونة وألوانًا وصفحة وأدوات وخرائط وإعدادات، مع معرف ثابت وخدمات مشتركة.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "هوية وصفحات ومعرفات ثابتة لـ22قسمًا و109منصات بأدوات وخدمات مشتركة؛ لا خدمة مستقلة أو إعدادات كاملة لكل تخصص",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/catalog.json",
+        "cyber_platform/static/app.js",
+        "docs/Implementation-Status.md"
       ],
       "source_ids": [
         "source.0015"
@@ -3804,9 +3820,11 @@
       "title": "خرائط مفهومة للتنظيم والتعلم والأدلة: عرض تدريجي، شرح عند اختيار العقدة والعلاقة، وربط بالمختبر والمصدر، وعرض جدول مكافئ.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "شجرة أقسام وخريطة أدلة بعقد وعلاقات وتفاصيل وجدول ومسارات تعلم؛ لا خرائط إتقان كل تقنية، وروابط المختبرات ملغاة",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
+        "cyber_platform/static/app.js",
+        "cyber_platform/curriculum.py",
+        "docs/Curriculum.md",
         "docs/Scope-Update-0.2.md"
       ],
       "source_ids": [
@@ -3818,8 +3836,9 @@
       "title": "تجديد تلقائي قابل للضبط للمصادر والمعرفة والأدوات وحزم المختبرات والمنصات الفرعية، بحسب سياسة المالك للمصدر والتوافق والتجارب والصلاحيات والموارد.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "جدولة اختيارية لمصدر CISAواحتفاظ بلقطة عند الفشل؛ لا تجديد تلقائي لجميع الأدوات والمنصات، والمختبرات ملغاة",
       "evidence_paths": [
+        "cyber_platform/knowledge.py",
         "docs/Implementation-Status.md",
         "docs/Scope-Update-0.2.md"
       ],
@@ -3832,10 +3851,11 @@
       "title": "صيانة تلقائية مشتركة تشمل مكونات الأقسام الرئيسية العشرين ومنصاتها ومختبراتها: متابعة المصادر وحالة الخدمات حسب إعدادات المالك، ومراجعة شهرية للأدوات والتوافق والمساحة والنسخ الاحتياطية، ومعالجة الأعطال المهمة وانتهاء دعم المكونات عند اكتشافها دون انتظار الموعد الشهري. يشمل ذلك تجربة تحديث أو بديل وترحيل البيانات والتحقق والاستعادة عند الفشل",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "فحص صيانة وإصلاح صلاحيات محدود ونسخ واستعادة وترقية يدوية وطلبات متابعة؛ لا متابعة شهرية شاملة أو إصلاح وترحيل كل الأدوات تلقائيًا",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/maintenance.py",
+        "cyber_platform/backup.py",
+        "docs/Maintenance.md"
       ],
       "source_ids": [
         "source.0018"
@@ -3846,10 +3866,11 @@
       "title": "حماية بيانات المالك شرط مشترك في الأقسام العشرين: تقليل جمع معلومات جهازه ومنع وصول الأدوات والمساعدين إلى ملفاته وحساباته وأسراره أو إرسالها خارجًا دون سياسة صريحة لغرض محدد. لا يمثل ذلك ضمانًا لإخفاء عنوان الاتصال أو نوع النظام عن جميع الجهات، ولا يشمل إخفاء الفحص عن مراقبة الأنظمة المستهدفة.",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "وصول loopbackوحساب مالك وCSRFوأدلة خاصة ودون telemetryومحللات موثوقة محدودة الموارد؛ لا عزل أسماء ملفات وشبكة لكل عامل أو تشفير حي للقرص أو ضمان أمام مدير مخترق",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/server.py",
+        "cyber_platform/worker.py",
+        "docs/Security.md"
       ],
       "source_ids": [
         "source.0019"
@@ -3860,10 +3881,12 @@
       "title": "إضافة وإيقاف واستبدال ومحو وتصدير بسهولة، مع ترحيل البيانات والواجهات وإعادة بناء واستعادة موثقة",
       "group": "BASE",
       "status": "partial",
-      "scope": "متطلب محفوظ؛ تنفيذه الكامل يحتاج قبولًا حسب التخصص، ولا تثبته بطاقات الواجهة",
+      "scope": "تصدير وتقارير ونسخ مشفرة واستعادة مرحلية وترقية ورجوع كود؛ لا محو وترحيل عام لكل مكون أو عكس تلقائي لتغير البيانات",
       "evidence_paths": [
-        "docs/Implementation-Status.md",
-        "docs/Scope-Update-0.2.md"
+        "cyber_platform/backup.py",
+        "cyber_platform/case_reports.py",
+        "scripts/release.sh",
+        "docs/Implementation-Status.md"
       ],
       "source_ids": [
         "source.0020"
@@ -3888,10 +3911,11 @@
       "title": "الاستخبارات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "استخراج IOCوسياق مصادر وCISA؛ لا جمع وتحليل كل مصادر الاستخبارات أو رسم حملات حي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/tools.py",
+        "cyber_platform/knowledge.py"
       ],
       "source_ids": [
         "source.0194"
@@ -3902,10 +3926,11 @@
       "title": "الثغرات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "رؤوس HTTPوتحليل HARومقارنة بياناته الآمنة؛ لا فحص أهداف أو إثبات ثغرات تطبيقات حي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/har.py",
+        "tests/test_har.py"
       ],
       "source_ids": [
         "source.0201"
@@ -3916,10 +3941,12 @@
       "title": "الدفاع والعمليات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "محولات أحداث وقواعد مرجعية وتغطية ثابتة؛ لا مستشعرات أو استجابة حية أو Sigmaكامل",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/event_adapters.py",
+        "cyber_platform/detection.py",
+        "cyber_platform/coverage_scans.py"
       ],
       "source_ids": [
         "source.0210"
@@ -3930,10 +3957,12 @@
       "title": "التحقيق الرقمي",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "بصمات وأدلة وتقارير وبنية ZIP/TARوEML؛ لا استخراج أو تحليل قرص وذاكرة كامل أو اعتماد قضائي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/archive_review.py",
+        "cyber_platform/email_review.py",
+        "cyber_platform/store.py"
       ],
       "source_ids": [
         "source.0217"
@@ -3944,7 +3973,7 @@
       "title": "الهندسة العكسية",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "رؤوس ELF/PEوسلاسل ساكنة؛ لا تصحيح ديناميكي أو تشغيل عينات أو تكامل Ghidraفعلي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -3958,10 +3987,11 @@
       "title": "الشبكات والاتصالات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "تدفقات CSVوتسجيل PCAPورسائل DNSموثقة؛ لا التقاط أو استعلام أو إعادة تجميع أو فك تشفير حي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/pcap.py",
+        "cyber_platform/dns_message.py"
       ],
       "source_ids": [
         "source.0234"
@@ -3972,9 +4002,11 @@
       "title": "الأنظمة والهوية",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "حسابات JSONومفاتيح SSHالعامة وتوجيهات systemd؛ لا مصادقة SSHأو تشغيل خدمة أو SSO/FreeIPA/SPIFFE",
       "evidence_paths": [
         "cyber_platform/catalog.json",
+        "cyber_platform/ssh_keys.py",
+        "cyber_platform/systemd_review.py",
         "cyber_platform/tools.py"
       ],
       "source_ids": [
@@ -3986,10 +4018,11 @@
       "title": "السحابة والحاويات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "وصف حاوية وKubernetes JSONومقارنة حقول الأمان المفحوصة؛ لا تطبيق أو إثبات عنقود أو سياسة عزل حية",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/kubernetes_review.py",
+        "tests/test_kubernetes_review.py"
       ],
       "source_ids": [
         "source.0255"
@@ -4000,10 +4033,11 @@
       "title": "هندسة البرمجيات الآمنة",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "SPDX/CycloneDXواعتماديات ومقارنة وSARIFومقارنته؛ لا تشغيل فاحص أو مصدرية بناء أو ضمان إصلاح",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/supply_chain.py",
+        "cyber_platform/sarif.py"
       ],
       "source_ids": [
         "source.0265"
@@ -4014,10 +4048,11 @@
       "title": "أبحاث البرمجيات والنواة",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "محلل TLVمحدود يرفض البتر وأمثلة تعليمية؛ لا fuzzingللنواة أو استغلال أو محاكاة نظام كاملة",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/tools.py",
+        "cyber_platform/learning.py"
       ],
       "source_ids": [
         "source.0275"
@@ -4028,9 +4063,10 @@
       "title": "التشفير والبروتوكولات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "جرد خوارزميات وفحص X.509وتوقيعات مباشرة بوقت صريح؛ لا PKIXكامل أو OCSPأو ML-KEM/ML-DSA",
       "evidence_paths": [
         "cyber_platform/catalog.json",
+        "cyber_platform/certificates.py",
         "cyber_platform/tools.py"
       ],
       "source_ids": [
@@ -4042,7 +4078,7 @@
       "title": "العتاد والبرامج الثابتة",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "entropyوتواقيع Firmwareساكنة؛ لا تفليش أو تصحيح عتاد أو تحقق إقلاع موثوق كامل",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4056,7 +4092,7 @@
       "title": "الأنظمة الصناعية وIoT",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "نموذج حراري حسابي مبسط؛ لا اتصال OT/IoTأو ضمان سلامة مصنع أو محاكاة مادية كاملة",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4070,7 +4106,7 @@
       "title": "الإشارات والاستشعار",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "DFTلعينات قصيرة؛ لا أجهزة استقبال أو بث أو تحليل إشارات شامل",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4084,7 +4120,7 @@
       "title": "الطيران والمسيّرات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "جودة تسلسل قياسات مسجلة؛ لا طيران أو اتصال MAVLinkحي أو تحكم بمسيّرات",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4098,7 +4134,7 @@
       "title": "الروبوتات والمركبات",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "قراءة CANكلاسيكي من تسجيل؛ لا إرسال إطارات أو تكامل مركبات وروبوتات فعلي",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4112,7 +4148,7 @@
       "title": "الفضاء",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "رؤوس CCSDSمن ملف؛ لا اتصال فضائي أو تحليل كل حمولة أو محاكاة قمر",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/tools.py"
@@ -4126,10 +4162,12 @@
       "title": "الذكاء الاصطناعي",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "تدقيق وجود مقتطفات وموصل محلي اختياري؛ لا نموذج مثبت متحقق أو ضمان دقة أو فريق وكلاء داخل البرنامج",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/local_ai.py",
+        "cyber_platform/tools.py",
+        "docs/Scope-Update-0.7.md"
       ],
       "source_ids": [
         "source.0340"
@@ -4140,10 +4178,12 @@
       "title": "الحوكمة والمعمارية والخصوصية",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "تنقيح نسخ ونسخ مشفرة وحدود وصول وتدقيق؛ لا تشفير القرص أو دورة محو واحتفاظ عامة",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/backup.py",
+        "cyber_platform/tools.py",
+        "docs/Security.md"
       ],
       "source_ids": [
         "source.0347"
@@ -4154,10 +4194,12 @@
       "title": "إدارة المنظومة",
       "group": "SECTION",
       "status": "partial",
-      "scope": "المنصات والأداة المرجعية موجودة؛ لا يعني ذلك تنفيذ كل التقنيات والتكاملات في الملف",
+      "scope": "صيانة محدودة وجودة وترقية يدوية وسجل بيانات إضافات؛ لا إصلاح عام أو تحميل كود إضافات أو صيانة مضمونة لعقود",
       "evidence_paths": [
         "cyber_platform/catalog.json",
-        "cyber_platform/tools.py"
+        "cyber_platform/maintenance.py",
+        "cyber_platform/quality.py",
+        "cyber_platform/plugin_registry.py"
       ],
       "source_ids": [
         "source.0365"

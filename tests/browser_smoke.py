@@ -186,7 +186,10 @@ def main():
                 expect(page.get_by_text('Cyber-Platform-Requirements.md',exact=True)).to_be_visible()
                 checks.append('full source search, provenance, exact download and private project import')
                 page.get_by_role("link", name="التحديث والصيانة", exact=True).click()
-                page.get_by_role("button", name="تشغيل الفحص", exact=True).click()
+                with page.expect_response(lambda response: response.url.endswith('/api/maintenance')) as maintenance_response:
+                    page.get_by_role("button", name="تشغيل الفحص", exact=True).click()
+                assert maintenance_response.value.status == 200, maintenance_response.value.text()
+                assert maintenance_response.value.json()['passed'], maintenance_response.value.json()
                 expect(page.get_by_text("اجتاز الفحص المحدد", exact=True)).to_be_visible()
                 page.get_by_label("نطاق فحص بصمات الأدلة", exact=True).select_option(label="اختبار مشروع خاص")
                 page.get_by_role("button", name="بدء فحص بصمات الأدلة", exact=True).click()

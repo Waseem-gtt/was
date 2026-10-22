@@ -105,7 +105,11 @@ def main():
                 job = json.loads(request("/api/run", {"project_id": pid, "steps": [{"tool": "ioc", "evidence_id": evidence["id"], "expect": {"ipv4.0": "192.0.2.55"}}]})[0])
                 assert job["status"] == "succeeded", job
                 technical_tools = {"pcap":"was.pcap-analysis/1", "certificate":"was.certificate-analysis/1",
-                                   "supply-chain":"was.supply-chain/1", "supply-chain-diff":"was.supply-chain-diff/1"}
+                                   "supply-chain":"was.supply-chain/1", "supply-chain-diff":"was.supply-chain-diff/1",
+                                   "har":"was.har-analysis/1", "har-diff":"was.har-diff/1", "email":"was.email-analysis/1",
+                                   "kubernetes":"was.kubernetes-review/1", "kubernetes-diff":"was.kubernetes-diff/1", "systemd":"was.systemd-review/1",
+                                   "sarif":"was.sarif-analysis/1", "sarif-diff":"was.sarif-diff/1", "archive":"was.archive-review/1",
+                                   "ssh-keys":"was.ssh-key-review/1", "dns":"was.dns-analysis/1"}
                 from cyber_platform import tools
                 for tool in tools.describe():
                     if tool['id'] not in technical_tools:
@@ -187,7 +191,7 @@ def main():
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

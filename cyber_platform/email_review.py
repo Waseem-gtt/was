@@ -4,6 +4,7 @@ import binascii
 import hashlib
 import re
 from email import policy
+from email.errors import MessageError
 from email.parser import BytesParser
 from email.utils import getaddresses
 from .store import encode
@@ -69,7 +70,7 @@ def _headers(part):
             _bad("Invalid EML header encoding")
         try:
             parsed = part[name]
-        except (ValueError, TypeError, UnicodeError, RecursionError):
+        except (ValueError, TypeError, UnicodeError, RecursionError, IndexError, MessageError):
             _bad("Malformed EML header")
         if getattr(parsed, "defects", ()):
             _bad("Malformed EML header")
@@ -129,7 +130,7 @@ def analyze(data):
         _bad("EML boundary count exceeds limits")
     try:
         message = BytesParser(policy=policy.default).parsebytes(data)
-    except (ValueError, TypeError, RecursionError) as exc:
+    except (ValueError, TypeError, RecursionError, IndexError, MessageError) as exc:
         raise ValueError("Invalid EML parser structure") from exc
     if not list(message.raw_items()):
         _bad("EML requires message headers")

@@ -151,6 +151,11 @@ class KubernetesReviewTests(unittest.TestCase):
         output=json.dumps(self.review(p))
         for secret in ('SECRET_IMAGE','SECRET_COMMAND','SECRET_ENV'):self.assertNotIn(secret,output)
 
+    def test_email_style_rbac_user_identity_is_supported_without_exporting_subject(self):
+        p=self.binding();p['subjects']=[{'kind':'User','name':'reader@example.test','apiGroup':'rbac.authorization.k8s.io'}]
+        result=self.review(p);self.assertEqual(result['resource_count'],1)
+        self.assertNotIn('reader@example.test',json.dumps(result))
+
     def test_input_size_json_duplicates_nonfinite_and_depth(self):
         for data in (b'{"apiVersion":"v1","apiVersion":"v2"}',b'{"x":NaN}',b'{"x":'+b'['*40+b'0'+b']'*40+b'}',b'\xff',b'[]'):
             with self.subTest(data=data[:40]),self.assertRaises(ValueError):k.analyze(data)

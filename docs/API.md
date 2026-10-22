@@ -165,3 +165,26 @@
 يمكن استخدام هذه المعرّفات في عقد خطط`/api/plans/start`أيضًا. لا تعني حالة تنفيذ`succeeded`تقييم جودة دون توقعات مرجعية، ولا ثقة بشهادة أو خلوSBOMمن الثغرات. تحميل نتيجة تاريخية يتحقق من ملفات الدليل وبصماتها ولا يعيد تشغيل المحلل الحالي. لا توجد واجهة التقاط حي أو تثبيت حزم أو تنزيل شهادات.
 
 يتضمن `GET /api/events/adapters` المحول الرابع`windows-xml`، ويُستخدم عبر`POST /api/events/normalize`القائم بالجسم`{project_id,evidence_id,adapter:"windows-xml"}`. لا يقبل واجهةEVTXأو مسار ملف من المضيف. راجع[الصيغ والحدود التقنية](Technical-Analysis.md) و[عقدXML](Event-Adapters.md) و[تقرير التحقق](Validation-0.13.md).
+
+
+## إحدى عشرة وظيفة تحليل إضافية — 0.14
+
+تُضاف المعرفات التالية إلى `GET /api/bootstrap` وتستخدم `/api/upload` و`/api/run` والخطط القائمة دون مسار تنفيذ جديد. جميعها تتطلب أدلة من المشروع المختار وتبقى ضمن العمال المحدودين وقفل المهام الثقيلة والمصادقة القائمة.
+
+| معرف الأداة | المدخل | مخطط النتيجة |
+|---|---|---|
+| `har` | HAR1.2 JSON | `was.har-analysis/1` |
+| `har-diff` | JSON بحقلَي`left/right`لمستندَيHAR | `was.har-diff/1` |
+| `email` | EML | `was.email-analysis/1` |
+| `kubernetes` | مواردKubernetes JSONالموثقة | `was.kubernetes-review/1` |
+| `kubernetes-diff` | JSON بحقلَي`left/right`لمجموعتي موارد | `was.kubernetes-diff/1` |
+| `systemd` | وحدةUTF-8 | `was.systemd-review/1` |
+| `sarif` | SARIF2.1.0 JSON | `was.sarif-analysis/1` |
+| `sarif-diff` | JSON بحقلَي`left/right`لمستندَيSARIF | `was.sarif-diff/1` |
+| `archive` | ZIP/TARموثق أوJSONبحقل`archive_base64`فقط | `was.archive-review/1` |
+| `ssh-keys` | OpenSSH public keys أوauthorized_keysموثق | `was.ssh-key-review/1` |
+| `dns` | رسالةDNSثنائية أوJSONبحقل`dns_base64`فقط | `was.dns-analysis/1` |
+
+الحد العام4MiB؛ رسالةDNSالمفكوكة حتى65535بايتًا، وبقية الحدود التفصيلية في[دليل0.14](Technical-Analysis-0.14.md). لا تُصدّرHARالأسرار أو المسارات أو الأجسام، ولا تعرضEMLالأجسام أو أسماء المرفقات الخام، ولا تفعّلKubernetes/systemdإعدادات. الأرشيفات لا تُستخرج أو يُفك ضغطها أو يتحققCRC، وSSHلا يصادق، وDNSلا يستعلم أو يتحققDNSSEC.
+
+المقارنات كاملة للحقول المطَبعة الموثقة والتكرارات، وليست مساواة كل بايتات المصدر أو المحتوى المحجوب. بصمتا الطرفين تخصانJSONالقياسي المضمن، وتبقى للحزمة بصمة بايتاتها كاملة. غياب نتيجةSARIFعن المستند الثاني لا يثبت إصلاحها. الرسائل والمواقع بيانات تعرض كنصوص ولا تُفسر كتعليمات أوHTMLولا تُفتح تلقائيًا.
