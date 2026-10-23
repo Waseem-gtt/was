@@ -1,0 +1,138 @@
+{
+  "version": "0.18.0",
+  "date": "2026-10-23",
+  "completed_requirements": [
+    "F03",
+    "F04"
+  ],
+  "source_status_before": {
+    "F03": "partial",
+    "F04": "partial"
+  },
+  "source_status_after": {
+    "F03": "available",
+    "F04": "available"
+  },
+  "display_status": "مكتمل ضمن نطاقه",
+  "unit_tests": {
+    "CPython3.11.17": 806,
+    "CPython3.12.14": 806,
+    "CPython3.13.5": 806
+  },
+  "new_unit_tests": {
+    "event_dictionary_quality": 16,
+    "rule_fixture_acceptance": 25
+  },
+  "browser": {
+    "groups": 65,
+    "javascript_errors": 0,
+    "pages": 23,
+    "responsive_widths": [
+      320,
+      390
+    ],
+    "dictionary_and_timestamp_quality": true,
+    "rule_fixture_gap_then_actual_replay": true,
+    "acceptance_export_reload_and_delayed_selection_guard": true,
+    "existing_workspace_identities_checked": 131
+  },
+  "independent_json_schema_validation": {
+    "validator": "jsonschema",
+    "version": "4.26.0",
+    "draft": "2020-12",
+    "schema_well_formed": true,
+    "adapters_validated": [
+      "windows-json",
+      "windows-xml",
+      "syslog-rfc5424",
+      "flows-csv"
+    ],
+    "invalid_version_and_unknown_fields_rejected": true,
+    "network_schema_resolution": false
+  },
+  "rule_acceptance": {
+    "builtin_rules": 8,
+    "owner_rule_positive_negative_fixture": true,
+    "library_complete_false_if_missing_or_stale_fixture": true,
+    "metrics_tp_fp_fn_tn_precision_recall": true,
+    "source_rule_version_and_engine_provenance": true,
+    "full_enrollment_prevents_silent_index_rollback": true,
+    "atomic_fixture_index_audit_rollback": true,
+    "encrypted_restore": true,
+    "historical_report_not_live_protection": true,
+    "max_rules": 58,
+    "max_fixture_source_bytes": 1048576,
+    "max_batch_bytes": 4194304,
+    "max_batch_events": 10000
+  },
+  "security": {
+    "bandit_unresolved": 0,
+    "bandit_parse_errors": 0,
+    "runtime_packages_audited": 3,
+    "known_runtime_vulnerabilities": 0,
+    "new_runtime_dependencies": 0
+  },
+  "installed_wheel_smoke": {
+    "version": "0.18.0",
+    "installed_package": true,
+    "opening_map_assets": true,
+    "arabic_labels": true,
+    "workspace_identity_settings": true,
+    "offline_knowledge_import_search": true,
+    "desktop_menu_generation": true,
+    "visible_gui_tested": false,
+    "health_and_auth": true,
+    "bounded_analysis": true,
+    "maintenance": true,
+    "single_chat_fixture": true,
+    "runtime_agent_team_removed": true,
+    "integrity_batches": true,
+    "signed_release_fixture": true,
+    "quality_center": true,
+    "event_adapters": true,
+    "event_dictionary_quality": true,
+    "rule_fixture_acceptance": true,
+    "detection_library": true,
+    "defense_coverage": true,
+    "branching_plans": true,
+    "immutable_template_origin": true,
+    "full_coverage_scan": true,
+    "project_reports_json_html": true,
+    "curriculum_progress": true,
+    "plugin_metadata_governance": true,
+    "plugin_code_execution": false,
+    "pcap_metadata": true,
+    "x509_certificates": true,
+    "sbom_dependencies": true,
+    "sbom_comparison": true,
+    "windows_xml": true,
+    "new_014_tools": [
+      "har",
+      "har-diff",
+      "email",
+      "kubernetes",
+      "kubernetes-diff",
+      "systemd",
+      "sarif",
+      "sarif-diff",
+      "archive",
+      "ssh-keys",
+      "dns"
+    ],
+    "all_technical_tools": 15,
+    "audit": true,
+    "real_model_inference": false
+  },
+  "source_bytes": 173726,
+  "requirements_in_original_source_order": 61,
+  "total_file_tools": 36,
+  "runtime_agent_team": "remains_removed",
+  "cancelled_labs": "remain_cancelled",
+  "visible_gui_tested": false,
+  "virtualbox_tested": false,
+  "real_local_ai_inference": false,
+  "publisher_signature": false,
+  "github_actions": "not_observed_in_this_session",
+  "full_project_complete": false,
+  "completion_percentage": null
+}
