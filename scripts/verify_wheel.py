@@ -180,6 +180,23 @@ def main():
                 request("/api/detection/fixtures/register", {"project_id":pid,"rule_id":owner_rule['id'],"evidence_id":owner_source['id'],"expected_indexes":[0]})
                 acceptance = json.loads(request("/api/detection/acceptance/run", {"project_id":pid})[0])
                 assert acceptance['report']['passed'] and acceptance['report']['covered_rules'] == 9
+                assert b"function knowledgeGraphPanel" in request("/knowledge_graph.js")[0]
+                graph_entities = []
+                for kind in ("asset", "software", "vulnerability", "event", "evidence", "experiment"):
+                    value = {"type":kind,"label":"Synthetic wheel " + kind,"description":"Retained source assertion",
+                             "source_evidence":owner_source['id'],"reference_evidence":owner_source['id'] if kind in ("evidence","experiment") else None,
+                             "confidence":75,"observed_at":"2026-10-23T12:00:00+03:00","valid_from":None,"valid_until":None}
+                    saved = json.loads(request("/api/graph/entities", {"project_id":pid,"entity":value})[0])
+                    graph_entities.append(saved['entity'])
+                relation = {"source":graph_entities[0]['id'],"target":graph_entities[1]['id'],"type":"supports",
+                            "description":"Synthetic supporting claim","source_evidence":owner_source['id'],"confidence":60,
+                            "observed_at":"2026-10-23T12:00:00Z","valid_from":None,"valid_until":None,"conflicts_with":None}
+                supporting = json.loads(request("/api/graph/relations", {"project_id":pid,"relation":relation})[0])
+                relation.update(type="contradicts", conflicts_with=supporting['relation']['id'])
+                request("/api/graph/relations", {"project_id":pid,"relation":relation})
+                graph = json.loads(request("/api/graph?project=" + pid)[0])
+                assert len(graph['entities']) == 6 and len(graph['relations']) == 2 and len(graph['conflicts']) == 1
+                assert graph['entities'][0]['source_sha256'] == owner_source['sha256']
                 # Keep the original eight-rule workflow fixture independent of the added owner rule.
                 library = json.loads(request("/api/detection/library?project=" + pid)[0])
                 library['rules'] = [rule for rule in library['rules'] if rule['origin']=='builtin']
@@ -231,7 +248,7 @@ def main():
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "opening_map_assets": True, "arabic_labels": True, "workspace_identity_settings": True, "offline_knowledge_import_search": True, "desktop_menu_generation": True, "visible_gui_tested": False, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "event_dictionary_quality": True, "rule_fixture_acceptance": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "event_dictionary_quality": True, "knowledge_graph_six_types_provenance_conflicts": True, "rule_fixture_acceptance": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

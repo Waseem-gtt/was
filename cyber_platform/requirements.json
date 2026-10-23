@@ -3381,11 +3381,15 @@
       "id": "F06",
       "title": "خريطة علاقات وأدلة مشتركة",
       "group": "F",
-      "status": "partial",
-      "scope": "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة",
+      "status": "available",
+      "scope": "مكتمل: أصل وبرنامج وثغرة وحدث ودليل وتجربة مع مراجع ملفات فعلية، ومصدر وبصمة وثقة ووقت ملاحظة وصلاحية وتعارض؛ خريطة وجداول وتفاصيل وبحث وتصدير بعد تفويض المالك والتحقق من السجلات والمصادر، مع حفظ ذري واستعادة مختبرة",
       "evidence_paths": [
-        "cyber_platform/store.py",
-        "tests/test_platform.py"
+        "cyber_platform/knowledge_graph.py",
+        "cyber_platform/static/knowledge_graph.js",
+        "tests/test_knowledge_graph.py",
+        "tests/test_graph_http.py",
+        "tests/browser_knowledge_graph.py",
+        "docs/Knowledge-Graph.md"
       ],
       "source_ids": [
         "source.0032"

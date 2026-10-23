@@ -218,3 +218,14 @@
 - `GET /api/detection/acceptance/report?project=ID&id=EID`: تقرير محفوظ متحقق البصمة وإثبات الإنشاء؛ عرض تاريخي لا إعادة اختبار.
 
 جميع الواجهات محمية بحساب المالك، والحفظ والتشغيل بـCSRFوقفل المهمة الثقيلة، وتُحرر الأقفال قبل نشر الرد. [عقد الأحداث](Event-Schema.md) و[عقد عينات القواعد](Rule-Acceptance.md) يحددان الحدود والمعاني.
+
+
+## خريطة الكيانات والعلاقات F06 —0.19
+
+GET /api/graph?project=ID&at=RFC3339 يعيد الكيانات والعلاقات والتعارضات المتحققة وقاموس الأنواع والحدود. atاختياري.
+
+POST /api/graph/entities يقبل {project_id,entity}. حقولentityبالضبط: type,label,description,source_evidence,reference_evidence,confidence,observed_at,valid_from,valid_until. reference_evidenceمطلوب للدليل والتجربة، ويمكن أن يكونnullللأنواع الأخرى. المصدر أصلي من المشروع نفسه، والمرجع أي ملف محفوظ متحقق في المشروع.
+
+POST /api/graph/relations يقبل {project_id,relation}. حقولrelationبالضبط: source,target,type,description,source_evidence,confidence,observed_at,valid_from,valid_until,conflicts_with. طرفا العلاقة معرفا كيانين في المشروع، وconflicts_withمعرف علاقة سابقة أوnull. التوقيتRFC3339بإزاحة معلومة، والصلاحيةnullable، والثقة عددصحيح0..100.
+
+القراءة والحفظ خلف جلسة المالك، والحفظ خلفCSRFوالتحقق منOriginوقفل التنفيذ. لا إرسال للذكاء الاصطناعي. [العقد الكامل](Knowledge-Graph.md).

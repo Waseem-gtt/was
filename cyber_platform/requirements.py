@@ -5,7 +5,7 @@ from pathlib import Path
 from .store import Problem
 
 DATA = json.loads((Path(__file__).parent / "requirements.json").read_text())
-LABELS = {"available": "مكتمل ضمن نطاقه", "partial": "منفذ جزئيًا", "not_implemented": "غير منفذ",
+LABELS = {"available": "مكتمل", "partial": "منفذ جزئيًا", "not_implemented": "غير منفذ",
           "blocked": "متطلب تشغيل غير متحقق", "superseded": "ألغي أو عُدّل", "reference": "مرجع", "historical": "سجل تاريخي"}
 
 

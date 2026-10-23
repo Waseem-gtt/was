@@ -1,0 +1,110 @@
+{
+  "schema": "was.requirement-acceptance/1",
+  "version": "0.19.0",
+  "requirement": "F06",
+  "source": {
+    "filename": "Cyber-Platform-Requirements.md",
+    "repository_path": "docs/Requirements-Source.md",
+    "sha256": "7494e12a75b388c72a8a4b87c0b54045f4af8f517ce50d5a9ff17466cffd7f06",
+    "bytes": 173726,
+    "lines": 876
+  },
+  "source_lines": [
+    68,
+    355
+  ],
+  "status": "available",
+  "display_status": "مكتمل",
+  "all_original_conditions_met": true,
+  "unmet_conditions": [],
+  "conditions": [
+    {
+      "id": "entity_types",
+      "condition": "أصل وبرنامج وثغرة وحدث ودليل وتجربة",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_all_six_entity_types_have_source_observation_confidence_and_actual_references"
+    },
+    {
+      "id": "real_evidence_results",
+      "condition": "ربط الدليل والتجربة بملف أو نتيجة محفوظة",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_evidence_and_experiment_must_reference_retained_sameproject_file"
+    },
+    {
+      "id": "sources",
+      "condition": "المصدر وبصمته محفوظان ويتحقق منهما قبل العرض والحفظ",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_source_tampering_blocks_display_and_new_assertion"
+    },
+    {
+      "id": "confidence",
+      "condition": "الثقة المعلنة محفوظة مع كل كيان وعلاقة",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_all_six_entity_types_have_source_observation_confidence_and_actual_references"
+    },
+    {
+      "id": "observation_time",
+      "condition": "وقت الملاحظة مطلوب ومحفوظ مع إزاحة معلومة",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_invalid_and_unknownoffset_dates_are_rejected"
+    },
+    {
+      "id": "validity",
+      "condition": "فترة صلاحية وتقييم عند وقت محدد دون محو الماضي",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_validity_at_explicit_time_retains_expired_and_future_assertions"
+    },
+    {
+      "id": "conflicts",
+      "condition": "حفظ الادعاءات المتعارضة ومصادرها دون دمج صامت",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_conflicting_assertions_do_not_silently_merge_or_overwrite"
+    },
+    {
+      "id": "relations",
+      "condition": "معنى العلاقة ومصدرها وثقتها وصلاحيتها وتعارضها",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_knowledge_graph.py::test_all_relationship_types_and_meanings_are_preserved"
+    },
+    {
+      "id": "authorization",
+      "condition": "تفويض المالك قبل قراءة الخريطة وحفظها وبحث الواجهة",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_graph_http.py::test_authentication_precedes_graph_reads_and_writes"
+    },
+    {
+      "id": "restoration",
+      "condition": "استعادة السجلات ومصادرها وتعارضاتها",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_graph_http.py::test_encrypted_restore_preserves_full_graph_sources_and_conflicts"
+    },
+    {
+      "id": "atomic_failure",
+      "condition": "عدم نشر نجاح أو سجل جزئي عند فشل الحفظ أو تغير المصدر",
+      "implemented": true,
+      "verified": true,
+      "test": "tests/test_graph_http.py::test_mid_publication_source_change_rolls_back_graph_artifact_and_audit"
+    }
+  ],
+  "backend_tests": 19,
+  "independent_http_tests": 14,
+  "browser_groups": 4,
+  "browser_test": "tests/browser_knowledge_graph.py",
+  "implementation": "cyber_platform/knowledge_graph.py",
+  "interface": "cyber_platform/static/knowledge_graph.js",
+  "data_is_synthetic": true,
+  "no_owner_data_published": true,
+  "source_note": "المصدر المتاح كامل محفوظ؛ الملفات التاريخية المذكورة وغير المرفقة لا يدعى امتلاكها أو تنفيذ محتواها.",
+  "limits": "docs/Knowledge-Graph.md",
+  "continuation": "docs/Continuation.md"
+}

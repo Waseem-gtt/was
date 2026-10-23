@@ -1,0 +1,10 @@
+.knowledge-graph { min-width:0; }
+.knowledge-graph p,.knowledge-graph small,.knowledge-graph td,.knowledge-graph button { overflow-wrap:anywhere; }
+.knowledge-graph-canvas { width:100%; min-width:0; height:auto; border:1px solid var(--line); border-radius:12px; margin:1rem 0; }
+.knowledge-graph-canvas path { stroke:var(--muted); stroke-width:5; fill:none; cursor:pointer; }
+.knowledge-graph-canvas path.conflicting { stroke:#d97706; stroke-dasharray:8 5; }
+.knowledge-graph-canvas circle { fill:var(--cyan); stroke:var(--text); stroke-width:2; cursor:pointer; }
+.knowledge-graph-canvas text { fill:var(--text); font-size:12px; }
+.knowledge-graph-canvas :focus { outline:none; stroke:#f59e0b; stroke-width:5; }
+.knowledge-graph details { margin-block:1rem; }
+.knowledge-graph summary { cursor:pointer; font-weight:700; padding-block:.5rem; }
