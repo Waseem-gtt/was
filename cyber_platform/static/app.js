@@ -12,6 +12,7 @@ const state = {
 };
 const nav = [
   ["dashboard", "◈", "نظرة عامة"],
+  ["launchpad", "⌗", "خريطة المنظومة"],
   ["sections", "▦", "الأقسام والتخصصات"],
   ["projects", "▱", "المشاريع"],
   ["evidence", "◇", "الأدلة والملفات"],
@@ -484,6 +485,7 @@ function render() {
     ),
   );
   const views = {
+    launchpad: launchpadPage,
     dashboard,
     sections,
     projects,
@@ -586,6 +588,7 @@ function dashboard() {
   return el(
     "div",
     {},
+    launchpadPage(),
     el(
       "section",
       { class: "hero" },
@@ -1076,7 +1079,7 @@ function toolCard(t) {
     el(
       "footer",
       {},
-      el("small", {}, "لا شبكة · حد 4 MiB"),
+      el("small", {}, "لا شبكة · حد " + size(t.max_bytes || 4 * 1024 * 1024)),
       button("تحليل", () => openTool(t), "small primary"),
     ),
   );
@@ -1088,16 +1091,27 @@ function toolPage() {
     el(
       "div",
       { class: "notice info" },
-      "21 أداة تحليل واختبار قواعد بمدخلات وحدود معلنة. لا تفحص الأدوات أهدافًا خارجية، ولا تنفذ ملفات الأدلة.",
+      state.boot.tools.length + " أداة تحليل واختبار قواعد بمدخلات وحدود معلنة. لا تفحص الأدوات أهدافًا خارجية، ولا تنفذ ملفات الأدلة.",
     ),
     el("div", { class: "grid" }, state.boot.tools.map(toolCard)),
   );
 }
 function openTool(t) {
+  const guide = el("div", {class:"notice info"},
+    el("h3", {}, "طريقة التشغيل"),
+    el("ol", {},
+      el("li", {}, "أنشئ مشروعًا أو اختر مشروعك من القائمة العلوية."),
+      el("li", {}, "ارفع ملفك الأصلي بالصيغة الموضحة أدناه، أو اختر ملفًا سبق حفظه."),
+      el("li", {}, "اضغط تشغيل التحليل؛ تظهر النتيجة وحالة التنفيذ وتُحفظ مرتبطة بالأصل وبصمته.")),
+    el("p", {}, "المدخل: " + t.input),
+    el("p", {}, "حد الملف: " + size(t.max_bytes || 4 * 1024 * 1024) + " · تحليل محلي دون اتصال بهدف خارجي."),
+    el("small", {}, "العينة التعليمية اختيارية واصطناعية؛ تشغيلها ليس تحليلًا لبياناتك أو إثباتًا لحماية جهازك."));
   if (!state.project) {
-    toast("أنشئ مشروعًا أو اختره أولًا", true);
+    const close = modal(t.name, guide, button("إنشاء مشروع لبدء التشغيل", () => { close(); newProject(); }, "primary"));
     return;
   }
+  const projectId = state.project.project.id;
+  const currentProject = () => state.project?.project.id === projectId;
   const select = evidenceSelect(),
     expect = el("textarea", {
       class: "code",
@@ -1109,6 +1123,7 @@ function openTool(t) {
     "تشغيل التحليل",
     () =>
       action(async () => {
+        if (!currentProject()) throw Error("تغير المشروع؛ أغلق الأداة وافتحها من جديد");
         if (!select.value) throw Error("اختر دليلًا");
         let acceptance = {};
         try {
@@ -1117,14 +1132,15 @@ function openTool(t) {
           throw Error("معيار القبول يحتاج JSON صحيحًا");
         }
         const job = await api("run", {
-          project_id: state.project.project.id,
+          project_id: projectId,
           name: t.name,
           steps: [
             { tool: t.id, evidence_id: select.value, expect: acceptance },
           ],
         });
+        if (!currentProject()) return;
         await refresh();
-        result.replaceChildren(jobResult(job));
+        if (currentProject()) result.replaceChildren(jobResult(job));
       }, run),
     "primary",
   );
@@ -1135,27 +1151,51 @@ function openTool(t) {
           "إضافة عينة تعليمية",
           () =>
             action(async () => {
+              if (!currentProject()) throw Error("تغير المشروع؛ أغلق الأداة وافتحها من جديد");
               const raw = new TextEncoder().encode(t.sample);
               let s = "";
               for (const b of raw) s += String.fromCharCode(b);
               const e = await api("upload", {
-                project_id: state.project.project.id,
+                project_id: projectId,
                 name: "sample-" + t.id + ".txt",
                 base64: btoa(s),
               });
+              if (!currentProject()) return;
               await refresh();
+              if (!currentProject()) return;
               select.append(el("option", { value: e.id }, e.name));
               select.value = e.id;
               toast("أضيفت عينة تعليمية منفصلة عن بياناتك");
             }),
           "ghost",
         );
+  const file = el("input", {type:"file", "aria-label":"ملف الأداة: " + t.name});
+  const upload = button("رفع ملفي لهذه الأداة", () => action(async () => {
+    if (!currentProject()) throw Error("تغير المشروع؛ أغلق الأداة وافتحها من جديد");
+    const selected = file.files[0];
+    if (!selected) throw Error("اختر ملفًا من جهازك");
+    const limit = t.max_bytes || 4 * 1024 * 1024;
+    if (selected.size > limit) throw Error("الملف يتجاوز حد الأداة: " + size(limit));
+    const bytes = new Uint8Array(await selected.arrayBuffer());
+    let raw = "";
+    for (let i = 0; i < bytes.length; i += 32768) raw += String.fromCharCode(...bytes.subarray(i, i + 32768));
+    if (!currentProject()) throw Error("تغير المشروع؛ أغلق الأداة وافتحها من جديد");
+    const evidence = await api("upload", {project_id:projectId, name:selected.name, base64:btoa(raw)});
+    if (!currentProject()) return;
+    await refresh();
+    if (!currentProject()) return;
+    select.append(el("option", {value:evidence.id}, evidence.name));
+    select.value = evidence.id;
+    file.value = "";
+    toast("حُفظ ملفك الأصلي؛ اضغط تشغيل التحليل");
+  }, upload));
   modal(
     t.name,
     el(
       "div",
       { class: "stack" },
-      el("p", {}, t.input),
+      guide,
+      field("اختر ملفك لهذه الأداة", file), upload,
       field("الدليل", select),
       field("معايير قبول اختيارية: مسار حقل ونتيجة مطابقة", expect),
       el(

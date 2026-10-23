@@ -2,7 +2,8 @@
 Type=Application
 Name=واس — منصة البحث السيبراني
 Comment=Private Arabic cyber research application
+Icon=applications-science
 Exec=/ABSOLUTE/PATH/was/scripts/desktop.sh
-Terminal=true
+Terminal=false
 Categories=Education;Development;
-StartupNotify=true
+StartupNotify=false

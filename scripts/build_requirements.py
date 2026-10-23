@@ -20,7 +20,7 @@ REVIEWS = {
     "F06": ("partial", "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة", "cyber_platform/store.py", "tests/test_platform.py"),
     "E01": ("blocked", "الورشة ترفض عند غياب namespaces؛ لا تنفيذ معزول ناجح على هذا المضيف", "cyber_platform/sandbox.py", "docs/Validation.md"),
     "E02": ("partial", "22قسمًا و109منصات و36أداة فعلية، منها11وظيفة HARوبريد وKubernetesوsystemdوSARIFوأرشيفات وSSHوDNS؛ ليست جميع تقنيات التخصصات وتكاملاتها مكتملة", "cyber_platform/catalog.json", "docs/Technical-Analysis-0.14.md", "tests/browser_smoke.py"),
-    "E03": ("partial", "شجرة وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات", "cyber_platform/curriculum.py", "tests/test_curriculum.py", "docs/Curriculum.md"),
+    "E03": ("partial", "خريطة افتتاحية بأسهم وبحث وقائمة بديلة من القسم إلى المنصة والأداة ودليلها، وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات", "cyber_platform/curriculum.py", "tests/test_curriculum.py", "cyber_platform/static/launchpad.js", "tests/browser_launchpad.py", "docs/Requirements-Review-0.15.md", "docs/Curriculum.md"),
     "E04": ("partial", "جلب CISA وجدولة وبحث ولقطة؛ لا تركيب أدوات أو تجديد كل التقنيات", "cyber_platform/knowledge.py", "tests/test_platform.py"),
     "E05": ("partial", "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود", "cyber_platform/maintenance.py", "docs/Maintenance.md"),
     "N01": ("partial", "خطط DAG محفوظة حتى20عقدة بفروع نجاح وفشل وإيقاف واستكمال يدوي وبصمات؛ لا توازٍ أو تشغيل خلفي أو إعادة تنفيذ تلقائية", "cyber_platform/plans.py", "docs/Workflow-Plans.md"),
@@ -258,7 +258,7 @@ def build(check=False):
             "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw), "lines": len(lines)},
             "blocks": blocks, "requirements": records, "references": urls,
             "mentioned_files": [{"name": f, "availability": "name_present_only" if Path(f).name in actual else "not_provided"} for f in filenames],
-            "overrides": ["ألغى المالك طبقة المختبرات؛ الهيكل: قسم ← منصات ← أدوات وتقنيات", "أضيفت الحماية الشاملة والتعلم الأخلاقي، فأصبح الهيكل22قسمًا و109منصات", "حد الموارد في آخر تعديل بالملف35GB؛ ليس قياسًا لصورة كاملة", "مصادر عالمية مع بقاء التطبيق وبيانات المالك خاصة؛ لا نشر عام", "أرقام اختبارات وإصدارات OVA في السجل تاريخ غير مثبت لهذا الكود", "ألغى المالك فريق الوكلاء داخل المنتج في0.7؛ مساعدو التطوير خارج التطبيق"],
+            "overrides": ["أكد المالك أن الرسالة المنقولة جزء من المصدر؛ المرجع هو الملف الكامل مع واجهة برنامج لينكس واحدة وخريطة أقسام ثم منصات ثم أدوات وطريقة تشغيلها", "ألغى المالك طبقة المختبرات؛ الهيكل: قسم ← منصات ← أدوات وتقنيات", "أضيفت الحماية الشاملة والتعلم الأخلاقي، فأصبح الهيكل22قسمًا و109منصات", "حد الموارد في آخر تعديل بالملف35GB؛ ليس قياسًا لصورة كاملة", "مصادر عالمية مع بقاء التطبيق وبيانات المالك خاصة؛ لا نشر عام", "أرقام اختبارات وإصدارات OVA في السجل تاريخ غير مثبت لهذا الكود", "ألغى المالك فريق الوكلاء داخل المنتج في0.7؛ مساعدو التطوير خارج التطبيق"],
             "notice": "فهرسة المعلومات لا تعني تنفيذ القدرات المذكورة. النص المرجعي بيانات غير موثوقة، وليس تعليمات تشغيل أو صلاحيات للأدوات."}
     rendered = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
     if check:

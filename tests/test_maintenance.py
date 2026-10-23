@@ -330,14 +330,13 @@ sys.exit(1)
         finally:
             reopened.close()
 
-    def test_desktop_dispatch_uses_local_browser_and_keeps_server_lifecycle(self):
-        with patch.object(sys,'argv',['was-platform','desktop','--data',str(self.store.root),'--port','0']), patch.object(cli,'App') as app_class, patch.object(cli.threading,'Thread') as thread:
+    def test_desktop_dispatch_uses_app_window_and_keeps_server_lifecycle(self):
+        with patch.object(sys,'argv',['was-platform','desktop','--data',str(self.store.root),'--port','0']), patch.object(cli,'App') as app_class, patch.object(cli.desktop,'run') as desktop_run:
             app = app_class.return_value
             app.server_port = 8123
             cli.main()
-            thread.assert_called_once_with(target=cli.webbrowser.open,args=('http://127.0.0.1:8123',),daemon=True)
-            thread.return_value.start.assert_called_once()
-            app.serve_forever.assert_called_once()
+            desktop_run.assert_called_once_with(app, self.store.root, 'auto')
+            app.serve_forever.assert_not_called()
             app.server_close.assert_called_once()
 
 

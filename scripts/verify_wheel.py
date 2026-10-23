@@ -97,6 +97,13 @@ def main():
                 assert json.loads(request("/healthz")[0])["database"]
                 asset = request("/app.js")[0]
                 assert b"maintenancePage" in asset and b"function agentsPage" not in asset
+                assert b"function launchpadPage" in request("/launchpad.js")[0]
+                assert b".launch-map" in request("/launchpad.css")[0]
+                assert b"/launchpad.js" in request("/")[0]
+                from cyber_platform import desktop
+                with tempfile.TemporaryDirectory() as menu:
+                    entry = desktop.install_entry(store.root, menu, port=0)
+                    assert '"desktop"' in entry.read_text() and 'Terminal=false' in entry.read_text()
                 raw, headers = request("/api/setup", {"password": "Synthetic-wheel-password-123", "setup_token": store.setup_token()})
                 cookie, csrf = headers["Set-Cookie"].split(";")[0], json.loads(raw)["csrf"]
                 project = json.loads(request("/api/projects", {"name": "Synthetic installed wheel"})[0])
@@ -188,7 +195,7 @@ def main():
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
                 assert store.verify_audit()["valid"]
-                print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "health_and_auth": True,
+                print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "opening_map_assets": True, "desktop_menu_generation": True, "visible_gui_tested": False, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
                                   "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))

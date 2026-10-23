@@ -1,0 +1,201 @@
+{
+  "schema": "was.requirements-review/1",
+  "version": "0.15.0",
+  "review_date": "2026-10-23",
+  "uploaded_files_available": [
+    "Cyber-Platform-Requirements.md"
+  ],
+  "second_independent_upload_available": false,
+  "source": {
+    "filename": "Cyber-Platform-Requirements.md",
+    "repository_path": "docs/Requirements-Source.md",
+    "sha256": "7494e12a75b388c72a8a4b87c0b54045f4af8f517ce50d5a9ff17466cffd7f06",
+    "bytes": 173726,
+    "lines": 876
+  },
+  "upload_exact_repository_source": true,
+  "all_source_blocks_reconstruct_exact_bytes": true,
+  "counts": {
+    "blocks": 411,
+    "requirements": 61,
+    "references": 35,
+    "mentioned_files": 28
+  },
+  "mentioned_files_review": [
+    {
+      "name": "AI-Agent-Isolation-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Advanced-Technologies-Expansion-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Advanced-Technologies-Index-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Cyber-Platform-0.12-Work-Checkpoint.zip",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Cyber-Platform-Linux-Arabic-0.10.0.ova",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Cyber-Platform-Linux-Arabic-0.12.0.ova",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Cyber-Platform-Linux-Arabic-0.8.0.ova",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Cyber-Platform-Linux-Arabic-0.9.0.ova",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "DFIR-Validation-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Defense-eBPF-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Guest-Updates12.png",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Industrial-Digital-Twin-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Kernel-Software-Research-2026-09-15.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Platform-0.10-Work-Checkpoint.zip",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Platform-0.8-Work-Checkpoint.zip",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Platform-0.9-Work-Checkpoint.zip",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Platform-Evolution-Research-2026-10-03.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Post-Quantum-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Radar-SDR-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Requirements-Review-0.12.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Shared-Platform-Functions-2026-10-03.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Space-Security-Research-2026-10-02.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "Systems-Identity-Research-2026-08-30.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "UpdatesPhone12.png",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "docs/Implementation-Status.md",
+      "availability": "name_present_only",
+      "current_paths_with_same_name": [
+        "docs/Implementation-Status.md"
+      ],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "docs/Release-0.10.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "docs/Release-0.8.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    },
+    {
+      "name": "docs/Vulnerability-API.md",
+      "availability": "not_provided",
+      "current_paths_with_same_name": [],
+      "historical_identity_verified": false
+    }
+  ],
+  "historical_execution_claims_used_as_current_proof": false,
+  "latest_owner_scope": "Linux single application -> opening map arrows -> sections -> platforms -> actual tools and usage; full uploaded source takes precedence over incomplete pasted excerpt, latest owner overrides preserved",
+  "cancelled_labs_restored": false,
+  "cancelled_product_agent_team_restored": false,
+  "full_project_complete": false
+}
