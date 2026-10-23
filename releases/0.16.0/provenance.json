@@ -1,0 +1,34 @@
+{
+  "version": "0.16.0",
+  "source_commit": "5ac677a9b697ec1afdcb63c0fdfa9498970ff6de",
+  "source_exclusions": [
+    "releases/"
+  ],
+  "files": {
+    "README.md": {
+      "bytes": 710,
+      "sha256": "273a3dc2a8ec85194ac92c2fa4deea7d0b0c18bda91fb3d23947ef6f9fc3c223"
+    },
+    "validation.json": {
+      "bytes": 3622,
+      "sha256": "4ac266c29ffa5c1572cdac528aad410da10c720e577798b8632e6f59f2d0e4a0"
+    },
+    "was-cyber-platform-0.16.0-source.zip": {
+      "bytes": 751658,
+      "sha256": "425ae1d0b607a6419bd99e0b26bdae320ff6d0e6fae1460e02d2937a472a2548"
+    },
+    "was_cyber_platform-0.16.0-py3-none-any.whl": {
+      "bytes": 329565,
+      "sha256": "57b7cf6c4dc80bcd059ed3ad9e22915c657d43a0dded21520cc1f30f7ae7e68f"
+    }
+  },
+  "verification": {
+    "source_archive_exact_selected_tracked_files": 200,
+    "wheel_package_files_exact": 62,
+    "runtime_agent_modules": "absent",
+    "installed_wheel": "see_validation_json",
+    "github_actions_result": "not_observed"
+  },
+  "signature": "unsigned; SHA-256 is not a publisher signature",
+  "privacy": "No owner runtime files, evidence, backups, secrets, private keys or model weights included."
+}
