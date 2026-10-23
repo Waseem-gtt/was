@@ -1,0 +1,34 @@
+{
+  "version": "0.17.0",
+  "source_commit": "0bb4d5fa1ac378943299c1604eb26d3b5e178be3",
+  "source_exclusions": [
+    "releases/"
+  ],
+  "files": {
+    "README.md": {
+      "bytes": 710,
+      "sha256": "1c6a410a83b20f49686de30516b374889fe48da7118c9c1d3b255aa1e65fd2ff"
+    },
+    "validation.json": {
+      "bytes": 3032,
+      "sha256": "2866eda01156f7be26d21261275efc9cd7f9cceb80f9e191ec1a776af1622a00"
+    },
+    "was-cyber-platform-0.17.0-source.zip": {
+      "bytes": 792597,
+      "sha256": "8a8af2db2417a1ef8ffdbe773a6732ca35c119c65b821ae19ac4d7af7eda6ad0"
+    },
+    "was_cyber_platform-0.17.0-py3-none-any.whl": {
+      "bytes": 337790,
+      "sha256": "1415aa8123b4a91c2c2650b2881f1750e634757e3ff480d78fc4bc82ae59f633"
+    }
+  },
+  "verification": {
+    "source_archive_exact_selected_tracked_files": 210,
+    "wheel_package_files_exact": 65,
+    "runtime_agent_modules": "absent",
+    "installed_wheel": "see_validation_json",
+    "github_actions_result": "not_observed"
+  },
+  "signature": "unsigned; SHA-256 is not a publisher signature",
+  "privacy": "No owner runtime files, evidence, backups, secrets, private keys or model weights included."
+}
