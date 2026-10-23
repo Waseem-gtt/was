@@ -19,6 +19,8 @@ from tests.browser_coverage_scans import run_coverage_scan_checks
 from tests.browser_reports import run_report_checks
 from tests.browser_curriculum import run_curriculum_checks
 from tests.browser_plugins import run_plugins_checks
+from tests.browser_arabic import run_arabic_checks
+from tests.browser_knowledge_offline import run_offline_knowledge_checks
 from tests.browser_launchpad import run_launchpad_checks
 from tests.browser_technical import run_technical_checks
 
@@ -174,7 +176,7 @@ def main():
                 page.get_by_label('نمط عرض الملف',exact=True).select_option('source')
                 page.get_by_label('بحث ملف المشروع',exact=True).fill('0.13')
                 page.get_by_role('button',name='بحث في الملف').click()
-                expect(page.locator('article.card').first.locator('pre')).to_contain_text('0.13')
+                expect(page.locator('article.card').filter(has=page.locator('pre')).first.locator('pre')).to_contain_text('0.13')
                 with page.expect_download() as source_download:
                     page.get_by_role('button',name='تنزيل الملف الأصلي',exact=True).click()
                 downloaded=output/'requirements-source.md'
@@ -271,6 +273,8 @@ def main():
                 run_curriculum_checks(page, expect, checks)
                 run_plugins_checks(page, expect, checks)
                 run_technical_checks(page, expect, checks)
+                run_arabic_checks(page, expect, checks)
+                run_offline_knowledge_checks(page, expect, checks)
                 run_launchpad_checks(page, expect, checks)
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)

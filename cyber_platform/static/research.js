@@ -1,7 +1,7 @@
 /* Project event normalization and exact-match detection; local text nodes only. */
 function researchEvidenceSelect(label) {
   return el("select", {"aria-label":label}, el("option", {value:""}, "اختر دليلًا…"),
-    state.project.evidence.map(item => el("option", {value:item.id}, item.name + " · " + item.kind)));
+    state.project.evidence.map(item => el("option", {value:item.id}, item.name + " · " + evidenceKindLabel(item.kind))));
 }
 async function researchUpload(projectId, name, text) {
   const bytes = new TextEncoder().encode(text);
@@ -29,7 +29,7 @@ function eventAdaptersPage() {
   adapter.addEventListener("change", updateInfo);
   function refreshSources() {
     const chosen = source.value;
-    source.replaceChildren(el("option", {value:""}, "اختر دليلًا…"), ...state.project.evidence.map(item => el("option", {value:item.id, selected:item.id === chosen}, item.name + " · " + item.kind)));
+    source.replaceChildren(el("option", {value:""}, "اختر دليلًا…"), ...state.project.evidence.map(item => el("option", {value:item.id, selected:item.id === chosen}, item.name + " · " + evidenceKindLabel(item.kind))));
   }
   const result = el("div", {}, panel("توحيد الأحداث وحفظ أصلها",
     el("p", {class:"notice"}, "محولات ملفات محددة لصيغة was.event/1؛ ليست دعمًا كاملًا لـOCSF أو استقبالًا حيًا. يحتفظ كل حدث بأصله وبصمة ملف الإدخال. لا يُعرض محتوى الأحداث تلقائيًا؛ التقرير المنزّل قد يحتوي بيانات حساسة."),
@@ -92,7 +92,7 @@ function detectionLibraryPage() {
   }
   function refreshSources() {
     const chosen = source.value;
-    source.replaceChildren(el("option", {value:""}, "اختر دليلًا…"), ...state.project.evidence.map(item => el("option", {value:item.id, selected:item.id === chosen}, item.name + " · " + item.kind)));
+    source.replaceChildren(el("option", {value:""}, "اختر دليلًا…"), ...state.project.evidence.map(item => el("option", {value:item.id, selected:item.id === chosen}, item.name + " · " + evidenceKindLabel(item.kind))));
     const rows = state.project.evidence.filter(item => item.kind === "detection-test");
     history.replaceChildren(rows.length ? table(["التقرير المحفوظ", "عرض"], rows.map(item => [item.name, button("عرض " + item.name, () => action(async () => {
       const blob = await api("evidence?project=" + projectId + "&id=" + item.id, undefined, true);

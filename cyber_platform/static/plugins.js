@@ -34,7 +34,7 @@ function pluginsPage() {
       el("p", {}, "المصدر المعلن: " + item.manifest.source),
       el("p", {class:"muted"}, "المصدر تصريح داخل البيان؛ لا يجري تنزيله أو التحقق من هوية ناشره. الاعتماد هنا قرار بشأن البيانات الوصفية فقط."),
       table(["الصلاحيات المعلنة"], item.manifest.permissions.map(value => [value])),
-      item.issues.length ? table(["ما يحتاج مراجعة", "الوصف"], item.issues.map(issue => [issue.code, issue.message])) : el("p", {}, "لا توجد تعارضات في فحوص البيانات الحالية؛ هذا لا يثبت سلامة كود الإضافة."),
+      item.issues.length ? table(["ما يحتاج مراجعة", "الوصف"], item.issues.map(issue => [uiLabel(issue.code), issue.message])) : el("p", {}, "لا توجد تعارضات في فحوص البيانات الحالية؛ هذا لا يثبت سلامة كود الإضافة."),
       el("details", {}, el("summary", {}, "البيان وبصمات مصادره"), pre({manifest:item.manifest, source_evidence:item.source_evidence, source_sha256:item.source_sha256, manifest_sha256:item.manifest_sha256, evidence_id:item.evidence_id})),
       table(["المراجعة", "القرار", "الحالة", "السبب", "دليل القرار"], item.history.map(row => [row.revision, actions[row.action] || row.action, labels[row.state] || row.state, row.reason, row.evidence_id])));
   }
@@ -79,12 +79,12 @@ function pluginsPage() {
     snapshot = data;
     state.project = project;
     exportButton.disabled = false;
-    evidence.replaceChildren(el("option", {value:""}, "اختر ملف البيان"), ...project.evidence.map(item => el("option", {value:item.id, selected:item.id === original}, item.name + " · " + item.kind)));
+    evidence.replaceChildren(el("option", {value:""}, "اختر ملف البيان"), ...project.evidence.map(item => el("option", {value:item.id, selected:item.id === original}, item.name + " · " + evidenceKindLabel(item.kind))));
     chosen.replaceChildren(el("option", {value:""}, "اختر إضافة مسجلة"), ...data.items.map(item => el("option", {value:item.id, selected:item.id === previous}, item.id + " · " + item.manifest.version)));
     content.replaceChildren(
       panel("الإضافات المسجلة", el("p", {}, data.notice), data.items.length ? table(["المعرف", "الإصدار", "الترخيص", "الحالة", "المراجعة", "عرض"], data.items.map(item => [item.id, item.manifest.version, item.manifest.license, labels[item.effective_state] || item.effective_state, item.revision, button("مراجعة إضافة " + item.id, () => {chosen.value = item.id; show();})])) : el("p", {}, "لا توجد بيانات إضافات مسجلة.")),
       panel("خريطة تبعيات الإضافات", data.graph.edges.length ? table(["الإضافة", "التبعية", "الإصدار المطلوب"], data.graph.edges.map(edge => [edge.source, edge.target, edge.required_version])) : el("p", {}, "لا توجد تبعيات معلنة."),
-        data.graph.issues.length ? table(["الإضافة", "التعارض", "الوصف"], data.graph.issues.map(issue => [issue.plugin_id, issue.code, issue.message])) : el("p", {}, "لا توجد تعارضات تبعية مسجلة ضمن النطاق الحالي."),
+        data.graph.issues.length ? table(["الإضافة", "التعارض", "الوصف"], data.graph.issues.map(issue => [issue.plugin_id, uiLabel(issue.code), issue.message])) : el("p", {}, "لا توجد تعارضات تبعية مسجلة ضمن النطاق الحالي."),
         el("details", {}, el("summary", {}, "حدود السجل وبصمته"), pre({limits:data.limits, digest:data.digest}))));
     show();
   }

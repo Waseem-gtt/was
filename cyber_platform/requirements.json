@@ -3512,10 +3512,12 @@
       "title": "تجديد تلقائي للمعرفة والأدوات وحزم المختبرات والمنصات",
       "group": "E",
       "status": "partial",
-      "scope": "جلب CISA وجدولة وبحث ولقطة؛ لا تركيب أدوات أو تجديد كل التقنيات",
+      "scope": "اكتمل استيراد ملفات KEV وبحثها دون إنترنت مع إثبات مصدر وحفظ آخر فهرس صالح؛ ويتوفر جلب CISA وجدولته؛ تركيب الأدوات وتجديد جميع التقنيات متبقيان",
       "evidence_paths": [
         "cyber_platform/knowledge.py",
-        "tests/test_platform.py"
+        "cyber_platform/knowledge_files.py",
+        "tests/test_knowledge_files.py",
+        "docs/Knowledge-Files.md"
       ],
       "source_ids": [
         "source.0049"

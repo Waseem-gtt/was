@@ -15,7 +15,12 @@ def _analyze(connection, tool, data):
         resource.setrlimit(resource.RLIMIT_AS, (384 * 1024 * 1024, 384 * 1024 * 1024))
         resource.setrlimit(resource.RLIMIT_FSIZE, (1024 * 1024, 1024 * 1024))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
-        connection.send({"ok": True, "result": tools.analyze(tool, data)})
+        if tool == "knowledge-catalog":
+            from .knowledge_files import parse
+            result = parse(data)
+        else:
+            result = tools.analyze(tool, data)
+        connection.send({"ok": True, "result": result})
     except (ValueError, TypeError, KeyError, IndexError, OverflowError, MemoryError, RecursionError) as exc:
         connection.send({"ok": False, "error": str(exc)[:300] or "Analyzer resource limit exceeded"})
     finally:
@@ -23,7 +28,7 @@ def _analyze(connection, tool, data):
 
 
 def analyze(tool, data, timeout=10):
-    if tool not in tools.REGISTRY or not isinstance(data, bytes) or len(data) > 4 * 1024 * 1024:
+    if tool not in (*tools.REGISTRY, "knowledge-catalog") or not isinstance(data, bytes) or len(data) > 4 * 1024 * 1024:
         raise ValueError("Invalid analyzer or input exceeds 4 MiB")
     context = multiprocessing.get_context("spawn")
     receiver, sender = context.Pipe(duplex=False)

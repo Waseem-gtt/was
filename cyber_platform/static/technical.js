@@ -83,7 +83,7 @@ function technicalAnalysisPage() {
     } else if (report.tool === "certificate") {
       summary.push(el("p", {}, "الشهادات: " + value.certificate_count),
         el("p", {class:"notice"}, "الثقة في ناشر الشهادة غير مقيّمة. صحة توقيع رابط مقدم لا تعني ثقة الجهة أو صلاحية اسم موقع."),
-        table(["الشهادة", "الموضوع", "الجهة المصدرة", "بداية الصلاحية", "نهاية الصلاحية", "حالة الوقت"], (value.certificates || []).map((row,index) => [index + 1, typeof row.subject === "string" ? row.subject : JSON.stringify(row.subject),typeof row.issuer === "string" ? row.issuer : JSON.stringify(row.issuer),row.not_before,row.not_after,row.time_status])),
+        table(["الشهادة", "الموضوع", "الجهة المصدرة", "بداية الصلاحية", "نهاية الصلاحية", "حالة الوقت"], (value.certificates || []).map((row,index) => [index + 1, typeof row.subject === "string" ? row.subject : JSON.stringify(row.subject),typeof row.issuer === "string" ? row.issuer : JSON.stringify(row.issuer),row.not_before,row.not_after,uiLabel(row.time_status)])),
         el("details", {}, el("summary", {}, "روابط التوقيع والقيود والمفاتيح"), pre({chain_links:value.chain_links,certificates:value.certificates})));
     } else if (report.tool === "supply-chain-diff") {
       summary.push(el("p", {}, "المقارنة مكتملة: " + (value.complete ? "نعم":"لا") + " · الجرد المطبع متساوٍ: " + (value.normalized_inventory_equal ? "نعم":"لا")),
@@ -117,8 +117,8 @@ function technicalAnalysisPage() {
         el("p", {class:"notice"}, "SPF/DKIM/DMARC تصريحات من الملف فقط. لا يُصدّر الجسم أو اسم المرفق الخام ولا يُستخرج محتواه."));
     } else if (report.tool === "kubernetes") {
       summary.push(el("p", {}, "الموارد: " + value.resource_count + " · الحاويات: " + value.container_count),
-        table(["المورد", "النوع", "مساحة الاسم", "الحاويات", "نطاق المراجعة"], rows(value.resources).map(row => [row.name,row.kind,row.namespace,row.container_count,row.review_status])),
-        el("p", {class:"notice"}, "مراجعة ثابتة فقط؛ مورد not_reviewed لم يُفحص. لا تطبيق للإعدادات أو تحقق من العنقود."));
+        table(["المورد", "النوع", "مساحة الاسم", "الحاويات", "نطاق المراجعة"], rows(value.resources).map(row => [row.name,row.kind,row.namespace,row.container_count,uiLabel(row.review_status)])),
+        el("p", {class:"notice"}, "مراجعة ثابتة فقط؛ المورد الموسوم «لم يُفحص ضمن النطاق» لا يدخل في المراجعة. لا تطبيق للإعدادات أو تحقق من العنقود."));
     } else if (report.tool === "kubernetes-diff") {
       summary.push(el("p", {}, "المقارنة مكتملة: " + (value.complete ? "نعم":"لا") + " · المراجعة المطَبعة متساوية: " + (value.normalized_review_equal ? "نعم":"لا")),
         table(["المورد المتغير", "الحقول"], rows(value.changed_resources).map(row => [row.id,safeValue(row.fields)])),
@@ -131,17 +131,17 @@ function technicalAnalysisPage() {
         el("p", {class:"notice"}, "لا تُنفذ الخدمة أو الأوامر، ولا تعني المراجعة تحققًا من إعدادات خدمة عاملة."));
     } else if (report.tool === "sarif") {
       summary.push(el("p", {}, "النتائج المسجلة: " + value.finding_count + " · مرات التشغيل: " + value.run_count),
-        table(["القاعدة", "الشدة", "الرسالة", "المواقع"], rows(value.findings).map(row => [row.rule_id,row.level,row.message,safeValue(row.locations)])),
+        table(["القاعدة", "الشدة", "الرسالة", "المواقع"], rows(value.findings).map(row => [row.rule_id,uiLabel(row.level),row.message,safeValue(row.locations)])),
         el("p", {class:"notice"}, "استيراد تصريحات فاحص فقط، دون تشغيله أو عرض مقتطفات الكود أو فتح المواقع المذكورة."));
     } else if (report.tool === "sarif-diff") {
       summary.push(el("p", {}, "المقارنة مكتملة: " + (value.complete ? "نعم":"لا") + " · النتائج المطَبعة متساوية: " + (value.normalized_findings_equal ? "نعم":"لا")),
         pre(value.counts || {}),
-        table(["القاعدة", "الشدة السابقة", "الشدة الجديدة", "التكرارات"], rows(value.severity_changed).map(row => [row.finding?.rule_id,row.from_level,row.to_level,row.count])),
+        table(["القاعدة", "الشدة السابقة", "الشدة الجديدة", "التكرارات"], rows(value.severity_changed).map(row => [row.finding?.rule_id,uiLabel(row.from_level),uiLabel(row.to_level),row.count])),
         el("details", {}, el("summary", {}, "النتائج المضافة والغائبة"), pre({added:value.added,resolved:value.resolved})),
         el("p", {class:"notice"}, "اختفاء نتيجة من الملف لا يثبت إصلاح ثغرة. المقارنة تشمل الحقول المطَبعة والتكرارات فقط."));
     } else if (report.tool === "archive") {
       summary.push(el("p", {}, "الصيغة: " + value.format + " · أعضاء الأرشيف: " + value.member_count),
-        table(["العضو", "النوع", "الحجم المعلن", "الحجم المخزن", "مشفر"], rows(value.members).map(row => [row.name,row.type,row.size,row.compressed_size,row.encrypted ? "نعم":"لا"])),
+        table(["العضو", "النوع", "الحجم المعلن", "الحجم المخزن", "مشفر"], rows(value.members).map(row => [row.name,uiLabel(row.type),row.size,row.compressed_size,row.encrypted ? "نعم":"لا"])),
         el("p", {class:"notice"}, "لم تُستخرج الملفات أو يُفك ضغطها، ولم يُتحقق من CRC. الأحجام بيانات معلنة في الأرشيف."));
     } else if (report.tool === "ssh-keys") {
       summary.push(el("p", {}, "المفاتيح العامة: " + value.key_count),
@@ -150,11 +150,11 @@ function technicalAnalysisPage() {
     } else if (report.tool === "dns") {
       summary.push(el("p", {}, "الأسئلة: " + value.question_count + " · السجلات: " + value.record_count),
         table(["اسم السؤال", "النوع", "الفئة"], rows(value.questions).map(row => [row.name,row.type,row.class])),
-        table(["القسم", "الاسم", "النوع", "TTL", "البيانات الموثقة"], rows(value.records).map(row => [row.section,row.name,row.type,row.ttl,safeValue(row.data)])),
+        table(["القسم", "الاسم", "النوع", "TTL", "البيانات الموثقة"], rows(value.records).map(row => [uiLabel(row.section),row.name,row.type,row.ttl,safeValue(row.data)])),
         el("p", {class:"notice"}, "رسالة مسجلة دون استعلام شبكة أو تحقق DNSSEC. أعلام الأصالة تصريحات الرسالة وليست ثقة مكتسبة."));
     }
     if (rows(value.findings).length && !["sarif", "sarif-diff"].includes(report.tool)) summary.push(
-      table(["الملاحظة", "المورد أو الإدخال", "الحقل", "الوصف"], rows(value.findings).map(row => [row.code,safeValue(row.resource_id ?? row.entry ?? row.member ?? row.key),row.field || "—",row.message])));
+      table(["الملاحظة", "المورد أو الإدخال", "الحقل", "الوصف"], rows(value.findings).map(row => [uiLabel(row.code),safeValue(row.resource_id ?? row.entry ?? row.member ?? row.key),row.field || "—",findingDescription(row.code,row.message)])));
     output.replaceChildren(panel("نتيجة التحليل التقني", badge(historical ? "نتيجة تاريخية محفوظة":"اكتمل تحليل الملف", "good"),
       el("p", {class:"muted"}, "نجاح تنفيذ التحليل ليس شهادة سلامة. " + (historical ? "تحققت قراءة الملفات وبصماتها دون إعادة تشغيل المحلل؛ قد تختلف نتائج إصدار أحدث." : "حُفظ الأصل والنتيجة كدليلين منفصلين.")),
       ...summary,

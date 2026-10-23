@@ -68,7 +68,7 @@ function workflowPlansPage() {
       run.error_code ? el("p",{class:"notice"},"توقف التحقق: " + run.error_code + ". راجع المصدر قبل بدء تشغيل جديد.") : null,
       table(["العقدة","الأداة","الحالة","الدليل والتوقيت"],run.plan.nodes.map(node => {
         const item = results.get(node.id);
-        return [node.id,node.tool,item ? nodeStatuses[item.status] || item.status : nodeStatuses.pending,
+        return [node.id,toolDisplayName(node.tool),item ? nodeStatuses[item.status] || item.status : nodeStatuses.pending,
           item ? el("details",{},el("summary",{},String(item.elapsed_ms ?? 0) + " ms"),pre({evidence_id:item.evidence_id || null,input_evidence:item.input_evidence || null,input_sha256:item.input_sha256 || null,output_sha256:item.output_sha256 || null,error_code:item.error_code || null,checks:item.checks || []})) : "—"];
       })),
       el("details",{},el("summary",{},"بصمات الخطة والمحرك"),pre({version:run.version,plan_sha256:run.plan_sha256,engine_sha256:run.engine_sha256})),
@@ -104,7 +104,7 @@ function workflowPlansPage() {
     const slots = [...new Set(template.plan.nodes.map(node => node.input?.slot).filter(slot => typeof slot === "string"))];
     bindings.replaceChildren(...slots.map(slot => {
       const select = el("select",{"aria-label":"دليل مدخل الخطة: " + slot},el("option",{value:""},"اختر دليلًا للمدخل " + slot),
-        state.project.evidence.map(item => el("option",{value:item.id,selected:previous.get(slot) === item.id},item.name + " · " + item.kind)));
+        state.project.evidence.map(item => el("option",{value:item.id,selected:previous.get(slot) === item.id},item.name + " · " + evidenceKindLabel(item.kind))));
       bindingSelectors.set(slot,select);
       return field("دليل مدخل الخطة: " + slot,select);
     }));

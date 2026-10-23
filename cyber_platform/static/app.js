@@ -69,10 +69,10 @@ const panel = (title, ...children) =>
   );
 const size = (n) =>
   n >= 1e6
-    ? (n / 1e6).toFixed(2) + " MB"
+    ? (n / 1e6).toFixed(2) + " ميجابايت"
     : n >= 1024
-      ? (n / 1024).toFixed(1) + " KB"
-      : n + " B";
+      ? (n / 1024).toFixed(1) + " كيلوبايت"
+      : n + " بايت";
 const when = (n) =>
   new Intl.DateTimeFormat("ar-SA", {
     dateStyle: "medium",
@@ -259,7 +259,7 @@ function brand() {
       "div",
       {},
       el("b", {}, "واس"),
-      el("small", {}, "CYBER RESEARCH PLATFORM"),
+      el("small", {}, "منصة البحث السيبراني"),
     ),
   );
 }
@@ -461,7 +461,7 @@ function render() {
       el(
         "div",
         {},
-        el("div", { class: "eyebrow" }, "WAS / WORKSPACE"),
+        el("div", { class: "eyebrow" }, "واس / مساحة العمل"),
         el(
           "h1",
           {},
@@ -1216,7 +1216,7 @@ function jobResult(job) {
       "div",
       { class: "result-head" },
       badge(
-        statusText[job.status] || job.status,
+        statusText[job.status] || uiLabel(job.status),
         job.status === "succeeded" ? "good" : "bad",
       ),
       el(
@@ -1431,7 +1431,7 @@ function workflows() {
                 "div",
                 { class: "actions" },
                 badge(
-                  statusText[j.status] || j.status,
+                  statusText[j.status] || uiLabel(j.status),
                   j.status === "succeeded" ? "good" : "bad",
                 ),
                 button("النتائج", () => modal(j.name, pre(j)), "small"),
@@ -1958,7 +1958,16 @@ function requirementsPage() {
     currentPage = 1;
     load().catch((e) => toast(e.message, true));
   });
-  holder.append(meta, panel("معلومات الملف والمتطلبات", form), matches, pager);
+  holder.append(panel("وظائف جاهزة للتشغيل",
+    el("p", {}, "هذه وظائف مكتملة ضمن حدودها المعلنة. البنود الأصلية الواسعة أدناه تجمع وظائف أخرى؛ لذلك قد يبقى المتطلب الكبير جزئيًا."),
+    el("div", {class:"grid"},
+      el("article", {class:"card"}, badge("جاهز", "good"), el("h3", {}, "رفع الأدلة وحفظ الأصل والبصمة"),
+        el("p", {}, "ارفع ملفك، واحفظ الأصل منفصلًا عن النتائج، وتحقق من بصمته عند القراءة."), button("فتح الأدلة", () => go("evidence"))),
+      el("article", {class:"card"}, badge("جاهز", "good"), el("h3", {}, state.boot.tools.length + " أداة لتحليل الملفات"),
+        el("p", {}, "مدخلات وحدود معلنة، وتشغيل فعلي بنتيجة محفوظة مرتبطة بملفها الأصلي؛ لا فحص حي لجهازك."), button("فتح أدوات التحليل", () => go("tools"))),
+      el("article", {class:"card"}, badge("جاهز", "good"), el("h3", {}, "استيراد فهرس الثغرات والبحث دون إنترنت"),
+        el("p", {}, "ملف KEV أصلي، وتحليل متحقق، وإثبات استيراد قابل للتنزيل، واحتفاظ بالفهرس السابق عند رفض ملف جديد."), button("فتح استيراد فهرس الثغرات", () => go("knowledge")))
+    )), meta, panel("معلومات الملف والمتطلبات", form), matches, pager);
   load().catch((e) => toast(e.message, true));
   return holder;
 }
@@ -2100,6 +2109,7 @@ function knowledgePage() {
       action(search);
     });
     holder.replaceChildren(
+      offlineKnowledgePanel(),
       stateNode,
       schedule,
       panel("بحث المعرفة دون إرسال السؤال للمصدر", form),
@@ -2232,7 +2242,7 @@ function qualityPage() {
       run.status === "completed" && !passed ? el("p", {class:"notice"}, "اكتمل التنفيذ مع حالات أخفقت؛ راجع التفاصيل قبل الاعتماد على التغيير.") : null,
       el("details", {}, el("summary", {}, "بصمات نطاق الفحص والمحرك"), pre({version:run.version, suite_sha256:run.suite_sha256, engine_sha256:run.engine_sha256})),
       run.results.length ? table(["الحالة", "الأداة", "النتيجة", "الوقت والبصمات"], run.results.map(result => [
-        result.case_id, result.tool, result.status === "passed" ? "اجتاز" : "أخفق",
+        result.case_id, toolDisplayName(result.tool), result.status === "passed" ? "اجتاز" : "أخفق",
         el("details", {}, el("summary", {}, String(result.elapsed_ms) + " ms زمن منقضٍ"), pre({error_code:result.error_code || null, input_sha256:result.input_sha256, expected_sha256:result.expected_sha256, result_sha256:result.result_sha256})),
       ])) : el("p", {class:"muted"}, "لم تُنفّذ أي حالة بعد؛ شغّل الدفعة التالية."));
   }
@@ -2352,7 +2362,7 @@ function maintenancePage() {
   function showReport(r) {
     output.replaceChildren(panel("نتيجة الفحص", badge(r.passed ? "اجتاز الفحص المحدد" : "توجد ملاحظات أو فحص غير مكتمل", r.passed ? "good":"warn"),
       el("p", {}, r.limitation),
-      table(["الفحص", "النتيجة", "التفاصيل"], r.checks.map(c => [c.id, c.status === "passed" ? "اجتاز":"يحتاج مراجعة", pre(c.detail)])),
+      table(["الفحص", "النتيجة", "التفاصيل"], r.checks.map(c => [maintenanceCheckLabel(c.id), c.status === "passed" ? "اجتاز":"يحتاج مراجعة", pre(c.detail)])),
       el("p", {}, "إصلاحات صلاحيات: " + r.repairs.length)));
   }
   function showTasks(rows) {

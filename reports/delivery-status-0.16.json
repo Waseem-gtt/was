@@ -1,0 +1,1281 @@
+{
+  "schema": "was.delivery-status/1",
+  "version": "0.16.0",
+  "review_date": "2026-10-23",
+  "stage": "validated_delivery",
+  "source": {
+    "filename": "Cyber-Platform-Requirements.md",
+    "repository_path": "docs/Requirements-Source.md",
+    "sha256": "7494e12a75b388c72a8a4b87c0b54045f4af8f517ce50d5a9ff17466cffd7f06",
+    "bytes": 173726,
+    "lines": 876
+  },
+  "full_project_complete": false,
+  "completion_percentage": null,
+  "percentage_notice": "لا نسبة كلية؛ المتطلبات واسعة ومتشعبة، والقدرات المسلّمة محددة مع حدودها.",
+  "prior_release": {
+    "version": "0.15.0",
+    "validation": "docs/Validation-0.15.md",
+    "unit_tests_per_python": 722,
+    "python_versions": [
+      "3.11",
+      "3.12",
+      "3.13"
+    ],
+    "browser_groups": 56
+  },
+  "new_functions": [
+    {
+      "id": "offline-kev",
+      "name": "استيراد فهرس ثغرات والبحث دون إنترنت",
+      "scope": "وظيفة مكتملة ضمن KEVالموثق: رفع الأصل، وقارئ محدود، وإثبات ثابت، وبحث وتنزيل إثبات واستعادة متحققة؛ الملف غير موثق بتوقيع ناشر",
+      "status": "available_with_documented_limits"
+    },
+    {
+      "id": "arabic-ui",
+      "name": "تعريب خيارات وحالات الواجهة",
+      "scope": "تسميات الملفات والحالات وشدة SARIFوحالات الشهادات والملاحظات الأساسية وعناوين مساحة العمل؛ المعرفات وJSONوأسماء التقنيات تبقى بصيغتها الأصلية",
+      "status": "validated_in_0.16"
+    },
+    {
+      "id": "ready-functions",
+      "name": "إظهار الوظائف الجاهزة منفصلة عن المتطلبات الواسعة",
+      "scope": "روابط مباشرة لرفع الأدلة وتحليل الملفات واستيراد فهرس الثغرات؛ تبقى حالة المتطلب الأصلي الواسع وحدوده واضحة",
+      "status": "validated_in_0.16"
+    }
+  ],
+  "delivered_capability_groups": [
+    {
+      "name": "فهرس الثغرات من ملف",
+      "implemented": "استيراد KEVوبحثه دون إنترنت وإثبات مصدر ثابت واحتفاظ بالفهرس الحالي عند رفض ملف جديد؛ تحقق عملي من1754سجلًا عامًا",
+      "limit": "مصدر يقدمه المالك، لا توقيع ناشر أو مسح جهاز أو جمع كل مصادر الثغرات",
+      "reference": "docs/Knowledge-Files.md"
+    },
+    {
+      "name": "واجهة الفتح والتشغيل على لينكس",
+      "implemented": "خريطة أقسام ومنصات وأدوات ودليل ورفع مباشر، ومشغّل app mode ومدخل قائمة مولد",
+      "limit": "لا توزيعة نظام تشغيل أو OVA أو إثبات نافذة رسومية على المضيف؛ نطاق كل أداة يبقى محددًا",
+      "reference": "docs/Linux-Deployment.md"
+    },
+    {
+      "name": "الحساب والخصوصية",
+      "implemented": "حساب مالك مع رمز تهيئة خاص ومصادقة وCSRF وحدود طلبات وملفات تشغيل خارج Git",
+      "limit": "لا تشفير تلقائي لقاعدة البيانات الحية أو ضمان أمام مدير جهاز مخترق",
+      "reference": "docs/Security.md"
+    },
+    {
+      "name": "المشاريع والأدلة",
+      "implemented": "ملفات أصلية ببصمات SHA-256 ونتائج مشتقة وعلاقات وخريطة وجدول وتنزيل",
+      "limit": "لا إدارة قضية مؤسسية متعددة الأدوار أو اعتماد قضائي",
+      "reference": "docs/API.md"
+    },
+    {
+      "name": "هيكل التخصصات",
+      "implemented": "22 قسمًا و109 منصات بمعرفات وصفحات وروابط أدوات",
+      "limit": "عدد المنصات ليس نسبة إنجاز ولا إثبات اكتمال كل تقنية",
+      "reference": "docs/Implementation-Status.md"
+    },
+    {
+      "name": "تحليل الملفات السابق",
+      "implemented": "25 أداة مسلّمة حتى0.13، منها PCAP وX.509 وSPDX/CycloneDX ومقارنتهما",
+      "limit": "تحليل ملفات ونماذج محددة؛ لا اتصال أو تحكم حي بالأجهزة",
+      "reference": "docs/Technical-Analysis.md"
+    },
+    {
+      "name": "الأحداث والكشف",
+      "implemented": "4 محولات أحداث، و8 قواعد أصلية مع مراجعات مالك واختبارات TP/FP/FN/TN ومقاييسها",
+      "limit": "لا OCSF أو Sigma كامل أو EVTX أو جمع أحداث حي",
+      "reference": "docs/Event-Adapters.md"
+    },
+    {
+      "name": "خطط التحليل",
+      "implemented": "DAG حتى20عقدة وفروع نجاح وفشل وإيقاف واستكمال ومصدر نتيجة، و8قوالب بيانات",
+      "limit": "تنفيذ متتابع يدوي على دفعات؛ لا تشغيل خلفي أو إعادة عقدة منقطعة تلقائيًا",
+      "reference": "docs/Workflow-Plans.md"
+    },
+    {
+      "name": "التغطية الدفاعية",
+      "implemented": "أصول وتقييمات وأدلة وفحص حتى200تقييم على دفعات مع فحص ملفات الإثبات",
+      "limit": "لقطة تاريخية غير ذرية؛ لا مراقبة حية أو شهادة حماية",
+      "reference": "docs/Coverage-Scans.md"
+    },
+    {
+      "name": "تقارير المشروع",
+      "implemented": "JSON وHTML ثابتان بالمراجع والبصمات ومراجعة سلامة المصدر",
+      "limit": "لا تصدير خام لكل دليل أو ضمان صحة الادعاءات",
+      "reference": "docs/Project-Reports.md"
+    },
+    {
+      "name": "النسخ والاستعادة",
+      "implemented": "نسخ AES-256-GCM وScrypt مع بيان وبصمات واستعادة مرحلية متحققة",
+      "limit": "سقف حجم موثق؛ لا تشفير تلقائي للقرص أو نسخ كل خدمات الضيف",
+      "reference": "docs/Security.md"
+    },
+    {
+      "name": "التعلّم",
+      "implemented": "5 مسارات و20تمرين مفهوم ثابت مع متطلبات سابقة ومحاولات متحققة وتقدم مستقل للمشروع",
+      "limit": "لا شهادة إتقان أو تغطية كل تقنية؛ للمحاولات سقوف احتفاظ",
+      "reference": "docs/Curriculum.md"
+    },
+    {
+      "name": "الصيانة والجودة",
+      "implemented": "فحص البيانات والتدقيق والأدلة وعينات الأدوات وإصلاح صلاحيات محدود، ومجموعة جودة اصطناعية",
+      "limit": "لا إصلاح عام لكل النظام أو قياس ذاكرة فعلي أو اعتماد خارجي",
+      "reference": "docs/Quality-Center.md"
+    },
+    {
+      "name": "مراجعة الإضافات",
+      "implemented": "بيانات المصدر والترخيص والصلاحيات والاعتماديات ومراجعات وقرارات ثابتة",
+      "limit": "لا تنزيل أو تثبيت أو تشغيل كود الإضافات أو ثقة ناشر تلقائية",
+      "reference": "docs/Plugin-Registry.md"
+    },
+    {
+      "name": "الترقية والتسليم",
+      "implemented": "حزم مصدر وwheel وبصمات، ومسار ترقية ورجوع وتحقق Ed25519 اختياري",
+      "limit": "مفتاح وثقة التوقيع عملية مالك؛ الحزم ليست موقعة افتراضيًا ولا TUF",
+      "reference": "docs/Signed-Releases.md"
+    },
+    {
+      "name": "المعرفة",
+      "implemented": "جلب CISA KEV إلى لقطة خاصة وبحث وجدولة اختيارية تحفظ القديم عند الفشل",
+      "limit": "مصدر حي واحد؛ ليست متابعة لجميع تقنيات وثغرات العالم",
+      "reference": "docs/Implementation-Status.md"
+    }
+  ],
+  "remaining": [
+    {
+      "requirement": "E02 / E03 / BASE.05",
+      "name": "قبول سطح المكتب والجهاز الافتراضي",
+      "remaining": "اختبار النافذة وقائمة التطبيقات داخل جلسة Linux فعلية، ثم بناء OVA وإعادة استيرادها وقياس النظام الكامل"
+    },
+    {
+      "requirement": "F01",
+      "name": "تشغيل الإضافات",
+      "remaining": "حزم كود وثقة ناشر واختبارات معزولة وتثبيت وتفعيل وتراجع تنفيذي؛ الموجود إدارة بيانات فقط"
+    },
+    {
+      "requirement": "F02",
+      "name": "إدارة موارد الضيف",
+      "remaining": "cgroups وحصص ملزمة للخدمات والضيف وقياسات موارد موسعة؛ الموجود حدود العامل وحصة الأدلة واحتياطي القرص"
+    },
+    {
+      "requirement": "F03",
+      "name": "لغة الأحداث والتكامل الحي",
+      "remaining": "OCSF الكامل وEVTX والجمع الحي؛ الموجود أربع صيغ موثقة إلى was.event/1"
+    },
+    {
+      "requirement": "F04",
+      "name": "قواعد الكشف",
+      "remaining": "Sigma الكامل ومكتبة ناشر موقعة ومستشعرات حية؛ الموجود اختبارات ملفات وقواعد مطابقة حقول"
+    },
+    {
+      "requirement": "F05",
+      "name": "التحديث التلقائي والثقة",
+      "remaining": "TUF ودوران مفاتيح تلقائي وتحديث حزم النظام؛ اعتماد المفتاح الحقيقي يختاره المالك"
+    },
+    {
+      "requirement": "F06",
+      "name": "كيانات الأدلة المؤسسية",
+      "remaining": "دورة قضية وصلاحيات مؤسسية وكل كيانات الثقة والتعارض في الرؤية الأصلية"
+    },
+    {
+      "requirement": "E01 / BASE.12",
+      "name": "الورشة المعزولة",
+      "remaining": "لم يُتحقق تشغيل Bubblewrap على مضيف يدعم namespaces؛ الورشة ترفض آمنًا عند غيابها"
+    },
+    {
+      "requirement": "E03",
+      "name": "التعلّم الشامل",
+      "remaining": "مسارات إتقان كل تخصص وتقنية وقبول واقعي موسع؛ الموجود تمارين مفاهيم محددة"
+    },
+    {
+      "requirement": "E04",
+      "name": "المعرفة والأدوات العالمية",
+      "remaining": "مصادر متعددة واختبارات توافق وتركيب وترقية الأدوات؛ المصدر الحي المتاح CISA فقط"
+    },
+    {
+      "requirement": "E05",
+      "name": "الصيانة الكاملة",
+      "remaining": "ترقية واستبدال وترحيل شامل وإصلاح مستقل لكل الأعطال وضمان دعم طويل؛ الموجود إصلاح محدود ومتابعة يدوية"
+    },
+    {
+      "requirement": "N01 / N04",
+      "name": "التنفيذ والمحاكاة",
+      "remaining": "توازٍ وتشغيل خلفي وحالة أجهزة ومحاكاة قابلة للاستعادة؛ الخطط الحالية نتائج ملفات محفوظة"
+    },
+    {
+      "requirement": "N05 / N06",
+      "name": "التقييم العام والدفاع الحي",
+      "remaining": "مجموعات واقعية موسعة وقياسات موارد وتحقق فعالية كل تخصص ومراقبة حية؛ اللقطات تاريخية"
+    },
+    {
+      "requirement": "BASE.05",
+      "name": "صورة VirtualBox",
+      "remaining": "لا OVA مبنية ومختبرة ولا قياس35GBلضيف متكامل؛20GBرقم تاريخي تجاوزه آخر تعديل"
+    },
+    {
+      "requirement": "BASE.08 / BASE.09",
+      "name": "النموذج المحلي",
+      "remaining": "الموصل الاختياري موجود؛ لم يثبت نموذج أو استدلال فعلي، ولا مساعد كامل لكل تخصص"
+    },
+    {
+      "requirement": "Q01–Q05 والأقسام",
+      "name": "التكاملات المتقدمة",
+      "remaining": "مصدرية بناء كاملة، عتاد وهواتف ومركبات إنتاجية، PKIXعام، SSO/FreeIPA/SPIFFE، وML-KEM/ML-DSAغير منفذة بالكامل"
+    }
+  ],
+  "owner_cancelled": [
+    {
+      "requirement": "BASE.02 / N02",
+      "scope": "طبقة المختبرات ملغاة؛ قوالب بيانات الخطط مستقلة عنها ولا تعيدها"
+    },
+    {
+      "requirement": "N03",
+      "scope": "فريق الوكلاء داخل المنتج ملغى؛ مساعدو التطوير خارج البرنامج فقط"
+    }
+  ],
+  "requirements_in_source_order": [
+    {
+      "id": "BASE.01",
+      "title": "منصة أم واحدة، تحتوي أقسامًا رئيسية، وتحت كل قسم منصات فرعية وتطبيقات ومختبرات ومحركات وأدوات.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "هيكل22قسمًا و109منصات و36أداة مشتركة بهويات ثابتة؛ المختبرات ملغاة، وليست كل تطبيقات وتكاملات كل منصة منفذة",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0003"
+      ],
+      "source_line_start": 9,
+      "source_line_end": 9
+    },
+    {
+      "id": "BASE.02",
+      "title": "المختبرات تحتوي مختبرات فرعية وسيناريوهات وتجارب وأدلة ونتائج. عمق التقسيم حسب الوظيفة الفعلية.",
+      "group": "BASE",
+      "status": "superseded",
+      "scope": "ألغي الهيكل بتوجيه المالك؛ لا تعاد المختبرات إلى التطبيق",
+      "evidence_paths": [
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0004"
+      ],
+      "source_line_start": 10,
+      "source_line_end": 10
+    },
+    {
+      "id": "BASE.03",
+      "title": "لكل قسم محرك تنسيق وظيفي، وتحته محركات تخصصية مركبة تستدعي محركات مهام أصغر. لكل محرك مدخلات ومخرجات وأدوات وصلاحيات وميزانية موارد وطريقة تحقق",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "محرك DAGوعمال مشتركون بمدخلات ونتائج وبصمات وحدود موارد؛ محركات مستقلة مكتملة لكل تخصص غير منفذة",
+      "evidence_paths": [
+        "cyber_platform/plans.py",
+        "cyber_platform/worker.py",
+        "docs/Workflow-Plans.md"
+      ],
+      "source_ids": [
+        "source.0005"
+      ],
+      "source_line_start": 11,
+      "source_line_end": 11
+    },
+    {
+      "id": "BASE.04",
+      "title": "الاستخدام يشمل البحث والتحليل والتحقيق وتطوير الأدوات واختبار الدفاعات، إضافة إلى التعليم.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "محللات ملفات وأدلة وقواعد كشف وتقييمات اصطناعية وتعليم؛ لا كل البحث والتحقيق المتقدم أو التجارب الحية أو تطوير أدوات تلقائيًا",
+      "evidence_paths": [
+        "cyber_platform/tools.py",
+        "cyber_platform/detection.py",
+        "cyber_platform/learning.py",
+        "docs/Technical-Analysis-0.14.md"
+      ],
+      "source_ids": [
+        "source.0006"
+      ],
+      "source_line_start": 12,
+      "source_line_end": 12
+    },
+    {
+      "id": "BASE.05",
+      "title": "الهدف جهاز افتراضي قابل للتشغيل في VirtualBox. سقف المساحة الحالي 20 جيجابايت للمشروع كاملًا",
+      "group": "BASE",
+      "status": "blocked",
+      "scope": "لا صورة OVA؛ حد35GB حل محل20GB في آخر تعديل بالملف، والتوسعة تحتاج إجراء فعليًا",
+      "evidence_paths": [
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0007"
+      ],
+      "source_line_start": 13,
+      "source_line_end": 13
+    },
+    {
+      "id": "BASE.06",
+      "title": "المكونات المجانية والمفتوحة المصدر هي الأساس. لا اشتراكات إلزامية. ميزانية احتياطية قصوى 50 ريال حسب المحادثة، ولا شراء دون موافقة صريحة لاحقة.",
+      "group": "BASE",
+      "status": "available",
+      "scope": "لا شراء أو اشتراك إلزامي لهذا التنفيذ؛ سقف50ريال احتياطي وليس تفويض شراء",
+      "evidence_paths": [
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0008"
+      ],
+      "source_line_start": 14,
+      "source_line_end": 14
+    },
+    {
+      "id": "BASE.07",
+      "title": "إدارة المالك للكود والبيانات والإعدادات والخدمات المحلية، ضمن تراخيص المكونات.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "كود خاص وإعدادات محلية وأدلة ونسخ مشفرة وتصدير وترقية يدوية؛ لا إدارة شاملة لكل خدمة أو ضمان لتراخيص مكونات يضيفها المالك",
+      "evidence_paths": [
+        "cyber_platform/store.py",
+        "cyber_platform/backup.py",
+        "scripts/release.sh",
+        "docs/Security.md"
+      ],
+      "source_ids": [
+        "source.0009"
+      ],
+      "source_line_start": 15,
+      "source_line_end": 15
+    },
+    {
+      "id": "BASE.08",
+      "title": "مساعد ذكاء اصطناعي لكل قسم، ويمكن مشاركة محرك محلي واحد بين المساعدين. التشغيل المحلي دون مفتاح API خارجي مطلب أساسي.",
+      "group": "BASE",
+      "status": "blocked",
+      "scope": "الموصل موجود؛ لا نموذج محلي مثبت أو استدلال متحقق لكل قسم",
+      "evidence_paths": [
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0010"
+      ],
+      "source_line_start": 16,
+      "source_line_end": 16
+    },
+    {
+      "id": "BASE.09",
+      "title": "تحكم المالك في تعليمات المساعد وذاكرته ومعرفته وأدواته ووصوله واستقلاليته وإيقافه. لا ضمان للطاعة المطلقة أو الدقة الكاملة",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "موصل محادثة loopbackواختيار أدلة صريح دون سلطة تنفيذ؛ لا ذاكرة دائمة عامة أو استقلالية تشغيل أو ضمان طاعة ودقة",
+      "evidence_paths": [
+        "cyber_platform/local_ai.py",
+        "docs/Security.md"
+      ],
+      "source_ids": [
+        "source.0011"
+      ],
+      "source_line_start": 17,
+      "source_line_end": 17
+    },
+    {
+      "id": "BASE.10",
+      "title": "مختبر AI معزول",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "لا نموذجAIمتحقق أو بيئة تنفيذAIمعزولة؛ المختبرات ملغاة، والموصل الفردي الاختياري لا يشغل كودًا أو أدوات",
+      "evidence_paths": [
+        "cyber_platform/local_ai.py",
+        "docs/Scope-Update-0.2.md",
+        "docs/Implementation-Status.md"
+      ],
+      "source_ids": [
+        "source.0012"
+      ],
+      "source_line_start": 18,
+      "source_line_end": 18
+    },
+    {
+      "id": "BASE.11",
+      "title": "تصميم طويل الأمد: إضافات، استبدال النماذج، واجهات تكامل موثقة، تصدير بيانات، تحديث أدوات ومعرفة وبرنامج، استعادة إصدارات. الاستمرار يتطلب صيانة.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "APIوتصدير واستعادة وترقية ورجوع كود وسجل بيانات إضافات؛ لا تحميل إضافات تنفيذية أو تثبيت وتحديث كل الأدوات تلقائيًا",
+      "evidence_paths": [
+        "docs/API.md",
+        "cyber_platform/backup.py",
+        "cyber_platform/plugin_registry.py",
+        "docs/Signed-Releases.md"
+      ],
+      "source_ids": [
+        "source.0013"
+      ],
+      "source_line_start": 19,
+      "source_line_end": 19
+    },
+    {
+      "id": "BASE.12",
+      "title": "تعلم برمجة عملي داخل الأقسام: مفهوم ومثال ومحرر وتمرين وتشغيل بنتيجة قابلة للتحقق، مرتبط بمختبر التخصص وبالمساعد المحلي المشترك.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "20تمرين فهم ثابتًا وخمسة مسارات ومحرر ورشة يرفض غياب العزل؛ لا تشغيل معزول متحقق أو منهج برمجة لكل تخصص أو عودة للمختبرات",
+      "evidence_paths": [
+        "cyber_platform/curriculum.py",
+        "cyber_platform/sandbox.py",
+        "docs/Curriculum.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0014"
+      ],
+      "source_line_start": 20,
+      "source_line_end": 20
+    },
+    {
+      "id": "BASE.13",
+      "title": "لكل قسم هوية عرض ومساحة عمل خاصة تشمل عنوانًا ووصفًا وأيقونة وألوانًا وصفحة وأدوات وخرائط وإعدادات، مع معرف ثابت وخدمات مشتركة.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "هوية وصفحات ومعرفات ثابتة لـ22قسمًا و109منصات بأدوات وخدمات مشتركة؛ لا خدمة مستقلة أو إعدادات كاملة لكل تخصص",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/static/app.js",
+        "docs/Implementation-Status.md"
+      ],
+      "source_ids": [
+        "source.0015"
+      ],
+      "source_line_start": 21,
+      "source_line_end": 21
+    },
+    {
+      "id": "BASE.14",
+      "title": "خرائط مفهومة للتنظيم والتعلم والأدلة: عرض تدريجي، شرح عند اختيار العقدة والعلاقة، وربط بالمختبر والمصدر، وعرض جدول مكافئ.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "شجرة أقسام وخريطة أدلة بعقد وعلاقات وتفاصيل وجدول ومسارات تعلم؛ لا خرائط إتقان كل تقنية، وروابط المختبرات ملغاة",
+      "evidence_paths": [
+        "cyber_platform/static/app.js",
+        "cyber_platform/curriculum.py",
+        "docs/Curriculum.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0016"
+      ],
+      "source_line_start": 22,
+      "source_line_end": 22
+    },
+    {
+      "id": "BASE.15",
+      "title": "تجديد تلقائي قابل للضبط للمصادر والمعرفة والأدوات وحزم المختبرات والمنصات الفرعية، بحسب سياسة المالك للمصدر والتوافق والتجارب والصلاحيات والموارد.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "جدولة اختيارية لمصدر CISAواحتفاظ بلقطة عند الفشل؛ لا تجديد تلقائي لجميع الأدوات والمنصات، والمختبرات ملغاة",
+      "evidence_paths": [
+        "cyber_platform/knowledge.py",
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0017"
+      ],
+      "source_line_start": 23,
+      "source_line_end": 23
+    },
+    {
+      "id": "BASE.16",
+      "title": "صيانة تلقائية مشتركة تشمل مكونات الأقسام الرئيسية العشرين ومنصاتها ومختبراتها: متابعة المصادر وحالة الخدمات حسب إعدادات المالك، ومراجعة شهرية للأدوات والتوافق والمساحة والنسخ الاحتياطية، ومعالجة الأعطال المهمة وانتهاء دعم المكونات عند اكتشافها دون انتظار الموعد الشهري. يشمل ذلك تجربة تحديث أو بديل وترحيل البيانات والتحقق والاستعادة عند الفشل",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "فحص صيانة وإصلاح صلاحيات محدود ونسخ واستعادة وترقية يدوية وطلبات متابعة؛ لا متابعة شهرية شاملة أو إصلاح وترحيل كل الأدوات تلقائيًا",
+      "evidence_paths": [
+        "cyber_platform/maintenance.py",
+        "cyber_platform/backup.py",
+        "docs/Maintenance.md"
+      ],
+      "source_ids": [
+        "source.0018"
+      ],
+      "source_line_start": 24,
+      "source_line_end": 24
+    },
+    {
+      "id": "BASE.17",
+      "title": "حماية بيانات المالك شرط مشترك في الأقسام العشرين: تقليل جمع معلومات جهازه ومنع وصول الأدوات والمساعدين إلى ملفاته وحساباته وأسراره أو إرسالها خارجًا دون سياسة صريحة لغرض محدد. لا يمثل ذلك ضمانًا لإخفاء عنوان الاتصال أو نوع النظام عن جميع الجهات، ولا يشمل إخفاء الفحص عن مراقبة الأنظمة المستهدفة.",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "وصول loopbackوحساب مالك وCSRFوأدلة خاصة ودون telemetryومحللات موثوقة محدودة الموارد؛ لا عزل أسماء ملفات وشبكة لكل عامل أو تشفير حي للقرص أو ضمان أمام مدير مخترق",
+      "evidence_paths": [
+        "cyber_platform/server.py",
+        "cyber_platform/worker.py",
+        "docs/Security.md"
+      ],
+      "source_ids": [
+        "source.0019"
+      ],
+      "source_line_start": 25,
+      "source_line_end": 25
+    },
+    {
+      "id": "BASE.18",
+      "title": "إضافة وإيقاف واستبدال ومحو وتصدير بسهولة، مع ترحيل البيانات والواجهات وإعادة بناء واستعادة موثقة",
+      "group": "BASE",
+      "status": "partial",
+      "scope": "تصدير وتقارير ونسخ مشفرة واستعادة مرحلية وترقية ورجوع كود؛ لا محو وترحيل عام لكل مكون أو عكس تلقائي لتغير البيانات",
+      "evidence_paths": [
+        "cyber_platform/backup.py",
+        "cyber_platform/case_reports.py",
+        "scripts/release.sh",
+        "docs/Implementation-Status.md"
+      ],
+      "source_ids": [
+        "source.0020"
+      ],
+      "source_line_start": 26,
+      "source_line_end": 26
+    },
+    {
+      "id": "BASE.19",
+      "title": "كان منع البناء صريحًا في مرحلة البحث السابقة، ثم طلب المستخدم بناء الهيكل والواجهة والنواة وربط الأقسام وتجهيز VirtualBox واستكمال المشروع. هذا هو التفويض الحالي",
+      "group": "BASE",
+      "status": "reference",
+      "scope": "تاريخ تفويض؛ توجيهات المالك الأحدث هي المرجع، ولا نشر عام أو شراء",
+      "evidence_paths": [
+        "docs/Implementation-Status.md",
+        "docs/Scope-Update-0.2.md"
+      ],
+      "source_ids": [
+        "source.0021"
+      ],
+      "source_line_start": 27,
+      "source_line_end": 28
+    },
+    {
+      "id": "F01",
+      "title": "مدير الإضافات",
+      "group": "F",
+      "status": "partial",
+      "scope": "سجل بيانات إضافات بمصادر وتراخيص وصلاحيات وتوافق واعتماديات ومراجعات وقرارات اعتماد وتعطيل وسحب؛ لا تثبيت أو تنفيذ كود أو توقيع ناشر",
+      "evidence_paths": [
+        "cyber_platform/plugin_registry.py",
+        "tests/test_plugin_registry.py",
+        "docs/Plugin-Registry.md"
+      ],
+      "source_ids": [
+        "source.0027"
+      ],
+      "source_line_start": 63,
+      "source_line_end": 63
+    },
+    {
+      "id": "F02",
+      "title": "مدير الموارد والمساحة",
+      "group": "F",
+      "status": "partial",
+      "scope": "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف",
+      "evidence_paths": [
+        "cyber_platform/store.py",
+        "cyber_platform/worker.py",
+        "tests/test_security.py"
+      ],
+      "source_ids": [
+        "source.0028"
+      ],
+      "source_line_start": 64,
+      "source_line_end": 64
+    },
+    {
+      "id": "F03",
+      "title": "لغة مشتركة للأحداث الأمنية",
+      "group": "F",
+      "status": "partial",
+      "scope": "أربعة محولات Windows JSON/XML وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ XML محدود دون DTD أو موارد خارجية، وليس OCSF كاملًا أو EVTX أو مستشعرًا حيًا",
+      "evidence_paths": [
+        "cyber_platform/event_adapters.py",
+        "cyber_platform/event_ingest.py",
+        "tests/test_windows_xml.py",
+        "docs/Event-Adapters.md"
+      ],
+      "source_ids": [
+        "source.0029"
+      ],
+      "source_line_start": 65,
+      "source_line_end": 65
+    },
+    {
+      "id": "F04",
+      "title": "مكتبة قواعد كشف قابلة للاختبار",
+      "group": "F",
+      "status": "partial",
+      "scope": "مكتبة8قواعد واختبارات مرجعية ومراجعات مالك ثابتة وتقارير TP/FP/FN/TN والتحقق من المصدر؛ لا Sigma كامل أو مكتبة ناشر موقعة أو مراقبة حية",
+      "evidence_paths": [
+        "cyber_platform/detection.py",
+        "cyber_platform/detection_packs.json",
+        "docs/Detection-Library.md"
+      ],
+      "source_ids": [
+        "source.0030"
+      ],
+      "source_line_start": 66,
+      "source_line_end": 66
+    },
+    {
+      "id": "F05",
+      "title": "تحديثات موثوقة",
+      "group": "F",
+      "status": "partial",
+      "scope": "ترقية لينكس متحققة مع بيان Ed25519اختياري وثقة مثبتة وتسلسل مانع للتراجع وانتهاء صلاحية؛ لا TUFأو تحديث آلي أو مفتاح ناشر مهيأ افتراضيًا",
+      "evidence_paths": [
+        "scripts/release.sh",
+        "cyber_platform/signed_release.py",
+        "cyber_platform/release_admin.py",
+        "docs/Signed-Releases.md"
+      ],
+      "source_ids": [
+        "source.0031"
+      ],
+      "source_line_start": 67,
+      "source_line_end": 67
+    },
+    {
+      "id": "F06",
+      "title": "خريطة علاقات وأدلة مشتركة",
+      "group": "F",
+      "status": "partial",
+      "scope": "أدلة ومصادر وعلاقات وخريطة؛ لا كل كيانات الثقة والتعارض المطلوبة",
+      "evidence_paths": [
+        "cyber_platform/store.py",
+        "tests/test_platform.py"
+      ],
+      "source_ids": [
+        "source.0032"
+      ],
+      "source_line_start": 68,
+      "source_line_end": 68
+    },
+    {
+      "id": "Q01",
+      "title": "أمن الإضافات وسلسلة التوريد",
+      "group": "Q",
+      "status": "partial",
+      "scope": "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل بيانات إضافات؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية أو توقيع ناشر إضافات",
+      "evidence_paths": [
+        "cyber_platform/supply_chain.py",
+        "cyber_platform/sarif.py",
+        "tests/test_sarif.py",
+        "docs/Technical-Analysis-0.14.md"
+      ],
+      "source_ids": [
+        "source.0037"
+      ],
+      "source_line_start": 80,
+      "source_line_end": 80
+    },
+    {
+      "id": "Q02",
+      "title": "عزل السحابة والحاويات",
+      "group": "Q",
+      "status": "partial",
+      "scope": "مراجعة JSONللحاويات وموارد Kubernetesووراثة سياق الأمان وRBACومقارنة الحقول المفحوصة؛ لا تطبيق أو اتصال بعنقود أو إثبات عزل حي أو CISكامل",
+      "evidence_paths": [
+        "cyber_platform/kubernetes_review.py",
+        "tests/test_kubernetes_review.py",
+        "docs/Technical-Analysis-0.14.md"
+      ],
+      "source_ids": [
+        "source.0038"
+      ],
+      "source_line_start": 81,
+      "source_line_end": 81
+    },
+    {
+      "id": "Q03",
+      "title": "الهندسة العكسية وأمن Firmware",
+      "group": "Q",
+      "status": "partial",
+      "scope": "رؤوس ELF/PE وجرد Firmware؛ لا تصحيح ديناميكي أو إقلاع وثقة وتحديث كامل",
+      "evidence_paths": [
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0039"
+      ],
+      "source_line_start": 82,
+      "source_line_end": 82
+    },
+    {
+      "id": "Q04",
+      "title": "أمن الأنظمة المتحركة والمحاكاة",
+      "group": "Q",
+      "status": "partial",
+      "scope": "محللات قياسات وCAN وتوأم مبسط؛ لا أنظمة طيران ومركبات إنتاجية",
+      "evidence_paths": [
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0040"
+      ],
+      "source_line_start": 83,
+      "source_line_end": 83
+    },
+    {
+      "id": "Q05",
+      "title": "الخصوصية ودورة حياة البيانات",
+      "group": "Q",
+      "status": "partial",
+      "scope": "نسخ مشفرة وتنقيح نسخة وحدود وصول؛ لا تشفير القرص أو دورة احتفاظ ومحو كاملة",
+      "evidence_paths": [
+        "cyber_platform/backup.py",
+        "docs/Security.md"
+      ],
+      "source_ids": [
+        "source.0041"
+      ],
+      "source_line_start": 84,
+      "source_line_end": 84
+    },
+    {
+      "id": "E01",
+      "title": "ورشة تعلم وكتابة وتشغيل برمجة مرتبطة بكل تخصص",
+      "group": "E",
+      "status": "blocked",
+      "scope": "الورشة ترفض عند غياب namespaces؛ لا تنفيذ معزول ناجح على هذا المضيف",
+      "evidence_paths": [
+        "cyber_platform/sandbox.py",
+        "docs/Validation.md"
+      ],
+      "source_ids": [
+        "source.0046"
+      ],
+      "source_line_start": 98,
+      "source_line_end": 98
+    },
+    {
+      "id": "E02",
+      "title": "هوية ومساحة عمل لكل قسم ومنصة فرعية",
+      "group": "E",
+      "status": "partial",
+      "scope": "22قسمًا و109منصات و36أداة فعلية، منها11وظيفة HARوبريد وKubernetesوsystemdوSARIFوأرشيفات وSSHوDNS؛ ليست جميع تقنيات التخصصات وتكاملاتها مكتملة",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "docs/Technical-Analysis-0.14.md",
+        "tests/browser_smoke.py"
+      ],
+      "source_ids": [
+        "source.0047"
+      ],
+      "source_line_start": 99,
+      "source_line_end": 99
+    },
+    {
+      "id": "E03",
+      "title": "خرائط تنظيم وتعليم وأدلة مفهومة",
+      "group": "E",
+      "status": "partial",
+      "scope": "خريطة افتتاحية بأسهم وبحث وقائمة بديلة من القسم إلى المنصة والأداة ودليلها، وخريطة أدلة وخمسة مسارات تغطي20تمرين فهم ثابتًا بمتطلبات سابقة وتقدم محفوظ متحقق؛ لا إتقان كل التقنيات أو تغطية جميع الأدوات",
+      "evidence_paths": [
+        "cyber_platform/curriculum.py",
+        "tests/test_curriculum.py",
+        "cyber_platform/static/launchpad.js",
+        "tests/browser_launchpad.py",
+        "docs/Requirements-Review-0.15.md",
+        "docs/Curriculum.md"
+      ],
+      "source_ids": [
+        "source.0048"
+      ],
+      "source_line_start": 100,
+      "source_line_end": 100
+    },
+    {
+      "id": "E04",
+      "title": "تجديد تلقائي للمعرفة والأدوات وحزم المختبرات والمنصات",
+      "group": "E",
+      "status": "partial",
+      "scope": "اكتمل استيراد ملفات KEV وبحثها دون إنترنت مع إثبات مصدر وحفظ آخر فهرس صالح؛ ويتوفر جلب CISA وجدولته؛ تركيب الأدوات وتجديد جميع التقنيات متبقيان",
+      "evidence_paths": [
+        "cyber_platform/knowledge.py",
+        "cyber_platform/knowledge_files.py",
+        "tests/test_knowledge_files.py",
+        "docs/Knowledge-Files.md"
+      ],
+      "source_ids": [
+        "source.0049"
+      ],
+      "source_line_start": 101,
+      "source_line_end": 101
+    },
+    {
+      "id": "E05",
+      "title": "تعديل سهل وصيانة تلقائية ومعالجة انتهاء الدعم وقابلية نقل طويلة الأمد",
+      "group": "E",
+      "status": "partial",
+      "scope": "مركز صيانة لجميع الأقسام وفحص بيانات وعينات أدوات وإصلاح صلاحيات وسجل طلبات تطوير وترقية يدوية متحققة؛ لا إصلاح عام مستقل أو ضمان لعقود",
+      "evidence_paths": [
+        "cyber_platform/maintenance.py",
+        "docs/Maintenance.md"
+      ],
+      "source_ids": [
+        "source.0050"
+      ],
+      "source_line_start": 102,
+      "source_line_end": 102
+    },
+    {
+      "id": "N01",
+      "title": "محرك سير عمل عبر الأقسام",
+      "group": "N",
+      "status": "partial",
+      "scope": "خطط DAG محفوظة حتى20عقدة بفروع نجاح وفشل وإيقاف واستكمال يدوي وبصمات؛ لا توازٍ أو تشغيل خلفي أو إعادة تنفيذ تلقائية",
+      "evidence_paths": [
+        "cyber_platform/plans.py",
+        "docs/Workflow-Plans.md"
+      ],
+      "source_ids": [
+        "source.0055"
+      ],
+      "source_line_start": 120,
+      "source_line_end": 120
+    },
+    {
+      "id": "N02",
+      "title": "ورشة إنشاء مختبرات ومنصات فرعية",
+      "group": "N",
+      "status": "superseded",
+      "scope": "طبقة المختبرات ملغاة؛ أضيفت8قوالب بيانات لخطط التحليل بمراجعات مالك وإثبات ربط، دون مولد منصات أو إضافات كود عامة",
+      "evidence_paths": [
+        "docs/Scope-Update-0.2.md",
+        "cyber_platform/plan_templates.py",
+        "docs/Plan-Templates.md"
+      ],
+      "source_ids": [
+        "source.0056"
+      ],
+      "source_line_start": 121,
+      "source_line_end": 121
+    },
+    {
+      "id": "N03",
+      "title": "تعاون مساعدين متخصصين على مشروع واحد",
+      "group": "N",
+      "status": "superseded",
+      "scope": "ألغى المالك فريق الوكلاء داخل المنتج؛ مساعدو تطوير المشروع خارج التطبيق ولا يمثلون قدرة تشغيل داخله",
+      "evidence_paths": [
+        "docs/Scope-Update-0.7.md"
+      ],
+      "source_ids": [
+        "source.0057"
+      ],
+      "source_line_start": 122,
+      "source_line_end": 122
+    },
+    {
+      "id": "N04",
+      "title": "تسجيل حالة التجربة وإعادتها ومقارنة التغييرات",
+      "group": "N",
+      "status": "partial",
+      "scope": "حفظ خطط ونتائج وتقارير ومقارنات كاملة للجرد وHARوKubernetesوSARIFبحقولها الموثقة وتكرارها؛ لا مساواة المحتوى المحجوب أو كل بايتات المصدر أو حالة محاكاة أو جودة عامة",
+      "evidence_paths": [
+        "cyber_platform/plans.py",
+        "cyber_platform/supply_chain.py",
+        "cyber_platform/har.py",
+        "cyber_platform/kubernetes_review.py",
+        "cyber_platform/sarif.py"
+      ],
+      "source_ids": [
+        "source.0058"
+      ],
+      "source_line_start": 123,
+      "source_line_end": 123
+    },
+    {
+      "id": "N05",
+      "title": "مركز قياس صحة النتائج وجودة الأدوات",
+      "group": "N",
+      "status": "partial",
+      "scope": "مركز جودة بحالات اصطناعية ثابتة وتقدم محفوظ وزمن جداري ومقارنة تراجع؛ لا تقييم شامل لكل التخصصات أو قياس ذاكرة فعلي",
+      "evidence_paths": [
+        "cyber_platform/quality.py",
+        "cyber_platform/quality_cases.json",
+        "docs/Quality-Center.md"
+      ],
+      "source_ids": [
+        "source.0059"
+      ],
+      "source_line_start": 124,
+      "source_line_end": 124
+    },
+    {
+      "id": "N06",
+      "title": "خريطة تغطية دفاعية وفجوات تحقق",
+      "group": "N",
+      "status": "partial",
+      "scope": "خريطة أصول وتقييمات وفجوات مع فحص جميع التقييمات على دفعات وإعادة قراءة الإثبات وحفظ لقطة تاريخية؛ لا حماية حية أو لقطة ذرية أو D3FEND كامل",
+      "evidence_paths": [
+        "cyber_platform/coverage.py",
+        "cyber_platform/coverage_scans.py",
+        "docs/Coverage-Scans.md"
+      ],
+      "source_ids": [
+        "source.0060"
+      ],
+      "source_line_start": 125,
+      "source_line_end": 125
+    },
+    {
+      "id": "SECTION.01",
+      "title": "الاستخبارات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "استخراج IOCوسياق مصادر وCISA؛ لا جمع وتحليل كل مصادر الاستخبارات أو رسم حملات حي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py",
+        "cyber_platform/knowledge.py"
+      ],
+      "source_ids": [
+        "source.0194"
+      ],
+      "source_line_start": 353,
+      "source_line_end": 358
+    },
+    {
+      "id": "SECTION.02",
+      "title": "الثغرات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "رؤوس HTTPوتحليل HARومقارنة بياناته الآمنة؛ لا فحص أهداف أو إثبات ثغرات تطبيقات حي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/har.py",
+        "tests/test_har.py"
+      ],
+      "source_ids": [
+        "source.0201"
+      ],
+      "source_line_start": 365,
+      "source_line_end": 366
+    },
+    {
+      "id": "SECTION.03",
+      "title": "الدفاع والعمليات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "محولات أحداث وقواعد مرجعية وتغطية ثابتة؛ لا مستشعرات أو استجابة حية أو Sigmaكامل",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/event_adapters.py",
+        "cyber_platform/detection.py",
+        "cyber_platform/coverage_scans.py"
+      ],
+      "source_ids": [
+        "source.0210"
+      ],
+      "source_line_start": 375,
+      "source_line_end": 380
+    },
+    {
+      "id": "SECTION.04",
+      "title": "التحقيق الرقمي",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "بصمات وأدلة وتقارير وبنية ZIP/TARوEML؛ لا استخراج أو تحليل قرص وذاكرة كامل أو اعتماد قضائي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/archive_review.py",
+        "cyber_platform/email_review.py",
+        "cyber_platform/store.py"
+      ],
+      "source_ids": [
+        "source.0217"
+      ],
+      "source_line_start": 387,
+      "source_line_end": 390
+    },
+    {
+      "id": "SECTION.05",
+      "title": "الهندسة العكسية",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "رؤوس ELF/PEوسلاسل ساكنة؛ لا تصحيح ديناميكي أو تشغيل عينات أو تكامل Ghidraفعلي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0224"
+      ],
+      "source_line_start": 397,
+      "source_line_end": 398
+    },
+    {
+      "id": "SECTION.06",
+      "title": "الشبكات والاتصالات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "تدفقات CSVوتسجيل PCAPورسائل DNSموثقة؛ لا التقاط أو استعلام أو إعادة تجميع أو فك تشفير حي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/pcap.py",
+        "cyber_platform/dns_message.py"
+      ],
+      "source_ids": [
+        "source.0234"
+      ],
+      "source_line_start": 411,
+      "source_line_end": 412
+    },
+    {
+      "id": "SECTION.07",
+      "title": "الأنظمة والهوية",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "حسابات JSONومفاتيح SSHالعامة وتوجيهات systemd؛ لا مصادقة SSHأو تشغيل خدمة أو SSO/FreeIPA/SPIFFE",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/ssh_keys.py",
+        "cyber_platform/systemd_review.py",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0241"
+      ],
+      "source_line_start": 419,
+      "source_line_end": 420
+    },
+    {
+      "id": "SECTION.08",
+      "title": "السحابة والحاويات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "وصف حاوية وKubernetes JSONومقارنة حقول الأمان المفحوصة؛ لا تطبيق أو إثبات عنقود أو سياسة عزل حية",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/kubernetes_review.py",
+        "tests/test_kubernetes_review.py"
+      ],
+      "source_ids": [
+        "source.0255"
+      ],
+      "source_line_start": 434,
+      "source_line_end": 435
+    },
+    {
+      "id": "SECTION.09",
+      "title": "هندسة البرمجيات الآمنة",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "SPDX/CycloneDXواعتماديات ومقارنة وSARIFومقارنته؛ لا تشغيل فاحص أو مصدرية بناء أو ضمان إصلاح",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/supply_chain.py",
+        "cyber_platform/sarif.py"
+      ],
+      "source_ids": [
+        "source.0265"
+      ],
+      "source_line_start": 450,
+      "source_line_end": 453
+    },
+    {
+      "id": "SECTION.10",
+      "title": "أبحاث البرمجيات والنواة",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "محلل TLVمحدود يرفض البتر وأمثلة تعليمية؛ لا fuzzingللنواة أو استغلال أو محاكاة نظام كاملة",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py",
+        "cyber_platform/learning.py"
+      ],
+      "source_ids": [
+        "source.0275"
+      ],
+      "source_line_start": 468,
+      "source_line_end": 471
+    },
+    {
+      "id": "SECTION.11",
+      "title": "التشفير والبروتوكولات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "جرد خوارزميات وفحص X.509وتوقيعات مباشرة بوقت صريح؛ لا PKIXكامل أو OCSPأو ML-KEM/ML-DSA",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/certificates.py",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0282"
+      ],
+      "source_line_start": 482,
+      "source_line_end": 485
+    },
+    {
+      "id": "SECTION.12",
+      "title": "العتاد والبرامج الثابتة",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "entropyوتواقيع Firmwareساكنة؛ لا تفليش أو تصحيح عتاد أو تحقق إقلاع موثوق كامل",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0289"
+      ],
+      "source_line_start": 492,
+      "source_line_end": 493
+    },
+    {
+      "id": "SECTION.13",
+      "title": "الأنظمة الصناعية وIoT",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "نموذج حراري حسابي مبسط؛ لا اتصال OT/IoTأو ضمان سلامة مصنع أو محاكاة مادية كاملة",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0299"
+      ],
+      "source_line_start": 506,
+      "source_line_end": 509
+    },
+    {
+      "id": "SECTION.14",
+      "title": "الإشارات والاستشعار",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "DFTلعينات قصيرة؛ لا أجهزة استقبال أو بث أو تحليل إشارات شامل",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0306"
+      ],
+      "source_line_start": 516,
+      "source_line_end": 519
+    },
+    {
+      "id": "SECTION.15",
+      "title": "الطيران والمسيّرات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "جودة تسلسل قياسات مسجلة؛ لا طيران أو اتصال MAVLinkحي أو تحكم بمسيّرات",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0313"
+      ],
+      "source_line_start": 526,
+      "source_line_end": 527
+    },
+    {
+      "id": "SECTION.16",
+      "title": "الروبوتات والمركبات",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "قراءة CANكلاسيكي من تسجيل؛ لا إرسال إطارات أو تكامل مركبات وروبوتات فعلي",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0323"
+      ],
+      "source_line_start": 542,
+      "source_line_end": 543
+    },
+    {
+      "id": "SECTION.17",
+      "title": "الفضاء",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "رؤوس CCSDSمن ملف؛ لا اتصال فضائي أو تحليل كل حمولة أو محاكاة قمر",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/tools.py"
+      ],
+      "source_ids": [
+        "source.0333"
+      ],
+      "source_line_start": 556,
+      "source_line_end": 559
+    },
+    {
+      "id": "SECTION.18",
+      "title": "الذكاء الاصطناعي",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "تدقيق وجود مقتطفات وموصل محلي اختياري؛ لا نموذج مثبت متحقق أو ضمان دقة أو فريق وكلاء داخل البرنامج",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/local_ai.py",
+        "cyber_platform/tools.py",
+        "docs/Scope-Update-0.7.md"
+      ],
+      "source_ids": [
+        "source.0340"
+      ],
+      "source_line_start": 566,
+      "source_line_end": 571
+    },
+    {
+      "id": "SECTION.19",
+      "title": "الحوكمة والمعمارية والخصوصية",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "تنقيح نسخ ونسخ مشفرة وحدود وصول وتدقيق؛ لا تشفير القرص أو دورة محو واحتفاظ عامة",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/backup.py",
+        "cyber_platform/tools.py",
+        "docs/Security.md"
+      ],
+      "source_ids": [
+        "source.0347"
+      ],
+      "source_line_start": 578,
+      "source_line_end": 579
+    },
+    {
+      "id": "SECTION.20",
+      "title": "إدارة المنظومة",
+      "group": "SECTION",
+      "status": "partial",
+      "scope": "صيانة محدودة وجودة وترقية يدوية وسجل بيانات إضافات؛ لا إصلاح عام أو تحميل كود إضافات أو صيانة مضمونة لعقود",
+      "evidence_paths": [
+        "cyber_platform/catalog.json",
+        "cyber_platform/maintenance.py",
+        "cyber_platform/quality.py",
+        "cyber_platform/plugin_registry.py"
+      ],
+      "source_ids": [
+        "source.0365"
+      ],
+      "source_line_start": 614,
+      "source_line_end": 621
+    }
+  ],
+  "current_validation": "docs/Validation-0.16.md",
+  "current_release_directory": "releases/0.16.0",
+  "completed_function_scope": {
+    "requirement": "E04 / SECTION.02",
+    "function": "offline KEV JSON import and search",
+    "acceptance": "original retained; structural validation in bounded worker; immutable audited receipt/index; search capped50 with total; no network; rejection retains current; encrypted restore verified",
+    "broader_requirement_complete": false
+  }
+}

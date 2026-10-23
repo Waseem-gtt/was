@@ -881,3 +881,5 @@ tr:last-child td {
     transition: none !important;
   }
 }
+
+.offline-knowledge{min-width:0;overflow-wrap:anywhere}.offline-knowledge .row{flex-wrap:wrap}.offline-knowledge .row .code{min-width:0;max-width:100%}

@@ -28,7 +28,7 @@ function caseReportsPage() {
     for (const b of [jsonButton,htmlButton,verifyButton]) b.disabled = false;
     output.replaceChildren(el("h3", {}, report.title), el("p", {}, report.notice),
       el("p", {}, "أدلة: " + report.evidence.length + " · خطط: " + report.plans.length + " · لقطة تغطية: " + (report.coverage ? "مرفقة":"غير مرفقة")),
-      table(["الدليل", "النوع", "التحقق"], report.evidence.map(item => [item.name,item.kind,item.verification])),
+      table(["الدليل", "النوع", "التحقق"], report.evidence.map(item => [item.name,evidenceKindLabel(item.kind),uiLabel(item.verification)])),
       el("details", {}, el("summary", {}, "بصمات التقرير ومراجعه"), pre({digest:report.digest, engine_sha256:report.engine_sha256, created:report.created})),
       el("p", {class:"muted"}, "التقرير لا يضم بايتات الملفات الأصلية. المطابقة تعني سلامة المراجع؛ لا تعني اعتماد التحقيق أو صحة كل نتيجة أو حماية حية."));
   }
@@ -37,7 +37,7 @@ function caseReportsPage() {
     sources.replaceChildren(el("p", {class:"muted"}, "يعرض آخر200دليل مطابق. اختر حتى50دليلًا، وبحدود قراءة32MiBتشمل إثبات الخطط."),
       ...all.slice(0,200).map(item => {
         const check = el("input", {type:"checkbox", name:"report-evidence", value:item.id, checked:selectedEvidence.has(item.id), onchange:() => check.checked ? selectedEvidence.add(item.id):selectedEvidence.delete(item.id)});
-        return field(item.name + " · " + item.kind + " · " + size(item.size), check);
+        return field(item.name + " · " + evidenceKindLabel(item.kind) + " · " + size(item.size), check);
       }));
   }
   query.addEventListener("input", renderSources);
@@ -67,7 +67,7 @@ function caseReportsPage() {
     if (!planRows.isConnected) return;
     planRows.replaceChildren(...data.runs.map(item => {
       const check = el("input", {type:"checkbox", name:"report-plan", value:item.id, onchange:() => check.checked ? selectedPlans.add(item.id):selectedPlans.delete(item.id)});
-      return field(item.name + " · " + item.status + " · " + item.id, check);
+      return field(item.name + " · " + uiLabel(item.status) + " · " + item.id, check);
     }));
   }).catch(e => { if (planRows.isConnected) toast(e.message,true); });
   api("coverage/scans/history?project=" + pid).then(data => {
