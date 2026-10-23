@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, engine, event_adapters, event_ingest, integrity, knowledge, knowledge_files, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools, workspaces
+from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, detection_acceptance, engine, event_adapters, event_schema, event_ingest, integrity, knowledge, knowledge_files, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools, workspaces
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/workspaces.js", "/workspaces.css", "/launchpad.js", "/launchpad.css"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/workspaces.js", "/workspaces.css", "/defense_acceptance.js", "/launchpad.js", "/launchpad.css"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
@@ -258,6 +258,18 @@ class Handler(BaseHTTPRequestHandler):
                                   headers={"Content-Disposition": 'attachment; filename="Cyber-Platform-Requirements.md"', "X-Source-SHA256": requirements.DATA["source"]["sha256"]})
             if path == "/api/requirements/export":
                 return self.reply(requirements.DATA, headers={"Content-Disposition": 'attachment; filename="requirements-register.json"'})
+            if path == "/api/events/schema":
+                return self.reply(event_schema.describe())
+            if path == "/api/detection/acceptance":
+                if not self.server.execution_lock.acquire(blocking=False):
+                    raise Problem("مهمة أخرى قيد التنفيذ",409)
+                try:
+                    result = detection_acceptance.status(self.store,query.get("project",[""])[0])
+                finally:
+                    self.server.execution_lock.release()
+                return self.reply(result)
+            if path == "/api/detection/acceptance/report":
+                return self.reply(detection_acceptance.report(self.store,query.get("project",[""])[0],query.get("id",[""])[0]))
             if path == "/api/workspaces":
                 return self.reply(workspaces.describe(self.store, query.get("id", [""])[0]))
             if path == "/api/knowledge/offline":
@@ -370,7 +382,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/knowledge/offline/import", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify", "/api/curriculum/attempt", "/api/plugins/register", "/api/plugins/transition"):
+            if path in ("/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/knowledge/offline/import", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/detection/fixtures/register", "/api/detection/acceptance/run", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify", "/api/curriculum/attempt", "/api/plugins/register", "/api/plugins/transition"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
@@ -394,6 +406,14 @@ class Handler(BaseHTTPRequestHandler):
         def reply_data(*args, **kwargs):
             return args, kwargs
 
+        if path == "/api/detection/fixtures/register":
+            if set(body) != {"project_id","rule_id","evidence_id","expected_indexes"}:
+                raise Problem("حدد المشروع والقاعدة وأصل العينة وتسميات المطابقة فقط")
+            return reply_data(detection_acceptance.register(self.store,body["project_id"],body["rule_id"],body["evidence_id"],body["expected_indexes"]))
+        if path == "/api/detection/acceptance/run":
+            if set(body) != {"project_id"}:
+                raise Problem("حدد المشروع فقط")
+            return reply_data(detection_acceptance.run(self.store,body["project_id"]))
         if path == "/api/curriculum/attempt":
             if set(body) != {"project_id", "path_id", "lesson_id", "answer_index"}:
                 raise Problem("حدد المشروع والمسار والدرس والإجابة فقط")

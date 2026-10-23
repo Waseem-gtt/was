@@ -18,6 +18,9 @@ def _analyze(connection, tool, data):
         if tool == "knowledge-catalog":
             from .knowledge_files import parse
             result = parse(data)
+        elif tool == "detection-acceptance":
+            from .detection_acceptance import execute_batch
+            result = execute_batch(data)
         else:
             result = tools.analyze(tool, data)
         connection.send({"ok": True, "result": result})
@@ -28,7 +31,7 @@ def _analyze(connection, tool, data):
 
 
 def analyze(tool, data, timeout=10):
-    if tool not in (*tools.REGISTRY, "knowledge-catalog") or not isinstance(data, bytes) or len(data) > 4 * 1024 * 1024:
+    if tool not in (*tools.REGISTRY, "knowledge-catalog", "detection-acceptance") or not isinstance(data, bytes) or len(data) > 4 * 1024 * 1024:
         raise ValueError("Invalid analyzer or input exceeds 4 MiB")
     context = multiprocessing.get_context("spawn")
     receiver, sender = context.Pipe(duplex=False)

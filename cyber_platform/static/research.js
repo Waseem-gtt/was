@@ -31,7 +31,7 @@ function eventAdaptersPage() {
     const chosen = source.value;
     source.replaceChildren(el("option", {value:""}, "اختر دليلًا…"), ...state.project.evidence.map(item => el("option", {value:item.id, selected:item.id === chosen}, item.name + " · " + evidenceKindLabel(item.kind))));
   }
-  const result = el("div", {}, panel("توحيد الأحداث وحفظ أصلها",
+  const result = el("div", {}, eventSchemaPanel(), panel("توحيد الأحداث وحفظ أصلها",
     el("p", {class:"notice"}, "محولات ملفات محددة لصيغة was.event/1؛ ليست دعمًا كاملًا لـOCSF أو استقبالًا حيًا. يحتفظ كل حدث بأصله وبصمة ملف الإدخال. لا يُعرض محتوى الأحداث تلقائيًا؛ التقرير المنزّل قد يحتوي بيانات حساسة."),
     field("دليل الأحداث الأصلي", source), field("صيغة الأحداث", adapter), information,
     el("div", {class:"actions"}, button("استيراد عينة أحداث اصطناعية", () => action(async () => {
@@ -56,6 +56,7 @@ function eventAdaptersPage() {
       exportReport.disabled = false;
       output.replaceChildren(el("p", {}, "أحداث موحدة: " + normalized.count + " · أحداث نتيجتها فشل: " + normalized.failed),
         pre({schema:normalized.schema, adapter:normalized.adapter, input_sha256:data.report.input_sha256 || normalized.input_sha256, adapter_sha256:data.report.adapter_sha256, result_evidence:data.evidence.id}),
+        eventQualityView(normalized.quality),
         normalized.limitations ? pre(normalized.limitations) : null);
     }), "primary")), exportReport, output));
   api("events/adapters").then(data => {
@@ -118,7 +119,7 @@ function detectionLibraryPage() {
       toast("حُفظت عينة اصطناعية بتوقعاتها المرجعية؛ ليست قياسًا ميدانيًا");
     }))));
   }
-  const result = el("div", {}, panel("مكتبة قواعد الكشف المحلية",
+  const result = el("div", {}, ruleAcceptancePanel(), panel("مكتبة قواعد الكشف المحلية",
     el("p", {class:"notice"}, "مطابقة حقول وقيم صريحة فقط، دون تنفيذ كود أو صياغة Sigma الكاملة. قواعد المالك محفوظة كمراجعات مع بصمات؛ لا تُثبت إضافات خارجية."), library),
     panel("اختبار الكشف وتوثيق النتائج", el("p", {}, "العينات التالية اصطناعية وتتضمن تسميات متوقعة؛ يمكن اختيار دليل آخر بشرط أن يطابق صيغة الأحداث المدعومة."), fixtures,
       field("دليل اختبار الكشف", source), button("اختبار القواعد المختارة وحفظ التقرير", () => action(async () => {

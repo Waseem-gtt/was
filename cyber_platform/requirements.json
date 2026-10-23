@@ -3332,13 +3332,14 @@
       "id": "F03",
       "title": "لغة مشتركة للأحداث الأمنية",
       "group": "F",
-      "status": "partial",
-      "scope": "أربعة محولات Windows JSON/XML وRFC5424 وCSV إلى was.event/1 مع حفظ الأصل وبصمات وإعادة تحقق؛ XML محدود دون DTD أو موارد خارجية، وليس OCSF كاملًا أو EVTX أو مستشعرًا حيًا",
+      "status": "available",
+      "scope": "مكتمل: محولات الأحداث الأربعة مع قاموس حقول ومخططJSONبإصدار وبصمة، وحفظ الأصل وترتيبه ودقة توقيته، وقياس فجوات الجودة والتحقق قبل الحفظ وأثناء الإعادة؛ OCSFمرجع مرشح لا شرط مطابقة كاملة",
       "evidence_paths": [
         "cyber_platform/event_adapters.py",
+        "cyber_platform/event_schema.py",
         "cyber_platform/event_ingest.py",
-        "tests/test_windows_xml.py",
-        "docs/Event-Adapters.md"
+        "tests/test_event_schema.py",
+        "docs/Event-Schema.md"
       ],
       "source_ids": [
         "source.0029"
@@ -3348,12 +3349,13 @@
       "id": "F04",
       "title": "مكتبة قواعد كشف قابلة للاختبار",
       "group": "F",
-      "status": "partial",
-      "scope": "مكتبة8قواعد واختبارات مرجعية ومراجعات مالك ثابتة وتقارير TP/FP/FN/TN والتحقق من المصدر؛ لا Sigma كامل أو مكتبة ناشر موقعة أو مراقبة حية",
+      "status": "available",
+      "scope": "مكتمل: مكتبة قواعد بمصدر وترخيص وإصدارات، وعينات موجبة وسالبة مرتبطة بالإصدار، وتغطية لجميع القواعد الحالية وقياساتFP/FNوإعادة اختبار فعلية وتقارير ثابتة؛ Sigmaمرجع مرشح ولا يُدعى جمع حي",
       "evidence_paths": [
         "cyber_platform/detection.py",
-        "cyber_platform/detection_packs.json",
-        "docs/Detection-Library.md"
+        "cyber_platform/detection_acceptance.py",
+        "tests/test_detection_acceptance.py",
+        "docs/Rule-Acceptance.md"
       ],
       "source_ids": [
         "source.0030"

@@ -14,7 +14,7 @@ from . import archive_review, certificates, dns_message, email_review, event_ada
 
 # Every persisted engine fingerprint must include these implementation files,
 # rather than only this registry, when deciding whether old results can be reused.
-ANALYZER_FILES = ("pcap.py", "certificates.py", "supply_chain.py", "har.py", "email_review.py", "kubernetes_review.py", "systemd_review.py", "sarif.py", "dns_message.py", "archive_review.py", "ssh_keys.py")
+ANALYZER_FILES = ("pcap.py", "certificates.py", "supply_chain.py", "har.py", "email_review.py", "kubernetes_review.py", "systemd_review.py", "sarif.py", "dns_message.py", "archive_review.py", "ssh_keys.py", "event_schema.py", "detection_acceptance.py")
 
 
 def text(data):

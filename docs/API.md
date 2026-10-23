@@ -207,3 +207,14 @@
 - يعكسbootstrapالعناوين والألوان المخصصة في التنقل مع ثبات جميع المعرفات وروابط الأدوات.
 
 [العقد والقبول والاستعمال](Workspaces.md).
+
+## قاموس الأحداث وقبول قواعد الكشف —0.18
+
+- `GET /api/events/schema`: القاموس وإصدارwas.event/1وبصمته وJSONSchemaمحلي مكتمل الهيكل وملاحظات الجودة.
+- نتيجة `POST /api/events/normalize` تتضمن `schema_version,dictionary_sha256,quality`؛ يتأكد الحفظ والإعادة من العقد والجودة.
+- `GET /api/detection/acceptance?project=ID`: قواعد المكتبة وإصداراتها وحالة كل عينة وتقارير القبول.
+- `POST /api/detection/fixtures/register`: فقط `project_id,rule_id,evidence_id,expected_indexes`؛ ملفJSONأصلي≤1ميبيبايت وتسميات موجبة وسالبة.
+- `POST /api/detection/acceptance/run`: فقط `project_id`، ويعيد`{evidence,report}`بعد تنفيذ فعلي جديد.
+- `GET /api/detection/acceptance/report?project=ID&id=EID`: تقرير محفوظ متحقق البصمة وإثبات الإنشاء؛ عرض تاريخي لا إعادة اختبار.
+
+جميع الواجهات محمية بحساب المالك، والحفظ والتشغيل بـCSRFوقفل المهمة الثقيلة، وتُحرر الأقفال قبل نشر الرد. [عقد الأحداث](Event-Schema.md) و[عقد عينات القواعد](Rule-Acceptance.md) يحددان الحدود والمعاني.

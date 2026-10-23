@@ -8,11 +8,12 @@ import math
 import re
 from datetime import datetime
 from xml.parsers import expat
+from . import event_schema
 
 MAX_BYTES = 1024 * 1024
 MAX_RECORDS = 1000
 MAX_RECORD_BYTES = 8192
-LIMITATIONS = "تطبيع جزئي إلى was.event/1؛ ليس OCSF كاملًا ولا إثبات هجوم أو نجاح حماية."
+LIMITATIONS = "تحويل ملفات موثق إلى was.event/1؛ ليس OCSF كاملًا ولا إثبات هجوم أو نجاح حماية."
 
 
 def _pairs(items):
@@ -435,9 +436,9 @@ def normalize(adapter, content):
             result.append(convert(record))
         except (ValueError, TypeError, KeyError, UnicodeError) as exc:
             raise ValueError(f"Record {index}: {exc}") from None
-    return {"schema": "was.event/1", "adapter": adapter, "events": result,
+    return event_schema.enrich({"schema": "was.event/1", "adapter": adapter, "events": result,
             "count": len(result), "failed": sum(e["outcome"] == "failure" for e in result),
-            "limitations": LIMITATIONS, "input_sha256": hashlib.sha256(raw).hexdigest()}
+            "limitations": LIMITATIONS, "input_sha256": hashlib.sha256(raw).hexdigest()})
 
 
 def catalog():

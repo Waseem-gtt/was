@@ -97,6 +97,16 @@ def _index(store, pid):
     for rid, revisions in index.items():
         if not isinstance(rid, str) or not isinstance(revisions, list) or not 1 <= len(revisions) <= LIMITS["revisions_per_rule"] or any(not isinstance(eid, str) or not re.fullmatch(r"[a-f0-9]{32}", eid) for eid in revisions) or len(set(revisions)) != len(revisions):
             _bad("فهرس مراجعات قواعد المالك غير صالح", 409)
+    rows = store.rows("SELECT id,sha256,size FROM evidence WHERE project_id=? AND kind='detection-rule'", (pid,))
+    maximum = LIMITS['owner_rules'] * LIMITS['revisions_per_rule']
+    audits = store.rows("SELECT details FROM audit WHERE action='detection-rule.created' AND details LIKE ? LIMIT ?", ('%"project":"'+pid+'"%',maximum+1))
+    try:
+        enrolled = [json.loads(row['details']) for row in audits]
+        identifiers = [eid for revisions in index.values() for eid in revisions]
+        if len(rows)>maximum or sum(row['size'] for row in rows)>64*1024*1024 or len(enrolled)>maximum or any(set(item)!={'project','id','sha256'} or item['project']!=pid for item in enrolled) or len({item['id'] for item in enrolled})!=len(enrolled) or len(set(identifiers))!=len(identifiers) or set(identifiers)!={row['id'] for row in rows} or {item['id']:item['sha256'] for item in enrolled}!={row['id']:row['sha256'] for row in rows}:
+            _bad('فهرس مراجعات القواعد لا يطابق كامل إثباتات إنشائها',409)
+    except (ValueError,TypeError,KeyError):
+        _bad('إثباتات تسجيل قواعد المالك غير صالحة',409)
     return index
 
 

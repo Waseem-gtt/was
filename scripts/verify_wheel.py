@@ -167,7 +167,22 @@ def main():
                 assert xml_report['report']['input_sha256'] == xml_original['sha256']
                 assert xml_report['report']['result']['events'][0]['outcome'] == 'unknown'
                 assert '.1234567' in xml_report['report']['result']['events'][0]['time']
+                dictionary = json.loads(request("/api/events/schema")[0])
+                assert dictionary["id"] == "was.event/1" and dictionary["version"] == "1.0.0"
+                assert xml_report['report']['result']['dictionary_sha256'] == dictionary['dictionary_sha256']
+                assert xml_report['report']['result']['quality']['timestamps'][0]['fraction_digits'] == 7
+                assert b"function ruleAcceptancePanel" in request("/defense_acceptance.js")[0]
+                acceptance = json.loads(request("/api/detection/acceptance/run", {"project_id":pid})[0])
+                assert acceptance['report']['passed'] and acceptance['report']['covered_rules'] == 8
+                owner_rule = {"id":"wheel-reference-login","title":"Synthetic fixture rule","version":"1.0.0","license":"CC0-1.0","source":"WAS wheel synthetic fixture","selection":{"action":"login","outcome":"failure"}}
+                request("/api/detection/save", {"project_id":pid,"rule":owner_rule})
+                owner_source = store.add_evidence(pid,"synthetic-owner-events.json",json.dumps([{"action":"login","outcome":"failure"},{"action":"login","outcome":"success"}]).encode())
+                request("/api/detection/fixtures/register", {"project_id":pid,"rule_id":owner_rule['id'],"evidence_id":owner_source['id'],"expected_indexes":[0]})
+                acceptance = json.loads(request("/api/detection/acceptance/run", {"project_id":pid})[0])
+                assert acceptance['report']['passed'] and acceptance['report']['covered_rules'] == 9
+                # Keep the original eight-rule workflow fixture independent of the added owner rule.
                 library = json.loads(request("/api/detection/library?project=" + pid)[0])
+                library['rules'] = [rule for rule in library['rules'] if rule['origin']=='builtin']
                 original_fixture = store.add_evidence(pid, "synthetic-detection.json", json.dumps(library["fixtures"][0]["input"]).encode())
                 tested = json.loads(request("/api/detection/test", {"project_id":pid, "evidence_id":original_fixture["id"], "rule_ids":[r["id"] for r in library["rules"]]})[0])
                 assert tested["report"]["passed"] and tested["report"]["evaluated_rules"] == 8
@@ -216,7 +231,7 @@ def main():
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "opening_map_assets": True, "arabic_labels": True, "workspace_identity_settings": True, "offline_knowledge_import_search": True, "desktop_menu_generation": True, "visible_gui_tested": False, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "event_dictionary_quality": True, "rule_fixture_acceptance": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

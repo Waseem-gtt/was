@@ -1,7 +1,7 @@
 """Preserve event inputs and normalized derivatives with verifiable provenance."""
 import hashlib
 from pathlib import Path
-from . import __version__, event_adapters, tools, worker
+from . import __version__, event_adapters, event_schema, tools, worker
 from .integrity import _directories
 from .store import Problem, encode
 
@@ -10,7 +10,7 @@ def fingerprint():
     root = Path(__file__).parent
     return hashlib.sha256(encode({"version": __version__, "files": {
         name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-        for name in ("event_ingest.py", "event_adapters.py", "tools.py", "worker.py") + tools.ANALYZER_FILES}}).encode()).hexdigest()
+        for name in ("event_ingest.py", "event_adapters.py", "event_schema.py", "tools.py", "worker.py") + tools.ANALYZER_FILES}}).encode()).hexdigest()
 
 
 def _input(store, project_id, evidence_id, adapter):
@@ -40,6 +40,7 @@ def normalize(store, project_id, evidence_id, adapter):
             raise Problem("تغير محول الأحداث أثناء التنفيذ؛ أعد المحاولة", 409)
         if not isinstance(result, dict) or result.get("input_sha256") != hashlib.sha256(raw).hexdigest() or result.get("schema") != "was.event/1" or result.get("adapter") != adapter:
             raise Problem("فشل التحقق من ناتج محول الأحداث", 409)
+        event_schema.verify(result)
         report = {"schema": "was.event-evidence/1", "adapter": adapter,
                   "input_evidence": evidence_id, "input_sha256": hashlib.sha256(raw).hexdigest(),
                   "adapter_sha256": before, "result": result}
@@ -73,6 +74,8 @@ def verify(store, project_id, evidence_id):
         if report["input_sha256"] != hashlib.sha256(raw).hexdigest():
             raise Problem("بصمة أصل الأحداث غير مطابقة", 409)
         actual = worker.analyze("events", payload, timeout=3)
+        event_schema.verify(actual)
+        event_schema.verify(report["result"])
         if encode(actual) != encode(report["result"]) or report["adapter_sha256"] != fingerprint():
             raise Problem("ناتج الأحداث الموحدة لا يطابق الأصل", 409)
         return report
