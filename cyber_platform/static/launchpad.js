@@ -43,7 +43,8 @@ function launchpadPage() {
       el("div", {class:"grid"}, tools.map(tool => el("article", {class:"card"},
         badge("تحليل ملف محلي", "good"), el("h4", {}, tool.name), el("p", {}, tool.input),
         button("طريقة التشغيل: " + tool.name, () => openTool(tool), "primary")))),
-      el("div", {class:"actions"}, button("→ منصات " + section.name, () => showSection(section)), button("مساحة القسم الكاملة", () => go("sections", section.id))),
+      el("div", {class:"actions"}, button("→ منصات " + section.name, () => showSection(section)), button("مساحة القسم الكاملة", () => goWorkspace(section.id))),
+      button("مساحة عمل المنصة", () => goWorkspace(platform.id), "primary"),
       references(platform.references || [])
     );
   }
@@ -60,7 +61,7 @@ function launchpadPage() {
           badge(count ? count + " أداة متاحة" : "نطاق يحتاج تنفيذًا", count ? "good" : ""),
           button("فتح منصة: " + platform.name, () => showPlatform(section, platform), "small"));
       })),
-      button("مساحة القسم الكاملة", () => go("sections", section.id), "ghost")
+      button("مساحة القسم الكاملة", () => goWorkspace(section.id), "ghost")
     );
   }
   function draw() {

@@ -3478,12 +3478,14 @@
       "id": "E02",
       "title": "هوية ومساحة عمل لكل قسم ومنصة فرعية",
       "group": "E",
-      "status": "partial",
-      "scope": "22قسمًا و109منصات و36أداة فعلية، منها11وظيفة HARوبريد وKubernetesوsystemdوSARIFوأرشيفات وSSHوDNS؛ ليست جميع تقنيات التخصصات وتكاملاتها مكتملة",
+      "status": "available",
+      "scope": "مكتمل: هويات ومساحات مستقلة لـ22قسمًا و109منصات، بمعرف ثابت وعنوان ووصف وأيقونة ولون وصفحة وأدوات وخريطة وإعدادات محفوظة ومدققة وخدمات مشتركة؛ اكتمال هوية المساحة لا يعني اكتمال تقنيات التخصص",
       "evidence_paths": [
-        "cyber_platform/catalog.json",
-        "docs/Technical-Analysis-0.14.md",
-        "tests/browser_smoke.py"
+        "cyber_platform/workspaces.py",
+        "cyber_platform/static/workspaces.js",
+        "tests/test_workspaces.py",
+        "tests/browser_workspaces.py",
+        "docs/Workspaces.md"
       ],
       "source_ids": [
         "source.0047"
@@ -3809,12 +3811,13 @@
       "id": "BASE.13",
       "title": "لكل قسم هوية عرض ومساحة عمل خاصة تشمل عنوانًا ووصفًا وأيقونة وألوانًا وصفحة وأدوات وخرائط وإعدادات، مع معرف ثابت وخدمات مشتركة.",
       "group": "BASE",
-      "status": "partial",
-      "scope": "هوية وصفحات ومعرفات ثابتة لـ22قسمًا و109منصات بأدوات وخدمات مشتركة؛ لا خدمة مستقلة أو إعدادات كاملة لكل تخصص",
+      "status": "available",
+      "scope": "مكتمل: هوية ومساحة عمل لكل قسم ومنصة مع إعدادات ظهور محفوظة وتدقيق ومنع تعارض المراجعات وثبات المعرف والخدمات المشتركة؛ لا يدعي اكتمال جميع الأدوات المرجعية",
       "evidence_paths": [
-        "cyber_platform/catalog.json",
-        "cyber_platform/static/app.js",
-        "docs/Implementation-Status.md"
+        "cyber_platform/workspaces.py",
+        "cyber_platform/static/workspaces.js",
+        "tests/test_workspaces.py",
+        "docs/Workspaces.md"
       ],
       "source_ids": [
         "source.0015"

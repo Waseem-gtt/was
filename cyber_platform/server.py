@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, engine, event_adapters, event_ingest, integrity, knowledge, knowledge_files, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools
+from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, engine, event_adapters, event_ingest, integrity, knowledge, knowledge_files, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools, workspaces
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,13 +168,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/launchpad.js", "/launchpad.css"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/workspaces.js", "/workspaces.css", "/launchpad.js", "/launchpad.css"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
             session = self.session()
             if path == "/api/bootstrap":
-                return self.reply({"csrf": session["csrf"], "catalog": CATALOG, "tools": tools.describe(), "lessons": learning.lessons(),
+                return self.reply({"csrf": session["csrf"], "catalog": workspaces.catalog_view(self.store), "tools": tools.describe(), "lessons": learning.lessons(),
                                    "projects": self.store.rows("SELECT * FROM projects ORDER BY created DESC"),
                                    "resources": self.store.resources(), "audit": self.store.verify_audit(),
                                    "capabilities": {"offline_analysis": True, "ai": "requires_local_model", "workshop": "requires_linux_namespaces",
@@ -258,6 +258,8 @@ class Handler(BaseHTTPRequestHandler):
                                   headers={"Content-Disposition": 'attachment; filename="Cyber-Platform-Requirements.md"', "X-Source-SHA256": requirements.DATA["source"]["sha256"]})
             if path == "/api/requirements/export":
                 return self.reply(requirements.DATA, headers={"Content-Disposition": 'attachment; filename="requirements-register.json"'})
+            if path == "/api/workspaces":
+                return self.reply(workspaces.describe(self.store, query.get("id", [""])[0]))
             if path == "/api/knowledge/offline":
                 return self.reply(knowledge_files.status(self.store, query.get("project", [""])[0]))
             if path == "/api/knowledge/offline/search":
@@ -353,6 +355,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(self.store.create_project(body.get("name"), body.get("description", "")), 201)
             if path == "/api/development":
                 return self.reply(maintenance.task(self.store, body))
+            if path == "/api/workspaces/settings":
+                return self.reply(workspaces.save(self.store, body))
             if path == "/api/knowledge/settings":
                 if set(body) != {"project_id", "enabled", "interval_seconds"}:
                     raise Problem("إعدادات الجدولة غير صالحة")

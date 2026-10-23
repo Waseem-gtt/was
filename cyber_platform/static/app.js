@@ -5,6 +5,7 @@ const state = {
   project: null,
   view: "dashboard",
   section: null,
+  workspaceId: "01",
   csrf: "",
   busy: false,
   integrityScan: null,
@@ -14,6 +15,7 @@ const nav = [
   ["dashboard", "◈", "نظرة عامة"],
   ["launchpad", "⌗", "خريطة المنظومة"],
   ["sections", "▦", "الأقسام والتخصصات"],
+  ["workspace", "▧", "مساحة العمل"],
   ["projects", "▱", "المشاريع"],
   ["evidence", "◇", "الأدلة والملفات"],
   ["tools", "⌘", "أدوات التحليل"],
@@ -147,6 +149,14 @@ function go(view, section = null) {
   render();
   window.scrollTo(0, 0);
 }
+function goWorkspace(identifier) {
+  state.view = "workspace";
+  state.workspaceId = identifier;
+  state.section = null;
+  history.pushState(null, "", "#workspace-" + identifier);
+  render();
+  window.scrollTo(0, 0);
+}
 function modal(title, ...children) {
   const previous = document.activeElement;
   const box = el("div", { class: "modal-backdrop" });
@@ -269,7 +279,10 @@ async function start() {
     try {
       await refresh();
       const hash = location.hash.slice(1);
-      if (hash.startsWith("section-")) {
+      if (hash.startsWith("workspace-")) {
+        state.workspaceId = hash.slice(10);
+        state.view = "workspace";
+      } else if (hash.startsWith("section-")) {
         state.section = hash.slice(8);
         state.view = "sections";
       } else if (nav.some((n) => n[0] === hash)) state.view = hash;
@@ -486,6 +499,7 @@ function render() {
   );
   const views = {
     launchpad: launchpadPage,
+    workspace: workspacePage,
     dashboard,
     sections,
     projects,
@@ -746,6 +760,7 @@ function platformCard(p) {
       el(
         "div",
         { class: "actions" },
+        button("مساحة عمل المنصة", () => goWorkspace(p.id), "small primary"),
         linked.map((t) => button(t.name, () => openTool(t), "small")),
         lessons.map((l) =>
           button(
@@ -839,6 +854,7 @@ function sections() {
       "div",
       {},
       button("→ جميع الأقسام", () => go("sections"), "small ghost"),
+      button("فتح مساحة عمل القسم", () => goWorkspace(s.id), "primary"),
       button("صيانة وتطوير هذا القسم", () => go("maintenance", s.id), "small"),
       el("div", { class: "divider" }),
       el(
@@ -1965,6 +1981,8 @@ function requirementsPage() {
         el("p", {}, "ارفع ملفك، واحفظ الأصل منفصلًا عن النتائج، وتحقق من بصمته عند القراءة."), button("فتح الأدلة", () => go("evidence"))),
       el("article", {class:"card"}, badge("جاهز", "good"), el("h3", {}, state.boot.tools.length + " أداة لتحليل الملفات"),
         el("p", {}, "مدخلات وحدود معلنة، وتشغيل فعلي بنتيجة محفوظة مرتبطة بملفها الأصلي؛ لا فحص حي لجهازك."), button("فتح أدوات التحليل", () => go("tools"))),
+      el("article", {class:"card"}, badge("E02 · مكتمل", "good"), el("h3", {}, "هوية ومساحة عمل لكل قسم ومنصة"),
+        el("p", {}, "131مساحة بمعرف ثابت وعنوان ووصف وأيقونة ولون وأدوات وخريطة وإعدادات محفوظة."), button("فتح مساحة عمل", () => goWorkspace("01"))),
       el("article", {class:"card"}, badge("جاهز", "good"), el("h3", {}, "استيراد فهرس الثغرات والبحث دون إنترنت"),
         el("p", {}, "ملف KEV أصلي، وتحليل متحقق، وإثبات استيراد قابل للتنزيل، واحتفاظ بالفهرس السابق عند رفض ملف جديد."), button("فتح استيراد فهرس الثغرات", () => go("knowledge")))
     )), meta, panel("معلومات الملف والمتطلبات", form), matches, pager);
@@ -2414,7 +2432,11 @@ function maintenancePage() {
 }
 window.addEventListener("hashchange", () => {
   const hash = location.hash.slice(1);
-  if (hash.startsWith("section-")) {
+  if (hash.startsWith("workspace-")) {
+    state.workspaceId = hash.slice(10);
+    state.view = "workspace";
+    state.section = null;
+  } else if (hash.startsWith("section-")) {
     state.view = "sections";
     state.section = hash.slice(8);
   } else if (nav.some((n) => n[0] === hash)) {
