@@ -1,0 +1,34 @@
+{
+  "version": "0.20.0",
+  "source_commit": "b9b31f5bb5070cb15988056e5ba253afe9f95f60",
+  "source_exclusions": [
+    "releases/"
+  ],
+  "files": {
+    "README.md": {
+      "bytes": 710,
+      "sha256": "1359b784e86305fbe244292a297eb35b88077833d6197bf333c2064ca0b445b4"
+    },
+    "validation.json": {
+      "bytes": 11880,
+      "sha256": "fbb151e0868312784979da568f214b8ce7a32db40eab12e8d5d88ae8220e99d9"
+    },
+    "was-cyber-platform-0.20.0-source.zip": {
+      "bytes": 973078,
+      "sha256": "f495fa3772511631155a5ba74241cec8f07a68bd5734aeb068f3e849dec84622"
+    },
+    "was_cyber_platform-0.20.0-py3-none-any.whl": {
+      "bytes": 382475,
+      "sha256": "ecde5e49a9bb2b7fd4832010b90a8717325ca0eb2156e8c87d01f7892fae1c15"
+    }
+  },
+  "verification": {
+    "source_archive_exact_selected_tracked_files": 254,
+    "wheel_package_files_exact": 76,
+    "runtime_agent_modules": "absent",
+    "installed_wheel": "see_validation_json",
+    "github_actions_result": "not_observed"
+  },
+  "signature": "unsigned; SHA-256 is not a publisher signature",
+  "privacy": "No owner runtime files, evidence, backups, secrets, private keys or model weights included."
+}
