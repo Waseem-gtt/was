@@ -30,7 +30,7 @@ def view(query="", status="", page=1, mode="requirements"):
     size = 25
     return {"source": DATA["source"], "items": filtered[(page - 1) * size:page * size], "matches": len(filtered),
             "page": page, "page_size": size, "mode": mode, "labels": LABELS, "overrides": DATA["overrides"],
-            "notice": DATA["notice"], "counts": {"source_blocks": len(DATA["blocks"]), "requirements": len(DATA["requirements"]),
+            "notice": DATA["notice"], "completion_policy": DATA.get("completion_policy", {}), "owner_added_sections": DATA.get("owner_added_sections", []), "counts": {"source_blocks": len(DATA["blocks"]), "requirements": len(DATA["requirements"]),
             "references": len(DATA["references"]), "mentioned_files": len(DATA["mentioned_files"])}}
 
 

@@ -1,0 +1,6 @@
+.plugin-installations { min-width:0; }
+.plugin-installations textarea,.plugin-installations select,.plugin-installations input { max-width:100%; min-width:0; }
+.plugin-installations td,.plugin-installations p,.plugin-installations small { overflow-wrap:anywhere; }
+.plugin-installations details { margin-block:1rem; }
+.plugin-installations details>summary { cursor:pointer; padding-block:.5rem; }
+.plugin-installations pre { max-width:100%; }

@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "was-cyber-platform"
-version = "0.19.0"
+version = "0.20.0"
 description = "Local Arabic cyber research workbench for Linux"
 requires-python = ">=3.11"
-dependencies = ["cryptography==50.0.2"]
+dependencies = ["cryptography==50.0.2", "wasmtime==50.0.1"]
 
 [project.scripts]
 was-platform = "cyber_platform.__main__:main"

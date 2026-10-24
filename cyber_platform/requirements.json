@@ -3303,14 +3303,26 @@
       "title": "مدير الإضافات",
       "group": "F",
       "status": "partial",
-      "scope": "سجل بيانات إضافات بمصادر وتراخيص وصلاحيات وتوافق واعتماديات ومراجعات وقرارات اعتماد وتعطيل وسحب؛ لا تثبيت أو تنفيذ كود أو توقيع ناشر",
+      "scope": "سجل بيانات وحزمWasmموقعة بثقة مالك صريحة واختبارات معزولة وتثبيت وتفعيل وإيقاف واستبدال واستعادة إصدار وتشغيل بمدخل مختار وأدلة محفوظة؛ قسم إدارة المنظومة غير مكتمل، وتشغيل أدواتPythonأوShellعامة خارج عقدWasmغير متاح",
       "evidence_paths": [
         "cyber_platform/plugin_registry.py",
-        "tests/test_plugin_registry.py",
-        "docs/Plugin-Registry.md"
+        "cyber_platform/plugin_installations.py",
+        "cyber_platform/plugin_wasm.py",
+        "cyber_platform/plugin_package.py",
+        "tests/test_plugin_installations.py",
+        "tests/test_plugin_install_http.py",
+        "tests/test_plugin_wasm.py",
+        "docs/Plugin-Installations.md"
       ],
       "source_ids": [
         "source.0027"
+      ],
+      "completion_dependencies": [
+        "SECTION.20"
+      ],
+      "functional_status": "partial",
+      "open_completion_dependencies": [
+        "SECTION.20"
       ]
     },
     {
@@ -3326,14 +3338,21 @@
       ],
       "source_ids": [
         "source.0028"
+      ],
+      "completion_dependencies": [
+        "SECTION.20"
+      ],
+      "functional_status": "partial",
+      "open_completion_dependencies": [
+        "SECTION.20"
       ]
     },
     {
       "id": "F03",
       "title": "لغة مشتركة للأحداث الأمنية",
       "group": "F",
-      "status": "available",
-      "scope": "مكتمل: محولات الأحداث الأربعة مع قاموس حقول ومخططJSONبإصدار وبصمة، وحفظ الأصل وترتيبه ودقة توقيته، وقياس فجوات الجودة والتحقق قبل الحفظ وأثناء الإعادة؛ OCSFمرجع مرشح لا شرط مطابقة كاملة",
+      "status": "partial",
+      "scope": "محولات الأحداث الأربعة مع قاموس حقول ومخططJSONبإصدار وبصمة، وحفظ الأصل وترتيبه ودقة توقيته، وقياس فجوات الجودة والتحقق قبل الحفظ وأثناء الإعادة؛ OCSFمرجع مرشح لا شرط مطابقة كاملة؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: SECTION.03",
       "evidence_paths": [
         "cyber_platform/event_adapters.py",
         "cyber_platform/event_schema.py",
@@ -3343,14 +3362,21 @@
       ],
       "source_ids": [
         "source.0029"
+      ],
+      "completion_dependencies": [
+        "SECTION.03"
+      ],
+      "functional_status": "verified",
+      "open_completion_dependencies": [
+        "SECTION.03"
       ]
     },
     {
       "id": "F04",
       "title": "مكتبة قواعد كشف قابلة للاختبار",
       "group": "F",
-      "status": "available",
-      "scope": "مكتمل: مكتبة قواعد بمصدر وترخيص وإصدارات، وعينات موجبة وسالبة مرتبطة بالإصدار، وتغطية لجميع القواعد الحالية وقياساتFP/FNوإعادة اختبار فعلية وتقارير ثابتة؛ Sigmaمرجع مرشح ولا يُدعى جمع حي",
+      "status": "partial",
+      "scope": "مكتبة قواعد بمصدر وترخيص وإصدارات، وعينات موجبة وسالبة مرتبطة بالإصدار، وتغطية لجميع القواعد الحالية وقياساتFP/FNوإعادة اختبار فعلية وتقارير ثابتة؛ Sigmaمرجع مرشح ولا يُدعى جمع حي؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: SECTION.03",
       "evidence_paths": [
         "cyber_platform/detection.py",
         "cyber_platform/detection_acceptance.py",
@@ -3359,6 +3385,13 @@
       ],
       "source_ids": [
         "source.0030"
+      ],
+      "completion_dependencies": [
+        "SECTION.03"
+      ],
+      "functional_status": "verified",
+      "open_completion_dependencies": [
+        "SECTION.03"
       ]
     },
     {
@@ -3375,14 +3408,21 @@
       ],
       "source_ids": [
         "source.0031"
+      ],
+      "completion_dependencies": [
+        "SECTION.20"
+      ],
+      "functional_status": "partial",
+      "open_completion_dependencies": [
+        "SECTION.20"
       ]
     },
     {
       "id": "F06",
       "title": "خريطة علاقات وأدلة مشتركة",
       "group": "F",
-      "status": "available",
-      "scope": "مكتمل: أصل وبرنامج وثغرة وحدث ودليل وتجربة مع مراجع ملفات فعلية، ومصدر وبصمة وثقة ووقت ملاحظة وصلاحية وتعارض؛ خريطة وجداول وتفاصيل وبحث وتصدير بعد تفويض المالك والتحقق من السجلات والمصادر، مع حفظ ذري واستعادة مختبرة",
+      "status": "partial",
+      "scope": "أصل وبرنامج وثغرة وحدث ودليل وتجربة مع مراجع ملفات فعلية، ومصدر وبصمة وثقة ووقت ملاحظة وصلاحية وتعارض؛ خريطة وجداول وتفاصيل وبحث وتصدير بعد تفويض المالك والتحقق من السجلات والمصادر، مع حفظ ذري واستعادة مختبرة؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: SECTION.01",
       "evidence_paths": [
         "cyber_platform/knowledge_graph.py",
         "cyber_platform/static/knowledge_graph.js",
@@ -3393,6 +3433,13 @@
       ],
       "source_ids": [
         "source.0032"
+      ],
+      "completion_dependencies": [
+        "SECTION.01"
+      ],
+      "functional_status": "verified",
+      "open_completion_dependencies": [
+        "SECTION.01"
       ]
     },
     {
@@ -3400,7 +3447,7 @@
       "title": "أمن الإضافات وسلسلة التوريد",
       "group": "Q",
       "status": "partial",
-      "scope": "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل بيانات إضافات؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية أو توقيع ناشر إضافات",
+      "scope": "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل إضافات وحزمWasmبتوقيع ناشر؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية",
       "evidence_paths": [
         "cyber_platform/supply_chain.py",
         "cyber_platform/sarif.py",
@@ -3484,8 +3531,8 @@
       "id": "E02",
       "title": "هوية ومساحة عمل لكل قسم ومنصة فرعية",
       "group": "E",
-      "status": "available",
-      "scope": "مكتمل: هويات ومساحات مستقلة لـ22قسمًا و109منصات، بمعرف ثابت وعنوان ووصف وأيقونة ولون وصفحة وأدوات وخريطة وإعدادات محفوظة ومدققة وخدمات مشتركة؛ اكتمال هوية المساحة لا يعني اكتمال تقنيات التخصص",
+      "status": "partial",
+      "scope": "هويات ومساحات مستقلة لـ22قسمًا و109منصات، بمعرف ثابت وعنوان ووصف وأيقونة ولون وصفحة وأدوات وخريطة وإعدادات محفوظة ومدققة وخدمات مشتركة؛ اكتمال هوية المساحة لا يعني اكتمال تقنيات التخصص؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: SECTION.01، SECTION.02، SECTION.03، SECTION.04، SECTION.05، SECTION.06، SECTION.07، SECTION.08، SECTION.09، SECTION.10، SECTION.11، SECTION.12، SECTION.13، SECTION.14، SECTION.15، SECTION.16، SECTION.17، SECTION.18، SECTION.19، SECTION.20، SECTION.21، SECTION.22",
       "evidence_paths": [
         "cyber_platform/workspaces.py",
         "cyber_platform/static/workspaces.js",
@@ -3495,6 +3542,55 @@
       ],
       "source_ids": [
         "source.0047"
+      ],
+      "completion_dependencies": [
+        "SECTION.01",
+        "SECTION.02",
+        "SECTION.03",
+        "SECTION.04",
+        "SECTION.05",
+        "SECTION.06",
+        "SECTION.07",
+        "SECTION.08",
+        "SECTION.09",
+        "SECTION.10",
+        "SECTION.11",
+        "SECTION.12",
+        "SECTION.13",
+        "SECTION.14",
+        "SECTION.15",
+        "SECTION.16",
+        "SECTION.17",
+        "SECTION.18",
+        "SECTION.19",
+        "SECTION.20",
+        "SECTION.21",
+        "SECTION.22"
+      ],
+      "functional_status": "verified",
+      "open_completion_dependencies": [
+        "SECTION.01",
+        "SECTION.02",
+        "SECTION.03",
+        "SECTION.04",
+        "SECTION.05",
+        "SECTION.06",
+        "SECTION.07",
+        "SECTION.08",
+        "SECTION.09",
+        "SECTION.10",
+        "SECTION.11",
+        "SECTION.12",
+        "SECTION.13",
+        "SECTION.14",
+        "SECTION.15",
+        "SECTION.16",
+        "SECTION.17",
+        "SECTION.18",
+        "SECTION.19",
+        "SECTION.20",
+        "SECTION.21",
+        "SECTION.22"
       ]
     },
     {
@@ -3786,7 +3882,7 @@
       "title": "تصميم طويل الأمد: إضافات، استبدال النماذج، واجهات تكامل موثقة، تصدير بيانات، تحديث أدوات ومعرفة وبرنامج، استعادة إصدارات. الاستمرار يتطلب صيانة.",
       "group": "BASE",
       "status": "partial",
-      "scope": "APIوتصدير واستعادة وترقية ورجوع كود وسجل بيانات إضافات؛ لا تحميل إضافات تنفيذية أو تثبيت وتحديث كل الأدوات تلقائيًا",
+      "scope": "APIوتصدير واستعادة وترقية ورجوع كود وإضافاتWasmتنفيذية موقعة؛ لا تثبيت وتحديث كل الأدوات تلقائيًا",
       "evidence_paths": [
         "docs/API.md",
         "cyber_platform/backup.py",
@@ -3817,8 +3913,8 @@
       "id": "BASE.13",
       "title": "لكل قسم هوية عرض ومساحة عمل خاصة تشمل عنوانًا ووصفًا وأيقونة وألوانًا وصفحة وأدوات وخرائط وإعدادات، مع معرف ثابت وخدمات مشتركة.",
       "group": "BASE",
-      "status": "available",
-      "scope": "مكتمل: هوية ومساحة عمل لكل قسم ومنصة مع إعدادات ظهور محفوظة وتدقيق ومنع تعارض المراجعات وثبات المعرف والخدمات المشتركة؛ لا يدعي اكتمال جميع الأدوات المرجعية",
+      "status": "partial",
+      "scope": "هوية ومساحة عمل لكل قسم ومنصة مع إعدادات ظهور محفوظة وتدقيق ومنع تعارض المراجعات وثبات المعرف والخدمات المشتركة؛ لا يدعي اكتمال جميع الأدوات المرجعية؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: SECTION.01، SECTION.02، SECTION.03، SECTION.04، SECTION.05، SECTION.06، SECTION.07، SECTION.08، SECTION.09، SECTION.10، SECTION.11، SECTION.12، SECTION.13، SECTION.14، SECTION.15، SECTION.16، SECTION.17، SECTION.18، SECTION.19، SECTION.20، SECTION.21، SECTION.22",
       "evidence_paths": [
         "cyber_platform/workspaces.py",
         "cyber_platform/static/workspaces.js",
@@ -3827,6 +3923,55 @@
       ],
       "source_ids": [
         "source.0015"
+      ],
+      "completion_dependencies": [
+        "SECTION.01",
+        "SECTION.02",
+        "SECTION.03",
+        "SECTION.04",
+        "SECTION.05",
+        "SECTION.06",
+        "SECTION.07",
+        "SECTION.08",
+        "SECTION.09",
+        "SECTION.10",
+        "SECTION.11",
+        "SECTION.12",
+        "SECTION.13",
+        "SECTION.14",
+        "SECTION.15",
+        "SECTION.16",
+        "SECTION.17",
+        "SECTION.18",
+        "SECTION.19",
+        "SECTION.20",
+        "SECTION.21",
+        "SECTION.22"
+      ],
+      "functional_status": "verified",
+      "open_completion_dependencies": [
+        "SECTION.01",
+        "SECTION.02",
+        "SECTION.03",
+        "SECTION.04",
+        "SECTION.05",
+        "SECTION.06",
+        "SECTION.07",
+        "SECTION.08",
+        "SECTION.09",
+        "SECTION.10",
+        "SECTION.11",
+        "SECTION.12",
+        "SECTION.13",
+        "SECTION.14",
+        "SECTION.15",
+        "SECTION.16",
+        "SECTION.17",
+        "SECTION.18",
+        "SECTION.19",
+        "SECTION.20",
+        "SECTION.21",
+        "SECTION.22"
       ]
     },
     {
@@ -4208,7 +4353,7 @@
       "title": "إدارة المنظومة",
       "group": "SECTION",
       "status": "partial",
-      "scope": "صيانة محدودة وجودة وترقية يدوية وسجل بيانات إضافات؛ لا إصلاح عام أو تحميل كود إضافات أو صيانة مضمونة لعقود",
+      "scope": "صيانة محدودة وجودة وترقية يدوية وسجل بيانات وإضافاتWasmتنفيذية موقعة؛ لا إصلاح عام أو تحديث شامل أو صيانة مضمونة لعقود",
       "evidence_paths": [
         "cyber_platform/catalog.json",
         "cyber_platform/maintenance.py",
@@ -4371,7 +4516,27 @@
       "availability": "not_provided"
     }
   ],
+  "owner_added_sections": [
+    {
+      "id": "SECTION.21",
+      "title": "الحماية الشاملة",
+      "status": "partial",
+      "origin": "later_owner_request"
+    },
+    {
+      "id": "SECTION.22",
+      "title": "تعلّم الهجوم الأخلاقي",
+      "status": "partial",
+      "origin": "later_owner_request"
+    }
+  ],
+  "completion_policy": {
+    "required_unit": "main_section",
+    "verified_function_is_completed_batch": false,
+    "notice": "لا تكتمل الدفعة بوظيفة منفردة مع بقاء وظائف القسم المرتبط ناقصة."
+  },
   "overrides": [
+    "أكد المالك أن إكمال الدفعة يشمل وظائف القسم الكبير المرتبط بها، فلا تسمى مكتملة ما دام فيه شيء ناقص",
     "أكد المالك أن الرسالة المنقولة جزء من المصدر؛ المرجع هو الملف الكامل مع واجهة برنامج لينكس واحدة وخريطة أقسام ثم منصات ثم أدوات وطريقة تشغيلها",
     "ألغى المالك طبقة المختبرات؛ الهيكل: قسم ← منصات ← أدوات وتقنيات",
     "أضيفت الحماية الشاملة والتعلم الأخلاقي، فأصبح الهيكل22قسمًا و109منصات",

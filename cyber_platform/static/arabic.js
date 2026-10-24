@@ -48,7 +48,7 @@ const ARABIC_EVIDENCE_KINDS = Object.freeze({
   original:"ملف أصلي", reference:"مرجع", result:"نتيجة تحليل", knowledge:"لقطة معرفة", "knowledge-file":"إثبات استيراد فهرس الثغرات", learning:"تقييم تعلّم",
   "learning-assessment":"تقييم تعلّم", events:"أحداث موحدة", "normalized-events":"أحداث موحدة", "detection-test":"اختبار قواعد كشف",
   "plan-result":"نتيجة خطوة خطة", "plan-template":"قالب خطة", "plan-run":"تشغيل خطة", "plan-instantiation":"إثبات إنشاء خطة",
-  "graph-entity":"كيان موثق", "graph-relation":"علاقة موثقة", "detection-fixture":"عينة مرجعية لقاعدة كشف", "detection-acceptance":"تقرير قبول قواعد الكشف",
+  "plugin-installation":"سجل تثبيت وتشغيل إضافة", "graph-entity":"كيان موثق", "graph-relation":"علاقة موثقة", "detection-fixture":"عينة مرجعية لقاعدة كشف", "detection-acceptance":"تقرير قبول قواعد الكشف",
   "coverage-scan":"فحص تغطية", "project-report":"تقرير مشروع", "plugin-registry":"سجل بيانات إضافة", "comparison":"مقارنة نتائج",
 });
 function uiLabel(value) {

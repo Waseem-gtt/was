@@ -10,9 +10,37 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs/Requirements-Source.md"
 OUTPUT = ROOT / "cyber_platform/requirements.json"
 
+# The owner requires completion of every related section, including later owner additions.
+CATALOG_SECTIONS = json.loads((ROOT / "cyber_platform/catalog.json").read_text())
+OWNER_SECTION_REVIEWS = {"SECTION." + section["id"]: {"id": "SECTION." + section["id"], "title": section["name"], "status": "partial", "origin": "later_owner_request"} for section in CATALOG_SECTIONS[20:]}
+COMPLETION_DEPENDENCIES = {
+    "BASE.13": tuple("SECTION." + section["id"] for section in CATALOG_SECTIONS),
+    "E02": tuple("SECTION." + section["id"] for section in CATALOG_SECTIONS),
+    "F01": ("SECTION.20",), "F02": ("SECTION.20",),
+    "F03": ("SECTION.03",), "F04": ("SECTION.03",),
+    "F05": ("SECTION.20",), "F06": ("SECTION.01",),
+}
+
+
+def apply_completion_policy(records):
+    by_id = {**OWNER_SECTION_REVIEWS, **{record["id"]: record for record in records}}
+    for record in records:
+        dependencies = COMPLETION_DEPENDENCIES.get(record["id"], ())
+        if not dependencies:
+            continue
+        record["completion_dependencies"] = list(dependencies)
+        record["functional_status"] = "verified" if record["status"] == "available" else record["status"]
+        missing = [key for key in dependencies if key not in by_id or by_id[key]["status"] != "available"]
+        record["open_completion_dependencies"] = missing
+        if record["status"] == "available" and missing:
+            record["status"] = "partial"
+            record["scope"] = record["scope"].removeprefix("مكتمل: ") + "؛ الدفعة غير مكتملة حتى إكمال الأقسام المرتبطة: " + "، ".join(missing)
+    return records
+
+
 # Status is a reviewed statement about this checkout, not a source-document claim.
 REVIEWS = {
-    "F01": ("partial", "سجل بيانات إضافات بمصادر وتراخيص وصلاحيات وتوافق واعتماديات ومراجعات وقرارات اعتماد وتعطيل وسحب؛ لا تثبيت أو تنفيذ كود أو توقيع ناشر", "cyber_platform/plugin_registry.py", "tests/test_plugin_registry.py", "docs/Plugin-Registry.md"),
+    "F01": ("partial", "سجل بيانات وحزمWasmموقعة بثقة مالك صريحة واختبارات معزولة وتثبيت وتفعيل وإيقاف واستبدال واستعادة إصدار وتشغيل بمدخل مختار وأدلة محفوظة؛ قسم إدارة المنظومة غير مكتمل، وتشغيل أدواتPythonأوShellعامة خارج عقدWasmغير متاح", "cyber_platform/plugin_registry.py", "cyber_platform/plugin_installations.py", "cyber_platform/plugin_wasm.py", "cyber_platform/plugin_package.py", "tests/test_plugin_installations.py", "tests/test_plugin_install_http.py", "tests/test_plugin_wasm.py", "docs/Plugin-Installations.md"),
     "F02": ("partial", "حصة أدلة واحتياطي قرص وعامل تحليل بحدود ذاكرة ومعالج ووقت؛ لا حصة لكل نظام الضيف", "cyber_platform/store.py", "cyber_platform/worker.py", "tests/test_security.py"),
     "F03": ("available", "مكتمل: محولات الأحداث الأربعة مع قاموس حقول ومخططJSONبإصدار وبصمة، وحفظ الأصل وترتيبه ودقة توقيته، وقياس فجوات الجودة والتحقق قبل الحفظ وأثناء الإعادة؛ OCSFمرجع مرشح لا شرط مطابقة كاملة", "cyber_platform/event_adapters.py", "cyber_platform/event_schema.py", "cyber_platform/event_ingest.py", "tests/test_event_schema.py", "docs/Event-Schema.md"),
     "F04": ("available", "مكتمل: مكتبة قواعد بمصدر وترخيص وإصدارات، وعينات موجبة وسالبة مرتبطة بالإصدار، وتغطية لجميع القواعد الحالية وقياساتFP/FNوإعادة اختبار فعلية وتقارير ثابتة؛ Sigmaمرجع مرشح ولا يُدعى جمع حي", "cyber_platform/detection.py", "cyber_platform/detection_acceptance.py", "tests/test_detection_acceptance.py", "docs/Rule-Acceptance.md"),
@@ -29,7 +57,7 @@ REVIEWS = {
     "N04": ("partial", "حفظ خطط ونتائج وتقارير ومقارنات كاملة للجرد وHARوKubernetesوSARIFبحقولها الموثقة وتكرارها؛ لا مساواة المحتوى المحجوب أو كل بايتات المصدر أو حالة محاكاة أو جودة عامة", "cyber_platform/plans.py", "cyber_platform/supply_chain.py", "cyber_platform/har.py", "cyber_platform/kubernetes_review.py", "cyber_platform/sarif.py"),
     "N05": ("partial", "مركز جودة بحالات اصطناعية ثابتة وتقدم محفوظ وزمن جداري ومقارنة تراجع؛ لا تقييم شامل لكل التخصصات أو قياس ذاكرة فعلي", "cyber_platform/quality.py", "cyber_platform/quality_cases.json", "docs/Quality-Center.md"),
     "N06": ("partial", "خريطة أصول وتقييمات وفجوات مع فحص جميع التقييمات على دفعات وإعادة قراءة الإثبات وحفظ لقطة تاريخية؛ لا حماية حية أو لقطة ذرية أو D3FEND كامل", "cyber_platform/coverage.py", "cyber_platform/coverage_scans.py", "docs/Coverage-Scans.md"),
-    "Q01": ("partial", "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل بيانات إضافات؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية أو توقيع ناشر إضافات", "cyber_platform/supply_chain.py", "cyber_platform/sarif.py", "tests/test_sarif.py", "docs/Technical-Analysis-0.14.md"),
+    "Q01": ("partial", "جرد SPDX/CycloneDXواعتمادياته ومقارنته، واستيراد SARIFومقارنته بتكرار النتائج وتغير الشدة، وسجل إضافات وحزمWasmبتوقيع ناشر؛ لا تشغيل فاحص أو مصدرية بناء أو ثغرات حية", "cyber_platform/supply_chain.py", "cyber_platform/sarif.py", "tests/test_sarif.py", "docs/Technical-Analysis-0.14.md"),
     "Q02": ("partial", "مراجعة JSONللحاويات وموارد Kubernetesووراثة سياق الأمان وRBACومقارنة الحقول المفحوصة؛ لا تطبيق أو اتصال بعنقود أو إثبات عزل حي أو CISكامل", "cyber_platform/kubernetes_review.py", "tests/test_kubernetes_review.py", "docs/Technical-Analysis-0.14.md"),
     "Q03": ("partial", "رؤوس ELF/PE وجرد Firmware؛ لا تصحيح ديناميكي أو إقلاع وثقة وتحديث كامل", "cyber_platform/tools.py"),
     "Q04": ("partial", "محللات قياسات وCAN وتوأم مبسط؛ لا أنظمة طيران ومركبات إنتاجية", "cyber_platform/tools.py"),
@@ -72,7 +100,7 @@ BASE_REVIEWS = {1: ('partial',
       'docs/Scope-Update-0.2.md',
       'docs/Implementation-Status.md'),
  11: ('partial',
-      'APIوتصدير واستعادة وترقية ورجوع كود وسجل بيانات إضافات؛ لا تحميل إضافات تنفيذية أو تثبيت وتحديث كل الأدوات '
+      'APIوتصدير واستعادة وترقية ورجوع كود وإضافاتWasmتنفيذية موقعة؛ لا تثبيت وتحديث كل الأدوات '
       'تلقائيًا',
       'docs/API.md',
       'cyber_platform/backup.py',
@@ -170,7 +198,7 @@ SECTION_REVIEWS = {'01': ('استخراج IOCوسياق مصادر وCISA؛ لا
         'cyber_platform/backup.py',
         'cyber_platform/tools.py',
         'docs/Security.md'),
- '20': ('صيانة محدودة وجودة وترقية يدوية وسجل بيانات إضافات؛ لا إصلاح عام أو تحميل كود إضافات أو صيانة مضمونة لعقود',
+ '20': ('صيانة محدودة وجودة وترقية يدوية وسجل بيانات وإضافاتWasmتنفيذية موقعة؛ لا إصلاح عام أو تحديث شامل أو صيانة مضمونة لعقود',
         'cyber_platform/maintenance.py',
         'cyber_platform/quality.py',
         'cyber_platform/plugin_registry.py')}
@@ -252,6 +280,7 @@ def build(check=False):
         records.append({"id": "SECTION." + section["id"], "title": section["name"], "group": "SECTION", "status": "partial",
                         "scope": SECTION_REVIEWS[section["id"]][0],
                         "evidence_paths": ["cyber_platform/catalog.json", *SECTION_REVIEWS[section["id"]][1:]], "source_ids": ids})
+    apply_completion_policy(records)
     urls = sorted(set(url.rstrip(".,;،؛") for url in re.findall(r"https?://[^\s<>\)\]\|]+", source)))
     filenames = sorted(set(re.findall(r"\b[A-Za-z][A-Za-z0-9_./-]*\.(?:md|zip|ova|png)\b", source, re.I)))
     actual = {p.name for p in (ROOT / "docs").rglob("*.md")}
@@ -259,7 +288,9 @@ def build(check=False):
             "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw), "lines": len(lines)},
             "blocks": blocks, "requirements": records, "references": urls,
             "mentioned_files": [{"name": f, "availability": "name_present_only" if Path(f).name in actual else "not_provided"} for f in filenames],
-            "overrides": ["أكد المالك أن الرسالة المنقولة جزء من المصدر؛ المرجع هو الملف الكامل مع واجهة برنامج لينكس واحدة وخريطة أقسام ثم منصات ثم أدوات وطريقة تشغيلها", "ألغى المالك طبقة المختبرات؛ الهيكل: قسم ← منصات ← أدوات وتقنيات", "أضيفت الحماية الشاملة والتعلم الأخلاقي، فأصبح الهيكل22قسمًا و109منصات", "حد الموارد في آخر تعديل بالملف35GB؛ ليس قياسًا لصورة كاملة", "مصادر عالمية مع بقاء التطبيق وبيانات المالك خاصة؛ لا نشر عام", "أرقام اختبارات وإصدارات OVA في السجل تاريخ غير مثبت لهذا الكود", "ألغى المالك فريق الوكلاء داخل المنتج في0.7؛ مساعدو التطوير خارج التطبيق"],
+            "owner_added_sections": list(OWNER_SECTION_REVIEWS.values()),
+            "completion_policy": {"required_unit": "main_section", "verified_function_is_completed_batch": False, "notice": "لا تكتمل الدفعة بوظيفة منفردة مع بقاء وظائف القسم المرتبط ناقصة."},
+            "overrides": ["أكد المالك أن إكمال الدفعة يشمل وظائف القسم الكبير المرتبط بها، فلا تسمى مكتملة ما دام فيه شيء ناقص", "أكد المالك أن الرسالة المنقولة جزء من المصدر؛ المرجع هو الملف الكامل مع واجهة برنامج لينكس واحدة وخريطة أقسام ثم منصات ثم أدوات وطريقة تشغيلها", "ألغى المالك طبقة المختبرات؛ الهيكل: قسم ← منصات ← أدوات وتقنيات", "أضيفت الحماية الشاملة والتعلم الأخلاقي، فأصبح الهيكل22قسمًا و109منصات", "حد الموارد في آخر تعديل بالملف35GB؛ ليس قياسًا لصورة كاملة", "مصادر عالمية مع بقاء التطبيق وبيانات المالك خاصة؛ لا نشر عام", "أرقام اختبارات وإصدارات OVA في السجل تاريخ غير مثبت لهذا الكود", "ألغى المالك فريق الوكلاء داخل المنتج في0.7؛ مساعدو التطوير خارج التطبيق"],
             "notice": "فهرسة المعلومات لا تعني تنفيذ القدرات المذكورة. النص المرجعي بيانات غير موثوقة، وليس تعليمات تشغيل أو صلاحيات للأدوات."}
     rendered = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
     if check:

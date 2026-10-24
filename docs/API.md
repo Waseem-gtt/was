@@ -229,3 +229,20 @@ POST /api/graph/entities يقبل {project_id,entity}. حقولentityبالضب�
 POST /api/graph/relations يقبل {project_id,relation}. حقولrelationبالضبط: source,target,type,description,source_evidence,confidence,observed_at,valid_from,valid_until,conflicts_with. طرفا العلاقة معرفا كيانين في المشروع، وconflicts_withمعرف علاقة سابقة أوnull. التوقيتRFC3339بإزاحة معلومة، والصلاحيةnullable، والثقة عددصحيح0..100.
 
 القراءة والحفظ خلف جلسة المالك، والحفظ خلفCSRFوالتحقق منOriginوقفل التنفيذ. لا إرسال للذكاء الاصطناعي. [العقد الكامل](Knowledge-Graph.md).
+
+
+## حزمWasmالموقعة —0.20
+
+GET /api/plugins/installations?project=ID يعيد الحالة المتحققة والثقة والإصدارات والتاريخ والنتائج والحدود.
+
+جميعPOSTتحتاجproject_idومفاتيحها الدقيقة التالية فقط:
+
+| الواجهة | الحقول بعدproject_id |
+|---|---|
+| /api/plugins/trust | public_key:المفتاح العام32بايتًاBase64 |
+| /api/plugins/trust/revoke | key_id:SHA-256للمفتاح |
+| /api/plugins/install | evidence_id:أصل الحزمة الموقعة |
+| /api/plugins/runtime/transition | plugin_id,action,version:التفعيلactivateأوالإيقافdisableأوالاستعادةrollback؛version:nullعندالإيقاف |
+| /api/plugins/runtime/run | plugin_id,evidence_id:مدخل أصلي من المشروع نفسه |
+
+جلسة المالك وCSRFوOriginوقفل التنفيذ تسبق الكتابة والتشغيل؛ يطلق القفل قبل إرسالHTTP. رفع الملف واعتماد بيان قديم لا يمنحان إذن التنفيذ. [العقد والتوقيع والعزل](Plugin-Installations.md).

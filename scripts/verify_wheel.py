@@ -244,11 +244,42 @@ def main():
                 assert len(registry["items"]) == 1 and len(registry["items"][0]["history"]) == 2
                 answer = json.loads(request("/api/chat", {"project_id": pid, "question": "Review the selected synthetic evidence", "evidence_ids": [evidence["id"]]})[0])
                 assert isinstance(answer["answer"], str) and len(answer["evidence"]) == 1
+                from cyber_platform import plugin_package
+                import wasmtime
+                publisher_path = Path(folder) / "ephemeral-plugin-publisher.pem"
+                publisher = plugin_package.generate_key(publisher_path)
+                request("/api/plugins/trust", {"project_id":pid,"public_key":publisher['public_key']})
+                counter_input = store.add_evidence(pid,"synthetic-plugin-input.txt",b"abcdefg")
+                for version, divisor in (("1.0.0",10),("2.0.0",5)):
+                    module_path = Path(folder) / "counter.wasm"
+                    wat = '(module (memory (export "memory") 2) (data (i32.const 0) "{\\"n\\":0}") (func (export "alloc") (param i32) (result i32) (i32.const 1024)) (func (export "analyze") (param i32 i32) (result i64) (i32.store8 (i32.const 5) (i32.add (i32.const 48) (i32.rem_u (local.get 1) (i32.const '+str(divisor)+')))) (i64.const 7)))'
+                    module_path.write_bytes(bytes(wasmtime.wat2wasm(wat)))
+                    manifest_path = Path(folder) / "counter-manifest.json"
+                    manifest_path.write_text(json.dumps({"id":"wheel.counter","version":version,"source":"https://example.test/counter","license":"MIT","permissions":["selected_evidence.read","derived_evidence.write"]}))
+                    fixture_path = Path(folder) / "counter-fixtures.json"
+                    fixture_path.write_text(json.dumps([{"input_base64":"YWJjZA==","expected":{"n":4}}]))
+                    package_path = Path(folder) / ("counter-"+version+".json")
+                    plugin_package.build(publisher_path,manifest_path,module_path,fixture_path,package_path)
+                    package_source = store.add_evidence(pid,"counter-"+version+".json",package_path.read_bytes())
+                    installed = json.loads(request("/api/plugins/install", {"project_id":pid,"evidence_id":package_source['id']})[0])
+                    assert installed['record']['action'] == 'install'
+                    request("/api/plugins/runtime/transition", {"project_id":pid,"plugin_id":"wheel.counter","action":"activate","version":version})
+                    output = json.loads(request("/api/plugins/runtime/run", {"project_id":pid,"plugin_id":"wheel.counter","evidence_id":counter_input['id']})[0])
+                    assert output['record']['result'] == {"n":7 % divisor}
+                    if version == "1.0.0":
+                        request("/api/plugins/runtime/transition", {"project_id":pid,"plugin_id":"wheel.counter","action":"disable","version":None})
+                request("/api/plugins/runtime/transition", {"project_id":pid,"plugin_id":"wheel.counter","action":"rollback","version":"1.0.0"})
+                restored = json.loads(request("/api/plugins/runtime/run", {"project_id":pid,"plugin_id":"wheel.counter","evidence_id":counter_input['id']})[0])
+                assert restored['record']['result'] == {"n":7}
+                request("/api/plugins/trust/revoke", {"project_id":pid,"key_id":publisher['key_id']})
+                runtime_view = json.loads(request("/api/plugins/installations?project="+pid)[0])
+                assert runtime_view['plugins'][0]['effective_state'] == 'blocked'
+                assert len(runtime_view['plugins'][0]['versions']) == 2
                 assert store.verify_audit()["valid"]
                 print(json.dumps({"version": cyber_platform.__version__, "installed_package": True, "opening_map_assets": True, "arabic_labels": True, "workspace_identity_settings": True, "offline_knowledge_import_search": True, "desktop_menu_generation": True, "visible_gui_tested": False, "health_and_auth": True,
                                   "bounded_analysis": True, "maintenance": True, "single_chat_fixture": True,
                                   "runtime_agent_team_removed": True, "integrity_batches": True, "signed_release_fixture": True,
-                                  "quality_center": True, "event_adapters": True, "event_dictionary_quality": True, "knowledge_graph_six_types_provenance_conflicts": True, "rule_fixture_acceptance": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "plugin_code_execution": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
+                                  "quality_center": True, "event_adapters": True, "event_dictionary_quality": True, "knowledge_graph_six_types_provenance_conflicts": True, "rule_fixture_acceptance": True, "detection_library": True, "defense_coverage": True, "branching_plans": True, "immutable_template_origin": True, "full_coverage_scan": True, "project_reports_json_html": True, "curriculum_progress": True, "plugin_metadata_governance": True, "signed_wasm_plugin_lifecycle": True, "offline_publisher_tooling": True, "plugin_code_execution": True, "generic_python_shell_plugins": False, "pcap_metadata": True, "x509_certificates": True, "sbom_dependencies": True, "sbom_comparison": True, "windows_xml": True, "new_014_tools": list(technical_tools)[4:], "all_technical_tools": len(technical_tools), "audit": True, "real_model_inference": False}))
             finally:
                 app.shutdown()
                 app.server_close()

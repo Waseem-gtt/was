@@ -10,7 +10,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, detection_acceptance, engine, event_adapters, event_schema, event_ingest, integrity, knowledge, knowledge_files, knowledge_graph, learning, local_ai, maintenance, plans, plan_templates, plugin_registry, quality, requirements, sandbox, tools, workspaces
+from . import __version__, backup, case_reports, comparison, coverage, coverage_scans, curriculum, detection, detection_acceptance, engine, event_adapters, event_schema, event_ingest, integrity, knowledge, knowledge_files, knowledge_graph, learning, local_ai, maintenance, plans, plan_templates, plugin_installations, plugin_registry, quality, requirements, sandbox, tools, workspaces
 from .store import Problem, encode
 
 STATIC = Path(__file__).parent / "static"
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"version": __version__, "initialized": bool(self.store.setting("owner")), "local_only": True})
             if path == "/healthz":
                 return self.reply({"status": "ok", "database": self.store.rows("SELECT 1 AS ready")[0]["ready"] == 1})
-            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/workspaces.js", "/workspaces.css", "/defense_acceptance.js", "/knowledge_graph.js", "/knowledge_graph.css", "/launchpad.js", "/launchpad.css"):
+            if path in ("/", "/app.js", "/style.css", "/research.js", "/coverage.js", "/coverage_scans.js", "/plans.js", "/reports.js", "/curriculum.js", "/plugins.js", "/plugin_installations.js", "/plugin_installations.css", "/technical.js", "/arabic.js", "/knowledge_offline.js", "/workspaces.js", "/workspaces.css", "/defense_acceptance.js", "/knowledge_graph.js", "/knowledge_graph.css", "/launchpad.js", "/launchpad.css"):
                 filename = "index.html" if path == "/" else path[1:]
                 mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
                 return self.reply((STATIC / filename).read_bytes(), content_type=mime + "; charset=utf-8")
@@ -189,6 +189,16 @@ class Handler(BaseHTTPRequestHandler):
                                  "/api/curriculum/history": curriculum.history,
                                  "/api/plugins": plugin_registry.view}[path]
                     result = operation(self.store, query.get("project", [""])[0])
+                finally:
+                    self.server.execution_lock.release()
+                return self.reply(result)
+            if path == "/api/plugins/installations":
+                if set(query) != {"project"}:
+                    raise Problem("حدد المشروع فقط")
+                if not self.server.execution_lock.acquire(blocking=False):
+                    raise Problem("مهمة أخرى قيد التنفيذ", 409)
+                try:
+                    result = plugin_installations.view(self.store, query["project"][0])
                 finally:
                     self.server.execution_lock.release()
                 return self.reply(result)
@@ -393,7 +403,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/relations":
                 self.store.link(body.get("project_id"), body.get("source"), body.get("target"), body.get("label"))
                 return self.reply({"ok": True}, 201)
-            if path in ("/api/graph/entities", "/api/graph/relations", "/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/knowledge/offline/import", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/detection/fixtures/register", "/api/detection/acceptance/run", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify", "/api/curriculum/attempt", "/api/plugins/register", "/api/plugins/transition"):
+            if path in ("/api/plugins/trust", "/api/plugins/trust/revoke", "/api/plugins/install", "/api/plugins/runtime/transition", "/api/plugins/runtime/run", "/api/graph/entities", "/api/graph/relations", "/api/run", "/api/workflows/resume", "/api/results/compare", "/api/workshop", "/api/chat", "/api/backup", "/api/learning/attempt", "/api/knowledge/refresh", "/api/knowledge/offline/import", "/api/requirements/import", "/api/maintenance", "/api/integrity/start", "/api/integrity/advance", "/api/quality/start", "/api/quality/advance", "/api/quality/compare", "/api/events/normalize", "/api/detection/save", "/api/detection/test", "/api/detection/fixtures/register", "/api/detection/acceptance/run", "/api/coverage/asset", "/api/coverage/assessment", "/api/coverage/remove", "/api/plans/start", "/api/plans/advance", "/api/plans/pause", "/api/plans/resume", "/api/plans/templates/save", "/api/plans/templates/instantiate", "/api/coverage/scans/start", "/api/coverage/scans/advance", "/api/case-reports/build", "/api/case-reports/verify", "/api/curriculum/attempt", "/api/plugins/register", "/api/plugins/transition"):
                 if not self.server.execution_lock.acquire(blocking=False):
                     raise Problem("مهمة أخرى قيد التنفيذ؛ حاول بعد انتهائها", 409)
                 try:
@@ -417,6 +427,26 @@ class Handler(BaseHTTPRequestHandler):
         def reply_data(*args, **kwargs):
             return args, kwargs
 
+        if path in ("/api/plugins/trust", "/api/plugins/trust/revoke", "/api/plugins/install", "/api/plugins/runtime/transition", "/api/plugins/runtime/run"):
+            fields = {"/api/plugins/trust": {"project_id", "public_key"},
+                      "/api/plugins/trust/revoke": {"project_id", "key_id"},
+                      "/api/plugins/install": {"project_id", "evidence_id"},
+                      "/api/plugins/runtime/transition": {"project_id", "plugin_id", "action", "version"},
+                      "/api/plugins/runtime/run": {"project_id", "plugin_id", "evidence_id"}}[path]
+            if set(body) != fields:
+                raise Problem("حقول إدارة الحزم التنفيذية غير مطابقة")
+            pid = body["project_id"]
+            if path == "/api/plugins/trust":
+                result = plugin_installations.trust(self.store, pid, body["public_key"])
+            elif path == "/api/plugins/trust/revoke":
+                result = plugin_installations.revoke(self.store, pid, body["key_id"])
+            elif path == "/api/plugins/install":
+                result = plugin_installations.install(self.store, pid, body["evidence_id"])
+            elif path == "/api/plugins/runtime/transition":
+                result = plugin_installations.transition(self.store, pid, body["plugin_id"], body["action"], body["version"])
+            else:
+                result = plugin_installations.run(self.store, pid, body["plugin_id"], body["evidence_id"])
+            return reply_data(result)
         if path in ("/api/graph/entities", "/api/graph/relations"):
             field = "entity" if path.endswith("entities") else "relation"
             if set(body) != {"project_id", field}:

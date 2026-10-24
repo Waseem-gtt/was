@@ -2,7 +2,7 @@ import argparse
 import getpass
 import os
 from pathlib import Path
-from . import backup, desktop
+from . import backup, desktop, plugin_package
 from .server import App
 from .store import Problem, Store
 
@@ -24,9 +24,20 @@ def main():
     restore = sub.add_parser("restore")
     restore.add_argument("file")
     restore.add_argument("destination")
+    keygen = sub.add_parser("plugin-keygen", help="إنشاء مفتاح ناشر محلي بأمر المالك الصريح")
+    keygen.add_argument("--output", required=True)
+    package = sub.add_parser("plugin-package", help="توقيع حزمة إضافة محلية دون تشغيلها")
+    for name in ("key", "manifest", "module", "fixtures", "output"):
+        package.add_argument("--" + name, required=True)
     args = parser.parse_args()
     os.umask(0o077)
     try:
+        if args.command in ("plugin-keygen", "plugin-package"):
+            from .store import encode
+            result = plugin_package.generate_key(args.output) if args.command == "plugin-keygen" else plugin_package.build(
+                args.key, args.manifest, args.module, args.fixtures, args.output)
+            print(encode(result))
+            return
         if args.command == "install-desktop":
             target = desktop.install_entry(args.data, args.applications_dir, args.port, args.browser, args.replace)
             print(f"Application-menu entry installed: {target}")

@@ -18,6 +18,7 @@ from tests.browser_plans import run_plan_checks
 from tests.browser_coverage_scans import run_coverage_scan_checks
 from tests.browser_reports import run_report_checks
 from tests.browser_curriculum import run_curriculum_checks
+from tests.browser_plugin_installations import run_plugin_installations_checks
 from tests.browser_plugins import run_plugins_checks
 from tests.browser_knowledge_graph import run_knowledge_graph_checks
 from tests.browser_defense_acceptance import run_defense_acceptance_checks
@@ -282,6 +283,7 @@ def main():
                 run_workspace_checks(page, expect, checks)
                 run_defense_acceptance_checks(page, expect, checks)
                 run_knowledge_graph_checks(page, expect, checks)
+                run_plugin_installations_checks(page, expect, checks)
                 page.get_by_role("link", name="نظرة عامة").click()
                 page.screenshot(path=str(output / "desktop.png"), full_page=True)
                 for width in (390, 320):

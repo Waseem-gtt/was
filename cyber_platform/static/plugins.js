@@ -89,6 +89,8 @@ function pluginsPage() {
     show();
   }
   for (const btn of Object.values(decisions)) btn.disabled = true;
-  load().catch(error => {if (holder.isConnected) toast(error.message, true);});
+  load().catch(error => {if (holder.isConnected) toast(error.message, true);}).finally(() => {
+    if (holder.isConnected && state.project?.project.id === pid) holder.append(pluginInstallationsPanel());
+  });
   return holder;
 }
